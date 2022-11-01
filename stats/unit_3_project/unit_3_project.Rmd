@@ -2,12 +2,13 @@
 title: "Unit 3 Project Assessment"
 author: "Mark Schulist"
 date: "`r Sys.Date()`"
-output: pdf_document
+output:
+  word_document: default
+  pdf_document: default
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
-library(mosaic)
 library(tidyverse)
 ```
 
@@ -144,10 +145,12 @@ ggplot(data.frame(x = c(220, 320)), aes(x)) +
 
 Based on our p-value of `r round(p_value, 4)` and our standardized statistic of `r round(z, 4)`, our data is not statistically significant. Our p-value is greater than 0.05 which means that there is a small, but still relevant, possibility that we could see our data from random chance. This means that we fail to reject our null hypothesis. It is not clear that the death penalty no longer has majority support: it is very possible that more than 50% of the population supports the death penalty.
 
-I would like to know if an updated survey has come out as this study was conducted in 2006 as I'm fairly certain that public opinions respondents changed since then. It would also be nice to know their sampling method as it doesn't explicitly say how they chose their respondents.
+I would like to know if an updated survey has come out as this study was conducted in 2006 as I'm fairly certain that public opinion has changed since then. It would also be nice to know their sampling method as it doesn't explicitly say how they chose their sample of adults. 
 
 Here's my new research question:
 
 Do college students believe that the death penalty or life imprisonment, without the possibility of parole, is a better punishment for people convicted of murder?
 
 <!-- drive_upload("unit_3_project.pdf", as_dribble("https://drive.google.com/drive/folders/1IT5yl9Obwbn5G5__GNexlsq2AlifeXcI"), overwrite = T) -->
+
+<!-- drive_upload("unit_3_project.docx", as_dribble("https://drive.google.com/drive/folders/1IT5yl9Obwbn5G5__GNexlsq2AlifeXcI"), overwrite = T) -->

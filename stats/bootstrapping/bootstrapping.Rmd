@@ -1,0 +1,127 @@
+---
+title: "Bootstrapping"
+subtitle: "Statistics with Taylor Tan"
+author: "Mark Schulist"
+date: "`r Sys.Date()`"
+output: rmdformats::downcute
+downcute_theme: "chaos"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE)
+library(tidyverse)
+library(boot)
+```
+
+# Bootstrapping
+
+I'm going to briefly go over bootstrapping with the example he gave us in class. I'll then delve into the code to show how we can automate this in R (and make it more reproducible).
+
+## Example
+Taylor just played a audio clip of a song (some Pink Floyd I believe). After playing it for 28 seconds, we all guessed how long we believed the clip was. 
+
+Our research question is this: Can people accurately estimate the length of a short song snippet?
+
+We collected the following quantitative data from our class. 
+```{r}
+students <- c(17, 38, 20, 17, 18, 22, 15, 16, 23, 28, 24, 12, 25, 30, 23, 30)
+```
+
+We can plot these data on a dot plot. 
+
+```{r}
+ggplot(data.frame(students), aes(x = students)) +
+  geom_dotplot() +
+  xlab("seconds")
+```
+
+Here are some statistics we calculated in class from our data. 
+
+mean = `r mean(students)`
+
+sd = `r sd(students)`
+
+IQR = `r IQR(students)`
+
+Looking at our graph, and these stats, we can can see that we underestimated the length of a song snippet. 
+
+## Bootstrapping
+Now onto the cool (and new) stuff. In class, we wrote our 16 guessing on pieces of paper and then picked them out of a hat and replaced them after picking each one. We recorded the guess that we picked out and then did that 16 times. We basically got new data from our existing data. 
+
+```{r}
+set.seed(123)
+
+one_boot <- sample(students, length(students), replace = T)
+one_boot
+mean(one_boot)
+```
+
+Of course, since we're using R, we can repeat this many times to determine the mean of the means. Let's try doing this 100 times to see what the mean approaches. 
+
+```{r}
+hundred_boot <- replicate(100, mean(sample(students, length(students), replace = T)))
+mean(hundred_boot)
+```
+
+Wow, our mean is very close to our original mean, which makes sense since its the same data. We can also find that the sd of our bootstrap is very small, at only `r round(sd(hundred_boot), 3)`. 
+
+## Using Normal Distribution to Get Confidence Intervals
+If we were to graph the t chart, we'd find that the `hundred_boot` would approach a normal distribution for many, many replications. We know that 95% of the data under a norm dist is within 2 standard deviations of the mean, so we can use this to find the 95% confidence interval. 
+
+$$
+\bar{x} \pm 2(\text{SD from bootstrap distribution})
+$$
+
+Let's first graph 10000 trials. 
+```{r}
+boot_tbl <- replicate(10000, mean(sample(students, length(students), replace = T))) %>% 
+  as_tibble() %>% rename(t_vals = 1)
+ggplot(boot_tbl, aes(t_vals)) +
+  geom_histogram(binwidth = 0.1) +
+  xlab("Mean of Each Bootstrapped Sample")
+```
+
+The reason that there are some spikes in this graph is because some values in our original data are repeated. 
+
+We let's add the confidence interval into our graph. 
+
+```{r}
+boot_tbl <- boot_tbl %>% mutate(
+  confidence = (t_vals <= mean(t_vals) + 2 * sd(t_vals)) & 
+    (t_vals >= mean(t_vals) - 2 * sd(t_vals))
+)
+ggplot(boot_tbl, aes(t_vals)) +
+  geom_histogram(aes(color = confidence), binwidth = 0.1) +
+  xlab("Mean of Each Bootstrapped Sample")
+```
+
+The blue values contain 95% of the data, and the red values are the other 5%. 
+
+We can overlay a normal distribution to get a better picture of what is happening. 
+
+```{r}
+boot_tbl <- boot_tbl %>% mutate(
+  density = t_vals / length(t_vals)
+)
+
+ggplot(boot_tbl, aes(x = t_vals)) +
+  geom_histogram(aes(y = (..count.. / (sum(..count..) * 0.1)),
+                     color = confidence), binwidth = 0.1) +
+  stat_function(fun = dnorm, args = list(mean = mean(boot_tbl$t_vals), 
+                                         sd = sd(boot_tbl$t_vals))) +
+  xlab("Mean of Each Bootstrapped Sample") +
+  ylab("density") +
+  labs(title = "T-Distribution with Normal Approximation")
+```
+
+Now that's pretty cool. We can see that the normal distribution is a very good approximation of our bootstrapped distribution (called a t-distribution). The red parts are more than 2 standard deviations away from the mean, and they comprise of 95% of the data. 
+
+This is how we calculate our confidence intervals. By using the above equation, we can find the bounds of the red and blue on the graph. 
+
+```{r}
+upper = mean(boot_tbl$t_vals) + 2 * sd(boot_tbl$t_vals)
+lower = mean(boot_tbl$t_vals) - 2 * sd(boot_tbl$t_vals)
+paste0("(", round(lower, 3), ", ", round(upper, 3), ")")
+```
+
+This is our confidence interval for our data!

@@ -1,0 +1,98 @@
+---
+title: "More Bootstrapping"
+author: "Mark Schulist"
+date: "`r Sys.Date()`"
+output: rmdformats::downcute
+downcute_theme: "chaos"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+```
+
+
+We are guessing the proportion of American youth age 8-18 have a screen in their bedroom. We found that the 80% interval is narrower than the 99% interval. *The more confident we want to be, the wider the interval needs to be.* 
+
+Here's how much sleep we got last night. 
+```{r}
+sleep <- c(8.25, 5.75, 6.5, 6.5, 7.5, 8.5, 7.5, 6, 7.5, 7, 7.25, 8.75, 8, 8.5, 8, 8.5, 8.5)
+```
+
+n = `r length(sleep)`
+
+mean = `r mean(sleep)`
+
+sd = `r sd(sleep)`
+
+Now, I'll generate 10000 samples with replacement. 
+
+```{r}
+thousand_samples <- replicate(10000, 
+  mean(sample(sleep, length(sleep), replace = T)))
+```
+
+Here's some stats of the bootstrap distribution. 
+
+mean = `r mean(thousand_samples)`
+
+sd = `r sd(thousand_samples)`
+
+Here's the confidence interval for the t-chart. 
+```{r}
+upper <- mean(sleep) + 2*sd(thousand_samples)
+lower <- mean(sleep) - 2*sd(thousand_samples)
+```
+
+Confidence interval: (`r round(lower, 4)`, `r round(upper, 4)`)
+
+Here's a graph of the t-chart. 
+
+```{r}
+thousand_tbl <- thousand_samples %>% as_tibble() %>% 
+  rename(t_vals = 1) %>% 
+  mutate(
+  confidence = (t_vals <= mean(t_vals) + 2 * sd(t_vals)) & 
+    (t_vals >= mean(t_vals) - 2 * sd(t_vals))
+)
+ggplot(thousand_tbl, aes(t_vals)) +
+  geom_histogram(aes(color = confidence), binwidth = 0.025) +
+  xlab("Mean of Each Bootstrapped Sample")
+```
+
+Misinterpretations: 
+
+Confidence intervals do NOT care about the data, only the mean of each sample. 
+
+The sample mean will always be inside of the confidence interval. The confidence interval shows us the true mean of the population, not the mean of the sample. 
+
+The confidence interval is not a 0.95 probability. 
+
+The confidence interval contains the true mean (ideally). 
+
+# Using our confidence interval to determine the p value
+
+```{=tex}
+\begin{align*}
+H_0{:\hspace{0.2cm}} \mu = 8 \\
+H_a{:\hspace{0.2cm}} \mu > 8
+\end{align*}
+```
+
+If our 8 hours is within the confidence interval, then we accept the null hypothesis. Any number inside the confidence interval is expected to happen (more than 0.05 chance of it happening).
+
+Now we can find the outside 5% of the data using the empirical values instead of the sd values. 
+
+```{r}
+empirical <- quantile(thousand_samples, c(0.025, 0.975))
+lower_emp <- empirical[1]
+upper_emp <- empirical[2]
+```
+
+Confidence interval = (`r round(lower_emp, 4)`, `r round(upper_emp, 4)`)
+
+# Recap
+
+If the level of confidence increases, then the interval gets wider. Like going from a 95% confidence to a 99% will make the interval wider. 
+
+If the sample size increases, then the interval gets narrower. So if we had 40 people in our class, the 95% confidence interval would have been narrower. 

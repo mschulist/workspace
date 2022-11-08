@@ -1,0 +1,110 @@
+---
+title: "Bootstrap Hypothesis Testing"
+author: "Mark Schulist"
+date: "`r Sys.Date()`"
+output: rmdformats::downcute
+downcute_theme: "chaos"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+```
+
+# Setup
+
+Here we have tires and their stopping distances. We want to know if the stop on average less than 130ft since that is what is considered safe. 
+
+```{r}
+tires <- c(129, 128, 130, 132, 135, 123, 122, 125, 128, 130)
+```
+
+```{=tex}
+\begin{align*}
+H_0{:\hspace{0.2cm}} \mu = 130 \\
+H_a{:\hspace{0.2cm}} \mu < 130
+\end{align*}
+```
+
+Parameter of interest: long-run mean stopping distance $(\mu)$. 
+
+# Running Samples
+
+Now, we'll run a bunch of samples with replacement from the data set and collect the mean of the samples. 
+
+sample mean = `r mean(tires)`
+
+sample sd = `r sd(tires)`
+
+sample size = `r length(tires)`
+
+
+```{r}
+set.seed(7)
+boot <- replicate(5000, mean(sample(tires, replace = T)))
+sd <- sd(boot)
+```
+
+bootstrap sd = `r sd`
+
+```{r}
+boot_tbl <- boot %>% as_tibble() %>% 
+  rename(t_vals = 1) %>% 
+  mutate(
+  confidence = (t_vals <= mean(t_vals) + 2 * sd(t_vals)) & 
+    (t_vals >= mean(t_vals) - 2 * sd(t_vals))
+)
+ggplot(boot_tbl, aes(t_vals)) +
+  geom_histogram(aes(color = confidence), binwidth = 0.05) +
+  xlab("Mean of Each Bootstrapped Sample")
+```
+
+# Finding 95% Confidence Interval
+
+Now, we'll find the 95% confidence interval and see if our data is contained within it. 
+
+```{r}
+upper = mean(boot) + 2 * sd(boot)
+lower = mean(boot) - 2 * sd(boot)
+```
+
+Interval: (`r round(lower, 4)`, `r round(upper, 4)`)
+
+Since 130 is contained within our 95% confidence interval, we fail to reject our null hypothesis. 
+
+# Using Bootstrap to run a Hypothesis Test
+
+We need to shift all of the data points to be at the null distribution mean to conduct a hypothesis test. This can be done by adding the difference between the sample mean and the null distribution mean to each of the bootstrapped data points. 
+
+So in this case, the mean of the sample = `r mean(tires)` and the mean of the null distribution = 130. So we just need to add 1.8 to all of the data points. 
+
+```{r}
+tires_mean <- tires + 1.8
+```
+
+Then, we can do a bunch more samples from this new data set. 
+
+```{r}
+boot_adj <- replicate(50000, mean(sample(tires_mean, replace = T)))
+
+boot_adj_tbl <- boot_adj %>% as_tibble() %>% 
+  rename(t_vals = 1) %>% 
+  mutate(
+  confidence = (t_vals <= mean(t_vals) + 2 * sd(t_vals)) & 
+    (t_vals >= mean(t_vals) - 2 * sd(t_vals))
+)
+ggplot(boot_adj_tbl, aes(t_vals)) +
+  geom_histogram(aes(color = confidence), binwidth = 0.05) +
+  xlab("Mean of Each Bootstrapped Sample")
+```
+
+Now, we can count the number of samples that have means of 128.2 or lower. We then divide this value by the number of samples to get the p-value. 
+```{r}
+p_value <- sum(boot_adj < 128.2) / length(boot_adj)
+```
+
+p-value = `r p_value`
+
+This is weak evidence to reject the null hypothesis so we do not reject it. 
+
+There is not strong evidence that the tires stop in less than 130 feet. 

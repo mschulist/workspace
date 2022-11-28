@@ -1,0 +1,201 @@
+---
+title: 'Statistical Rethinking: Chapter 4'
+author: "Mark Schulist"
+date: "`r Sys.Date()`"
+output: rmdformats::downcute
+downcute_theme: "chaos"
+---
+
+```{r message=FALSE, warning=FALSE, echo=FALSE}
+library(rethinking)
+library(tidyverse)
+```
+
+# Normal (Gaussian) Distributions
+
+Things in the world tend to be normal, so we can use Gaussian Distributions to model the world. 
+
+A distribution of sums tends to converge to a Gaussian distribution. 
+
+```{r}
+pos <- replicate(1000, sum(runif(16, -1, 1)))
+dens(pos)
+```
+
+
+# Describing Models
+
+Types of variables:
+
+* Observable: data
+* Unobservable (rates, averages): parameters
+
+Variables are defined in terms of other variables or probability distributions. 
+
+Combining variables and their probability distributions defines a *joint generative model* that can simulate hypothetical observations and analyze real observations. 
+
+**Stochastic** = mapping a variable or parameter onto a distribution (with a `~` in the model definition)
+
+# Gaussian Model of Height
+
+Loading data. 
+```{r}
+data(Howell1)
+d <- Howell1
+```
+
+Only keeping adults (using tidyverse since I'm gen z) and graphing density of the heights. 
+```{r}
+d2 <- d %>% filter(age > 18)
+dens(d2$height)
+```
+
+Our model for the data (Normal can also be written as $N$): 
+
+$$
+\begin{align}
+h_i &\sim \text{Normal}(\mu, \sigma)  &[\text{likelihood}] \\
+\mu &\sim \text{Normal}(178, 20)  &[\mu \text{ prior}] \\
+\sigma &\sim \text{Uniform}(0, 50)  &[\sigma \text{ prior}]
+\end{align}
+$$
+
+Let's plot the priors for a reality check. 
+```{r}
+curve(dnorm(x, 178, 20), from = 100, to = 250, main = "mu prior distribution")
+curve(dunif(x, 0, 50), from = -10, to = 60, main = "sigma prior distribution")
+```
+
+Let's do a *prior predictive simulation* to see the joint probs of the priors to see if it makes sensible choices about height. 
+```{r}
+sample_mu <- rnorm(1e4, 178, 20)
+sample_sigma <- runif(1e4, 0, 50)
+prior_h <- rnorm(1e4, sample_mu, sample_sigma)
+dens(prior_h)
+```
+
+It's OKAY that it is NOT a Gaussian distribution. "The distribution you see is not an empirical expectation, but rather the distribution of relative plausibilities of different heights, before seeing the data."
+
+All that it shows us is that the priors make sense, which they do in this case. If we increased sigma to a larger value, we would end up with a significant part of the distribution in negative heights, which obviously does not make any sense. 
+
+Using a grid approximation of the posterior. This is a dumb method since it is inefficient, but we'll get to the better methods later...
+```{r}
+mu.list <- seq(from = 150, to = 160, length.out = 500)
+sigma.list <- seq(from = 7, to = 9, length.out = 500)
+post <- expand.grid(mu = mu.list, sigma = sigma.list)
+post$LL <- sapply(1:nrow(post), function(i) {
+  sum(
+    dnorm(d2$height, post$mu[i], post$sigma[i], log = TRUE)
+  )
+})
+post$prod <- post$LL + dnorm(post$mu, 178, 20, TRUE) +
+  dunif(post$sigma, 0, 50, TRUE)
+post$prob <- exp(post$prod - max(post$prod))
+```
+
+We can sample from this posterior. 
+```{r}
+sample.rows <- sample(1:nrow(post),
+  size = 1e4, replace = TRUE,
+  prob = post$prob
+)
+sample.mu <- post$mu[sample.rows]
+sample.sigma <- post$sigma[sample.rows]
+```
+
+And then plot sampled posterior. 
+```{r}
+plot(sample.mu, sample.sigma, cex = .7, pch = 16, col = col.alpha(rangi2, 0.15))
+```
+
+The *marginal* posterior densities of $\mu$ and $\sigma$.
+```{r}
+dens(sample.mu)
+dens(sample.sigma)
+```
+
+Let's quickly redo this model with less data to see how it affects the posterior. 
+```{r}
+d3 <- sample(d2$height, size = 20)
+mu.list <- seq(from = 150, to = 170, length.out = 200)
+sigma.list <- seq(from = 4, to = 20, length.out = 200)
+post2 <- expand.grid(mu = mu.list, sigma = sigma.list)
+post2$LL <- sapply(1:nrow(post2), function(i) {
+  sum(dnorm(d3,
+    mean = post2$mu[i], sd = post2$sigma[i],
+    log = TRUE
+  ))
+})
+post2$prod <- post2$LL + dnorm(post2$mu, 178, 20, TRUE) +
+  dunif(post2$sigma, 0, 50, TRUE)
+post2$prob <- exp(post2$prod - max(post2$prod))
+sample2.rows <- sample(1:nrow(post2),
+  size = 1e4, replace = TRUE,
+  prob = post2$prob
+)
+sample2.mu <- post2$mu[sample2.rows]
+sample2.sigma <- post2$sigma[sample2.rows]
+plot(sample2.mu, sample2.sigma,
+  cex = 0.5,
+  col = col.alpha(rangi2, 0.1),
+  xlab = "mu", ylab = "sigma", pch = 16
+)
+
+dens(sample2.sigma, norm.comp = TRUE)
+```
+Now, we can see that $\sigma$ is no longer Gaussian. Instead, it has a long tail to the right. 
+
+# Using Quadratic Approximation
+
+We input a model and it returns an approximation of the posterior. 
+
+```{r}
+flist <- alist(
+  height ~ dnorm(mu, sigma),
+  mu ~ dnorm(178, 20),
+  sigma ~ dunif(0, 50)
+)
+```
+
+We can then fit this model with the data from `data(Howell1)` (heights/other stats of people)
+```{r}
+m4.1 <- quap(flist, d2)
+precis(m4.1)
+```
+
+This provides us with the approximations for each parameter's marginal distribution. A distribution of distributions, lol. 
+
+## Sampling from a `Quap`
+
+We first examine the covariances among all pairs of parameters. This is known as the *Variance-covariance Matrix*. 
+```{r}
+vcov(m4.1)
+```
+
+We can decompose this into 1) a vector of the variances of the parameters and 2) a correlation matrix that tells us how changes in any parameter lead to correlated changes in the others. 
+```{r}
+diag( vcov( m4.1 ) )
+cov2cor( vcov( m4.1 ) )
+```
+
+The "1's" show that the values are correlated with themselves, which is what we want. 
+
+The other values tell us that learning about mu doesn't tell us much about sigma or visa versa. 
+
+To sample from a quap, we sample from each of the two parameters. There are two dimensions, so we sample for each dimension. 
+```{r}
+post <- extract.samples(m4.1, n=1e4)
+head(post)
+```
+
+
+We can plot these values, which should be *very* similar to the complex grid sampling model above. 
+```{r}
+dens(post$mu)
+dens(post$sigma)
+```
+
+# Linear Prediction
+
+We are normally interested in modeling how an outcome is related to some other variable, a *predictor value*. 
+

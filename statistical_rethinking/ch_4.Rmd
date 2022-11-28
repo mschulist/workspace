@@ -283,5 +283,3 @@ for (i in 1:N) {
 ```
 
 We want to carefully pick our priors. They should be based on general facts, not the sample data. 
-
-

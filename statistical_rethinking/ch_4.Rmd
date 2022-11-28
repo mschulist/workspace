@@ -174,8 +174,8 @@ vcov(m4.1)
 
 We can decompose this into 1) a vector of the variances of the parameters and 2) a correlation matrix that tells us how changes in any parameter lead to correlated changes in the others. 
 ```{r}
-diag( vcov( m4.1 ) )
-cov2cor( vcov( m4.1 ) )
+diag(vcov(m4.1))
+cov2cor(vcov(m4.1))
 ```
 
 The "1's" show that the values are correlated with themselves, which is what we want. 
@@ -184,7 +184,7 @@ The other values tell us that learning about mu doesn't tell us much about sigma
 
 To sample from a quap, we sample from each of the two parameters. There are two dimensions, so we sample for each dimension. 
 ```{r}
-post <- extract.samples(m4.1, n=1e4)
+post <- extract.samples(m4.1, n = 1e4)
 head(post)
 ```
 
@@ -198,4 +198,90 @@ dens(post$sigma)
 # Linear Prediction
 
 We are normally interested in modeling how an outcome is related to some other variable, a *predictor value*. 
+
+```{r}
+plot(d2$height ~ d2$weight)
+```
+
+There's an obvious relationship. 
+
+We want to make a *linear model* which says that there is a constant additive relationship to the mean and outcome. 
+
+$$
+\begin{align}
+h_i &\sim \text{Normal}(\mu_1, \sigma) &[\text{likelihood}] \\
+\mu_1 &= \alpha + \beta(x_i + \bar{x}) &[\text{linear model}] \\
+\alpha &\sim \text{Normal}(178, 20) &[\alpha \text{ prior}] \\
+\beta &\sim \text{Normal}(0, 10) &[\beta \text{ prior}] \\
+\sigma &\sim \text{Uniform}(0, 50) &[\sigma \text{ prior}]
+\end{align}
+$$
+
+The little i on mu indicates that there is a different mean for every data point. 
+
+Mu is no longer estimated, it is determined by the linear model. 
+
+Alpha is the intercept and Beta is the slope (rate of change in expectation). 
+
+We will simulate the priors to see what they look like. 
+```{r}
+set.seed(2971)
+N <- 100 # 100 lines
+a <- rnorm(N, 178, 20)
+b <- rnorm(N, 0, 10)
+
+plot(NULL,
+  xlim = range(d2$weight), ylim = c(-100, 400),
+  xlab = "weight", ylab = "height"
+)
+abline(h = 0, lty = 2)
+abline(h = 272, lty = 1, lwd = 0.5)
+mtext("b ~ dnorm(0,10)")
+xbar <- mean(d2$weight)
+for (i in 1:N) {
+  curve(a[i] + b[i] * (x - xbar),
+    from = min(d2$weight), to = max(d2$weight), add = TRUE,
+    col = col.alpha("black", 0.2)
+  )
+}
+```
+
+These priors don't really tell us anything. First, there are some negative values, and nobody has negative height. And there are some that are absurdly tall, so we can use a log(beta) to fix these problems. 
+
+$$
+\beta \sim \text{Log-Normal}(0, 1)
+$$
+
+`dlnorm` and `rlnorm` deal with log-normal distributions. 
+
+```{r}
+b <- rlnorm(1e4, 0, 1)
+dens(b, xlim = c(0, 5), adj = 0.1)
+```
+
+Now using the prior predicitve simulation with a Log-Normal prior:
+```{r}
+set.seed(2971)
+N <- 100 # 100 lines
+a <- rnorm(N, 178, 20)
+b <- rlnorm(N, 0, 1)
+# plotting
+plot(NULL,
+  xlim = range(d2$weight), ylim = c(-100, 400),
+  xlab = "weight", ylab = "height"
+)
+abline(h = 0, lty = 2)
+abline(h = 272, lty = 1, lwd = 0.5)
+mtext("b ~ dnorm(0,10)")
+xbar <- mean(d2$weight)
+for (i in 1:N) {
+  curve(a[i] + b[i] * (x - xbar),
+    from = min(d2$weight), to = max(d2$weight), add = TRUE,
+    col = col.alpha("black", 0.2)
+  )
+}
+```
+
+We want to carefully pick our priors. They should be based on general facts, not the sample data. 
+
 

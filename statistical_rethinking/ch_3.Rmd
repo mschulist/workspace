@@ -282,9 +282,9 @@ simplehist(w)
 
 We can *cheat* a little and make a while loop that stops when the 99% interval is less than 0.05
 ```{r}
-find_pi_interval <- function(n, p){
+find_pi_interval <- function(n, p) {
   p_grid <- seq(0, 1, length.out = 1000)
-  likelihood <- dbinom(round(n*p), size = n, prob = p_grid)
+  likelihood <- dbinom(round(n * p), size = n, prob = p_grid)
   posterior <- likelihood * prior
   posterior <- posterior / sum(posterior)
   samples <- sample(p_grid, prob = posterior, size = 1e4, replace = T)
@@ -295,8 +295,8 @@ find_pi_interval <- function(n, p){
 interval <- 1
 n <- 1
 while (interval >= 0.05) {
-  interval = find_pi_interval(n, 0.7)
-  n = n + 1
+  interval <- find_pi_interval(n, 0.7)
+  n <- n + 1
 }
 n
 ```
@@ -308,14 +308,14 @@ The data we will be using---male = 1, female = 0
 ```{r}
 birth1 <- c(
   1, 0, 0, 0, 1, 1, 0, 1, 0, 1, 0, 0, 1, 1, 0, 1, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0,
-  0, 0, 0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 0, 1, 1, 0, 1, 0, 0, 1, 1, 0, 1, 0, 
-  0, 0, 0, 0, 0, 0, 1, 1, 0, 1, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1, 1, 1, 1, 0, 1, 0, 
+  0, 0, 0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 0, 1, 1, 0, 1, 0, 0, 1, 1, 0, 1, 0,
+  0, 0, 0, 0, 0, 0, 1, 1, 0, 1, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1, 1, 1, 1, 0, 1, 0,
   1, 1, 1, 1, 1, 0, 0, 1, 0, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 1, 1, 1
 )
 birth2 <- c(
   0, 1, 0, 1, 0, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 0, 0, 1, 1, 1, 0,
-  1, 1, 1, 0, 1, 1, 1, 0, 1, 0, 0, 1, 1, 1, 1, 0, 0, 1, 0, 1, 1, 1, 1, 1, 1, 1, 
-  1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1, 
+  1, 1, 1, 0, 1, 1, 1, 0, 1, 0, 0, 1, 1, 1, 1, 0, 0, 1, 0, 1, 1, 1, 1, 1, 1, 1,
+  1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 1,
   0, 0, 0, 1, 1, 0, 0, 1, 0, 0, 1, 1, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0
 )
 ```

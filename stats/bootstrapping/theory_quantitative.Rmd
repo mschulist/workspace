@@ -1,0 +1,70 @@
+---
+title: "Theory-based Quantitative Data"
+author: "Mark Schulist"
+date: "`r Sys.Date()`"
+output: rmdformats::downcute
+downcute_theme: "chaos"
+---
+
+We got the number of minutes that it takes for us to get to school. 
+
+```{r}
+minutes <- c(9,18,15,23,5,9,15,5,45,27,70,17,28,8,22,16,25,16)
+```
+
+Now we'll get the bootstrap mean distribution.
+
+Empirical Method (Simulated):
+```{r}
+means <- replicate(5000, mean(sample(minutes, replace = T)))
+upper_emp <- quantile(means, c(0.025, 0.975))[2]
+lower_emp <- quantile(means, c(0.025, 0.975))[1]
+
+print(paste0("empirical: ", "(", round(lower_emp, 4), ", ", round(upper_emp, 4), ")"))
+```
+
+Theoretical method:
+```{r}
+upper <- mean(minutes) + 2 * sd(means)
+lower <- mean(minutes) - 2 * sd(means)
+print(paste0("Theoritical: ", "(", round(lower, 4), ", ", round(upper, 4), ")"))
+```
+
+# Using t-distribution
+
+This is the formula for approximating the sd of the null distribution. 
+$$
+\frac{s}{\sqrt{n}}
+$$
+
+```{r}
+sd_theory <- sd(minutes) / sqrt(length(minutes))
+sd_theory
+```
+
+This compares well to the sd of the means (`r round(sd(means), 4)`). 
+
+
+Conducting a t-test.
+```{r}
+t_test <- t.test(minutes, alternative = "greater", mu = 30)
+t_test
+```
+
+So our p-value is `r t_test$p.value`. 
+
+We can calculate the t-stat (which is the same thing as the z-score for the t-distribution). This value is also in the above code as the "t". 
+
+```{r}
+(mean(minutes) - 30) / sd_theory
+```
+
+We will now graph a box plot of our sample data to see how it relates to our t stats. 
+
+```{r}
+boxplot(minutes, horizontal = T)
+```
+
+# Conclusion
+
+We need to have sample size of 20 or more or a symmetric sample distribution to use the t-test. 

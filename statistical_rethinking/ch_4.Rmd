@@ -283,3 +283,120 @@ for (i in 1:N) {
 ```
 
 We want to carefully pick our priors. They should be based on general facts, not the sample data. 
+
+Let's remake the model, now with a log-normal distribution instead of a normal distribution. 
+
+$$
+\begin{align}
+h_i &\sim \text{Normal}(\mu_1, \sigma) \\
+\mu_1 &= \alpha + \beta(x_i + \bar{x}) \\
+\alpha &\sim \text{Normal}(178, 20) \\
+\beta &\sim \text{Log-Normal}(0, 1) \\
+\sigma &\sim \text{Uniform}(0, 50)
+\end{align}
+$$
+
+
+Getting the data ready for fitting to the new model.
+```{r}
+d2 <- Howell1 %>% filter(age >= 18)
+```
+
+Writing the parameters. 
+```{r}
+xbar <- mean(d2$weight)
+# defining the model
+m4.3 <- quap(
+  alist(
+    height ~ dnorm(mu, sigma),
+    mu <- a + b * (weight - xbar),
+    a ~ dnorm(178, 20),
+    b ~ dlnorm(0, 1),
+    sigma ~ dunif(0, 50)
+  ),
+  data = d2
+)
+```
+
+We can look at tables, but often plotting the posterior is more useful than seeing the summary (marginal) stats. 
+```{r}
+precis(m4.3)
+```
+
+Beta is the slope, and because it is 0.9, it means, in context, that an increase of 1kg in weight corresponds with 0.9cm of height increase. (*a person 1 kg heavier is expected to be 0.90 cm taller*)
+
+Variance-covariance Matrix for the data:
+```{r}
+vcov(m4.3) %>% round(3)
+```
+
+There is practically no relationship between the parameters.
+
+Now we can plot the means for the parameters with the data. 
+```{r}
+plot(height ~ weight, data = d2, col = rangi2)
+post <- extract.samples(m4.3)
+a_map <- mean(post$a)
+b_map <- mean(post$b)
+curve(a_map + b_map * (x - xbar), add = TRUE)
+```
+
+Best fit lines are good, but they don't help us understand the uncertainty of that line. 
+
+Let's extract the first 10 cases and then remodel and put the uncertainty in the graph. 
+
+```{r}
+N <- 10
+dN <- d2 %>% slice_head(n = N)
+mN <- quap(
+  alist(
+    height ~ dnorm(mu, sigma),
+    mu <- a + b * (weight - mean(weight)),
+    a ~ dnorm(178, 20),
+    b ~ dlnorm(0, 1),
+    sigma ~ dunif(0, 50)
+  ),
+  data = dN
+)
+```
+
+Let's extract 20 samples from this posterior.
+
+```{r}
+post <- extract.samples(mN, n = 20)
+```
+
+Now, let's plot the samples and the posterior. 
+```{r}
+# display raw data and sample size
+plot(dN$weight, dN$height,
+  xlim = range(d2$weight), ylim = range(d2$height),
+  col = rangi2, xlab = "weight", ylab = "height"
+)
+mtext(concat("N = ", N))
+# plot the lines, with transparency
+for (i in 1:20) {
+  curve(post$a[i] + post$b[i] * (x - mean(dN$weight)),
+    col = col.alpha("black", 0.3), add = TRUE
+  )
+}
+```
+
+We can change `N` and the model will more certain about the mean (smaller variance) and the lines will be closer together. 
+
+We can look more specifically at the value of mu. We can ask the following question: *What are the possible heights for a given weight?*
+
+Let's try to answer that question for a weight of 50kg. 
+```{r}
+post <- extract.samples(m4.3)
+mu_at_50 <- post$a + post$b * (50 - xbar)
+dens(mu_at_50, col = rangi2, lwd = 2, xlab = "mu|weight=50")
+```
+
+Every parameter has a distribution, so here we are looking at the distribution of mu values for a given weight. 
+
+We can find the 89% percentile interval for this above distribution. 
+```{r}
+PI(mu_at_50, prob = 0.89)
+```
+

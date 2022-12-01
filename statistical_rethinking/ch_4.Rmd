@@ -400,3 +400,164 @@ We can find the 89% percentile interval for this above distribution.
 PI(mu_at_50, prob = 0.89)
 ```
 
+We can use the function `link` to take our quap approximation, sample from the posterior, and then compute mu for each case in the data and then sample from that posterior. It then returns a matrix where the rows are the samples and the columns are the different data points in the data. 
+```{r}
+mu <- link(m4.3)
+```
+
+We want to get a distribution of mu for each unique weight value on the horizontal axis. 
+```{r}
+weight.seq <- 25:70
+mu <- link(m4.3, data = data.frame(weight = weight.seq))
+```
+
+Now, we have the corresponding distribution (density) of mu for weights in between 25 and 70. 
+```{r}
+plot(height ~ weight, d2, type = "n")
+# looping over samples and plotting each mu value
+for (i in 1:100) {
+  points(weight.seq, mu[i, ], pch = 16, col = col.alpha(rangi2, 0.1))
+}
+```
+
+Now, we just need to summarize these points and show how they relate to the data we used in the model. 
+```{r}
+# summarize the distribution of mu
+mu.mean <- apply(mu, 2, mean)
+mu.PI <- apply(mu, 2, PI, prob = 0.89)
+
+# plot raw data
+# fading out points to make line and interval more visible
+plot(height ~ weight, data = d2, col = col.alpha(rangi2, 0.5))
+# plot the MAP line, aka the mean mu for each weight
+lines(weight.seq, mu.mean)
+# plot a shaded region for 89% PI
+shade(mu.PI, weight.seq)
+```
+
+## Prediction Intervals
+
+Let's say that we want to get the 89% prediction interval for actual heights, not just the average height (mu). That means we need to incorporate the sd (sigma) and its uncertainty as well. 
+
+The entire reason that we use a Gaussian dist. is because it allows us to model the expected heights to be distributed around mu with some sd sigma, not just right on top of mu. In other words, mu does not have all of the information from the model. 
+
+We can use the function `sim` to sample from the posterior for both parameters (mu and sigma). 
+```{r}
+sim.height <- sim(m4.3, data = list(weight = weight.seq))
+height.PI <- apply(sim.height, 2, PI, prob = 0.89)
+```
+
+Then we can plot the following:
+
+1. Average line
+2. Shaded region of 89% plausible mu
+3. Boundaries of the simulated heights the model expects
+
+```{r}
+# plot raw data
+plot(height ~ weight, d2, col = col.alpha(rangi2, 0.5))
+# draw MAP line
+lines(weight.seq, mu.mean)
+# draw HPDI region for line
+shade(mu.PI, weight.seq)
+# draw PI region for simulated heights
+shade(height.PI, weight.seq)
+```
+
+# Curves from Lines
+
+We can use polynomial regression to model relationships between variables. 
+```{r}
+plot(height ~ weight, d)
+```
+
+It's obvious that there's a nonlinear relationship because now we are including kids in the data. 
+
+*The most common polynomial regression is a parabolic model of the mean:*
+
+$$
+u_i = \alpha + \beta_1x_i + \beta_2x^2_i
+$$
+
+We first need to standardize the predictor variable to reduce the chance of numerical glitches as we are taking a number to a large power. 
+
+```{r}
+d <- d %>%
+  mutate(
+    weight_s = (weight - mean(weight)) / sd(weight),
+    weight_s2 = weight_s^2
+  )
+```
+
+Now we can define the new polynomial model. 
+
+$$
+\begin{align}
+h_i &\sim \text{Normal}(\mu_1, \sigma) \\
+\mu_i &= \alpha + \beta_1x_1 + \beta_2x^2_i \\
+\alpha &\sim \text{Normal}(178, 20) \\
+\beta_1 &\sim \text{Log-Normal}(0, 1) \\
+\beta_2 &\sim \text{Normal}(0, 1) \\
+\sigma &\sim \text{Uniform}(0, 50)
+\end{align}
+$$
+
+We are not using a log-normal prior for $\beta_2$ because it can be negative, but that can be confusing so polynomial models are bad in general. 
+
+Now we can write this model and put it through `quap`. 
+```{r}
+m4.5 <- quap(
+  alist(
+    height ~ dnorm(mu, sigma),
+    mu <- a + b1 * weight_s + b2 * weight_s2,
+    a ~ dnorm(178, 20),
+    b1 ~ dlnorm(0, 1),
+    b2 ~ dnorm(0, 1),
+    sigma ~ dunif(0, 50)
+  ),
+  data = d
+)
+precis(m4.5)
+```
+
+Let's plot the quadratic model fits and see what they are saying. 
+```{r}
+# organizing
+weight.seq <- seq( from=-2.2 , to=2 , length.out=30 )
+pred_dat <- list( weight_s=weight.seq , weight_s2=weight.seq^2 )
+mu <- link( m4.5 , data=pred_dat )
+mu.mean <- apply( mu , 2 , mean )
+mu.PI <- apply( mu , 2 , PI , prob=0.89 )
+sim.height <- sim( m4.5 , data=pred_dat )
+height.PI <- apply( sim.height , 2 , PI , prob=0.89 )
+# plotting
+plot( height ~ weight_s , d , col=col.alpha(rangi2,0.5) )
+lines( weight.seq , mu.mean )
+shade( mu.PI , weight.seq )
+shade( height.PI , weight.seq )
+```
+
+Fitting a linear model (cheating) using ggplot2. 
+```{r}
+ggplot(d, aes(weight_s, height)) +
+  geom_point() +
+  geom_smooth(method = "lm")
+```
+
+It's obvious that the quadratic model fits the data better, but does that mean it is a better model. No, just no. 
+
+## Splines
+
+We'll look at B-splines, where b = basis = component. 
+
+Let's load in a new data set for freshness. 
+```{r}
+data(cherry_blossoms)
+d <- cherry_blossoms
+```
+
+Let's plot the temp against the year to see if there is a relationship. 
+```{r}
+plot(temp ~ year, d)
+```
+

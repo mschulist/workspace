@@ -21,12 +21,12 @@ I expect that the current will be greater at higher frequencies since capacitors
 The current increased with frequency. There is a directly proportional relationship between current and frequency with a capacitor. 
 
  
-\begin{align}
+\begin{align*}
 X_c &= \frac{1}{2\pi f C} \\
 &= \frac{[s]}{[F]} \\
 &= \frac{[s][V]}{[C]} \\
 &= \frac{[V]}{[A]}
-\end{align}
+\end{align*}
  
 
 There is an inverse relationship between capacitive reactance and frequency. 
@@ -81,16 +81,16 @@ $$
 $$
 
 The units for the slope are:
- 
-\begin{gather}
+
+\begin{gather*}
 \frac{1}{\text{impedance} \cdot \text{frequency}} \\
 {[s]^2}
-\end{gather}
- 
-\begin{align}
+\end{gather*}
+
+\begin{align*}
 X_c &= \frac{1}{2\pi f C} \\
 \frac{1}{X_c} &= 2\pi f C
-\end{align}
+\end{align*}
  
 
 So the slope is equal to $\text{Capacitance} \cdot 2\pi$. 
@@ -106,8 +106,6 @@ Yes! There is only a small difference between the calculated and empirical value
 I expect there be less current at higher frequencies since inductors resist changes in current. 
 
 There is an inverse relationship between the frequency and current through a inductor. 
-
-
 
 ```{r}
 inductor <- read_csv(here("EECS/frequency_vs_current/input/RLC-inductor.csv"), 
@@ -150,3 +148,39 @@ ggplot(ind_summary, aes(frequency, impedance)) +
   labs(title = "Linearized Frequency vs Impedance of Inductor")
 ```
 
+# Complete RLC Circuit
+
+```{r}
+rlc <- read_csv(here("EECS/frequency_vs_current/input/RLC-full.csv"), 
+                     show_col_types = F)
+# Splitting the df into many dfs for every 3 columns
+rlc_dfs <- map(
+  seq(1, ncol(rlc), by = 3),
+  ~ rlc[, .x:(.x + 2)]
+)
+# Getting the frequency as a column
+rlc_df <- map_df(
+  1:length(rlc_dfs),
+  ~ rlc_dfs[[.x]] %>%
+    mutate(frequency = parse_number(colnames(rlc_dfs[[.x]][1]))) %>%
+    rename(time = 1, current = 2, potential = 3)
+)
+# Summarizing
+rlc_summary <- rlc_df %>%
+  group_by(frequency) %>%
+  summarize(current = max(abs(current)))
+```
+
+Graphing current vs frequency
+
+```{r}
+ggplot(rlc_summary, aes(frequency, current)) +
+  geom_point() +
+  labs(title = "Current vs Frequency of RLC Circuit")
+```
+$$
+\begin{align*}
+Z &= \sqrt{R^2 + (X_i^2 - X_c^2)} \\
+
+\end{align*}
+$$

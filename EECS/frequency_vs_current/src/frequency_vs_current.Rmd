@@ -9,8 +9,6 @@ output:
 
 ```{r include=FALSE}
 library(tidyverse)
-library(XML)
-library(xml2)
 library(here)
 ```
 

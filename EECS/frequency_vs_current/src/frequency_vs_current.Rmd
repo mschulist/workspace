@@ -1,0 +1,152 @@
+---
+title: "Frequency vs Current"
+author: "Mark Schulist"
+date: "`r Sys.Date()`"
+output:
+  html_document: default
+  pdf_document: default
+---
+
+```{r include=FALSE}
+library(tidyverse)
+library(XML)
+library(xml2)
+library(here)
+```
+
+# Capacitor 
+
+I expect that the current will be greater at higher frequencies since capacitors only pass signals, and there are more signals at higher frequencies. 
+
+The current increased with frequency. There is a directly proportional relationship between current and frequency with a capacitor. 
+
+ 
+\begin{align}
+X_c &= \frac{1}{2\pi f C} \\
+&= \frac{[s]}{[F]} \\
+&= \frac{[s][V]}{[C]} \\
+&= \frac{[V]}{[A]}
+\end{align}
+ 
+
+There is an inverse relationship between capacitive reactance and frequency. 
+```{r}
+capacitor <- read_csv(here("EECS/frequency_vs_current/input/RLC-capacitor.csv"), 
+                      show_col_types = F)[1:201, ]
+# Splitting the df into many dfs for every 3 columns
+cap_dfs <- map(
+  seq(1, ncol(capacitor), by = 3),
+  ~ capacitor[, .x:(.x + 2)]
+)
+# Getting the frequency as a column
+cap_df <- map_df(
+  1:length(cap_dfs),
+  ~ cap_dfs[[.x]] %>%
+    mutate(frequency = parse_number(colnames(cap_dfs[[.x]][1]))) %>%
+    rename(time = 1, current = 2, potential = 3)
+)
+# Summarizing
+cap_summary <- cap_df %>%
+  group_by(frequency) %>%
+  summarize(max(abs(potential)) / max(abs(current))) %>%
+  rename(impedance = 2)
+```
+
+Now we can graph the frequency vs impedance of the capacitor. 
+```{r}
+# Graphing
+ggplot(cap_summary, aes(frequency, impedance)) +
+  geom_point() +
+  labs(title = "Frequency vs Impedance for Capacitor")
+```
+
+This is nonlinear, so we need to linearize our data. We can do this by doing $\dfrac{1}{\text{impedance}}$. 
+```{r}
+linearized_cap <- cap_summary %>%
+  mutate(inv_impedance = 1 / impedance)
+
+ggplot(linearized_cap, aes(frequency, inv_impedance)) +
+  geom_point() +
+  geom_smooth(method = "lm") +
+  labs(title = "Frequency vs 1/impedance for Capacitor")
+```
+
+We can fit a linear model to the data. 
+```{r}
+summary(lm(linearized_cap$inv_impedance ~ linearized_cap$frequency))
+```
+
+$$
+\frac{1}{\text{Impedance}} = \text{Frequency} \cdot 0.00006422
+$$
+
+The units for the slope are:
+ 
+\begin{gather}
+\frac{1}{\text{impedance} \cdot \text{frequency}} \\
+{[s]^2}
+\end{gather}
+ 
+\begin{align}
+X_c &= \frac{1}{2\pi f C} \\
+\frac{1}{X_c} &= 2\pi f C
+\end{align}
+ 
+
+So the slope is equal to $\text{Capacitance} \cdot 2\pi$. 
+
+```{r}
+(2 * pi * 10e-6) / 6.422e-05
+```
+
+Yes! There is only a small difference between the calculated and empirical values. 
+
+# Inductor
+
+I expect there be less current at higher frequencies since inductors resist changes in current. 
+
+There is an inverse relationship between the frequency and current through a inductor. 
+
+
+
+```{r}
+inductor <- read_csv(here("EECS/frequency_vs_current/input/RLC-inductor.csv"), 
+                     show_col_types = F)
+# Splitting the df into many dfs for every 3 columns
+ind_dfs <- map(
+  seq(1, ncol(inductor), by = 3),
+  ~ inductor[, .x:(.x + 2)]
+)
+# Getting the frequency as a column
+ind_df <- map_df(
+  1:length(ind_dfs),
+  ~ ind_dfs[[.x]] %>%
+    mutate(frequency = parse_number(colnames(ind_dfs[[.x]][1]))) %>%
+    rename(time = 1, current = 2, potential = 3)
+)
+# Summarizing
+ind_summary <- ind_df %>%
+  group_by(frequency) %>%
+  summarize(max(abs(potential)) / max(abs(current))) %>%
+  rename(impedance = 2)
+```
+
+Now we can graph frequency vs impedance for the inductor. 
+
+```{r}
+ggplot(ind_summary, aes(frequency, impedance)) +
+  geom_point() +
+  labs(title = "Frequency vs Impedance of Inductor")
+```
+
+It may appear linear, but it is not! 
+
+We need to linearize the data! But I have no idea how to since I thought they were proportional!?!?!
+
+```{r}
+ggplot(ind_summary, aes(frequency, impedance)) +
+  geom_point() +
+  geom_smooth(method = "lm", se = F) +
+  labs(title = "Linearized Frequency vs Impedance of Inductor")
+```
+

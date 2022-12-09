@@ -132,24 +132,17 @@ Now we can graph frequency vs impedance for the inductor.
 ```{r}
 ggplot(ind_summary, aes(frequency, impedance)) +
   geom_point() +
+  geom_smooth(method = "lm", se = F) +
+  ylim(c(0,40))
   labs(title = "Frequency vs Impedance of Inductor")
 ```
 
-It may appear linear, but it is not! 
-
-We need to linearize the data! But I have no idea how to since I thought they were proportional!?!?!
-
-```{r}
-ggplot(ind_summary, aes(frequency, impedance)) +
-  geom_point() +
-  geom_smooth(method = "lm", se = F) +
-  labs(title = "Linearized Frequency vs Impedance of Inductor")
-```
+There is linear relationship between the frequency and the inductance, but their is not a proportional relationship. This is because there is also the resistance of the circuit, which is $10 \Omega$ in this case. Resistors are not affected by frequency, so the resistance is the y-intercept. 
 
 # Complete RLC Circuit
 
 ```{r}
-rlc <- read_csv(here("EECS/frequency_vs_current/input/RLC-full.csv"), 
+rlc <- read_csv(here("EECS/frequency_vs_current/input/rcl-full.csv"), 
                      show_col_types = F)
 # Splitting the df into many dfs for every 3 columns
 rlc_dfs <- map(
@@ -174,6 +167,7 @@ Graphing current vs frequency
 ```{r}
 ggplot(rlc_summary, aes(frequency, current)) +
   geom_point() +
+  scale_x_log10() +
   labs(title = "Current vs Frequency of RLC Circuit")
 ```
 $$

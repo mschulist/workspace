@@ -3,8 +3,8 @@ title: "Frequency vs Current"
 author: "Mark Schulist"
 date: "`r Sys.Date()`"
 output:
-  html_document: default
   pdf_document: default
+  html_document: default
 ---
 
 ```{r include=FALSE}
@@ -29,8 +29,9 @@ X_c &= \frac{1}{2\pi f C} \\
 
 There is an inverse relationship between capacitive reactance and frequency. 
 ```{r}
-capacitor <- read_csv(here("EECS/frequency_vs_current/input/RLC-capacitor.csv"), 
-                      show_col_types = F)[1:201, ]
+capacitor <- read_csv(here("EECS/frequency_vs_current/input/RLC-capacitor.csv"),
+  show_col_types = F
+)[1:201, ]
 # Splitting the df into many dfs for every 3 columns
 cap_dfs <- map(
   seq(1, ncol(capacitor), by = 3),
@@ -106,8 +107,9 @@ I expect there be less current at higher frequencies since inductors resist chan
 There is an inverse relationship between the frequency and current through a inductor. 
 
 ```{r}
-inductor <- read_csv(here("EECS/frequency_vs_current/input/RLC-inductor.csv"), 
-                     show_col_types = F)
+inductor <- read_csv(here("EECS/frequency_vs_current/input/RLC-inductor.csv"),
+  show_col_types = F
+)
 # Splitting the df into many dfs for every 3 columns
 ind_dfs <- map(
   seq(1, ncol(inductor), by = 3),
@@ -133,17 +135,27 @@ Now we can graph frequency vs impedance for the inductor.
 ggplot(ind_summary, aes(frequency, impedance)) +
   geom_point() +
   geom_smooth(method = "lm", se = F) +
-  ylim(c(0,40))
-  labs(title = "Frequency vs Impedance of Inductor")
+  ylim(c(0, 40))
+labs(title = "Frequency vs Impedance of Inductor")
 ```
 
-There is linear relationship between the frequency and the inductance, but their is not a proportional relationship. This is because there is also the resistance of the circuit, which is $10 \Omega$ in this case. Resistors are not affected by frequency, so the resistance is the y-intercept. 
+```{r}
+summary(lm(impedance ~ frequency, data = ind_summary))
+```
+
+
+There is linear relationship between the frequency and the inductance, but their is not a proportional relationship. This is because there is also the resistance of the circuit, which is $10 \Omega$ in this case. Resistors are not affected by frequency, so the resistance is the y-intercept, which in this case is 11, very close to 10. 
 
 # Complete RLC Circuit
 
+The lamp glows the brightest around 700 Hz. It is dimmer at higher and lower frequencies. 
+
+The iron core make the frequency when the bulb is brightest decrease because the core increases the inductance, which decreases frequency. 
+
 ```{r}
-rlc <- read_csv(here("EECS/frequency_vs_current/input/rcl-full.csv"), 
-                     show_col_types = F)
+rlc <- read_csv(here("EECS/frequency_vs_current/input/rcl-full.csv"),
+  show_col_types = F
+)
 # Splitting the df into many dfs for every 3 columns
 rlc_dfs <- map(
   seq(1, ncol(rlc), by = 3),
@@ -170,9 +182,20 @@ ggplot(rlc_summary, aes(frequency, current)) +
   scale_x_log10() +
   labs(title = "Current vs Frequency of RLC Circuit")
 ```
-$$
-\begin{align*}
-Z &= \sqrt{R^2 + (X_i^2 - X_c^2)} \\
 
+
+\begin{align*}
+\frac{1}{2 \pi fL} &= 2 \pi fC \\
+1 &= 4 \pi^2 f^2CL \\
+f^2 &= \frac{1}{4 \pi CL} \\
+f &= \frac{1}{2 \pi \sqrt{CL}}
 \end{align*}
-$$
+
+Now we can plug in the values that we had in our circuit. 
+
+\begin{align*}
+f &= \frac{1}{2 \pi \sqrt{0.005 \cdot 0.00001}} \\
+f &\approx 711.76
+\end{align*}
+
+This matches our graph, which shows that the frequency range 650--750 is where the most current flows through the circuit. 

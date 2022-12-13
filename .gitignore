@@ -31,3 +31,6 @@ vignettes/*.pdf
 
 # manim stuffs
 media/
+
+# python cache
+__pycache__/

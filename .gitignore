@@ -28,3 +28,6 @@ vignettes/*.pdf
 .Renviron
 # Rsconnect stuffs
 *.dcf
+
+# manim stuffs
+media/

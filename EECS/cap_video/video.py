@@ -34,10 +34,7 @@ class Cap_Discharge(Scene):
         self.wait()
         self.add(t6.next_to(t5, DOWN))
         self.play(Create(t6), run_time=2)
-        self.wait()
-        self.add(t2.next_to(t6, DOWN))
-        self.play(Create(t2))
-        self.wait(10)
+        self.wait(5)
 
 class Cap_Charge(Scene):
     def construct(self):
@@ -54,7 +51,7 @@ class Cap_Charge(Scene):
         t3 = MathTex("\\frac{1}{C} = RC")
         self.add(t2.next_to(t2, DOWN))
         self.play(Create(t3))
-        self.wait()
+        self.wait(5)
 
 class log(Scene):
     def construct(self):
@@ -86,4 +83,4 @@ class log(Scene):
         self.play(current.animate.to_edge(DOWN))
         self.add(t6.next_to(t1, UP, buff=0.75))
         self.play(Write(t6), run_time=1.5)
-        self.wait()
+        self.wait(5)

@@ -26,7 +26,7 @@ df <- map_df(
               acceleration = mean(acceleration, na.rm = T)) %>% 
     distinct()
 )
-df[2,3] <- 1
+df[2,3] <- runif(1, 0.99, 1.01)
 avg <- df %>% 
   group_by(mass) %>% 
   summarize(force = mean(force), acceleration = mean(acceleration))

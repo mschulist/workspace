@@ -1,4 +1,4 @@
-file <- read_csv("physics/second_law.csv")
+file <- read_csv("physics/ahhh.csv")
 
 # Splitting the df into many dfs for every 6 columns
 dfs <- map(
@@ -24,9 +24,9 @@ df <- map_df(
     filter_fun() %>% 
     summarize(mass, force = mean(force, na.rm = T), 
               acceleration = mean(acceleration, na.rm = T)) %>% 
+    mutate(force = (force)) %>% 
     distinct()
 )
-df[2,3] <- runif(1, 0.99, 1.01)
 avg <- df %>% 
   group_by(mass) %>% 
   summarize(force = mean(force), acceleration = mean(acceleration))

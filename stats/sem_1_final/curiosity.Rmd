@@ -45,7 +45,7 @@ plot(seq, p_vals)
 
 So now we have the probabilities of getting our number of detections (or more extreme) for many different possible p-values. 
 
-If we use 0.05 as a cutoff for p-values, we have a 95% confidence interval of our possible $p$ parameter values of 
+If we use 0.05 as a cutoff for p-values, we have a 95% confidence interval of our possible $p$ parameter values. 
 
 ```{r}
 min <- which(p_vals >= 0.05) %>% min()
@@ -55,3 +55,6 @@ paste0("(", round(seq[min], 3), ",", round(seq[max], 3), ")")
 
 Based on this, I am 95% confident that the true probability of detection of Golden-crowned Kinglet is between `r round(seq[min], 3)` and `r round(seq[max], 3)`. 
 
+# Conclusions
+
+The graph above shows the probabilities of seeing our data ($\hat{p} = \frac{107}{240}$) given the value of $p$. Higher p-values mean that it is more likely that we will see that data, but it does not mean that it is impossible to see the lower p-value parameter values. 

@@ -17,7 +17,7 @@ filter_fun <- function(df) {
   df
 }
 
-# Getting the frequency as a column
+# Getting the mass as a column
 df <- map_df(
   1:length(dfs),
   ~ dfs[[.x]] %>%

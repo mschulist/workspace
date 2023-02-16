@@ -8,4 +8,43 @@ output:
 
 # How Quickly Do Synthetic Fabrics Such as Polyester Decay in Landfills?
 
-This is an experiment
+
+We want to know if the data give convicing evidence that polyester decays more in 16 weeks than 2 weeks. 
+
+# Data 
+
+| &nbsp;             | &nbsp; | &nbsp; | &nbsp; | &nbsp; |  &nbsp; |
+|--------------------|-----|-----|-----|-----|-----|
+|  Group 1 (2 weeks) | 118 | 126 | 126 | 120 | 129 |
+| Group 2 (16 weeks) | 124 |  98 | 110 | 140 | 110 |
+
+# Design
+
+
+This is an experiment because the 10 strips were randomly assigned to two groups---buried for 2 weeks or buried for 16 weeks. 
+
+The observational units are the polyester strips. There are 10 of them. 
+
+They randomly assigned each strip to be left for 2 or 16 weeks. 
+
+Explanatory variable: number of days the polyester strip was left in landfill (qualitative---two discrete groups)
+
+Response variable: breaking strength of each polyester strip after being left in the landfill
+
+The samples are independent. They are not interacting with each other and hopefully randomized enough. We should use the multiple means procedure. 
+
+The parameter of interest is the difference in means ($\mu$) between leaving the strip for 2 weeks and 16 weeks. 
+
+$H_0$: There is no difference how much strength is required to break polyester between being in a landfill for 2 weeks and 16 weeks. 
+
+$H_a$: Polyester 
+
+\begin{align*}
+
+H_0 = 
+
+\end{align*}
+
+
+
+

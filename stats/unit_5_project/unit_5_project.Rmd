@@ -3,6 +3,7 @@ title: "Unit 5 Project Assessment"
 author: "Mark Schulist"
 date: "`r Sys.Date()`"
 output:
+  word_document: default
   pdf_document: default
 ---
 
@@ -13,7 +14,7 @@ library(tidyverse)
 
 # How Quickly Do Synthetic Fabrics Such as Polyester Decay in Landfills?
 
-We want to know if the data give convicing evidence that polyester decays more in 16 weeks than 2 weeks. 
+We want to know if the data give convincing evidence that polyester decays more in 16 weeks than 2 weeks. 
 
 # Design
 
@@ -21,15 +22,15 @@ This is an experiment because the 10 strips were randomly assigned to two groups
 
 The observational units are the polyester strips. There are 10 of them. 
 
-They randomly assigned each strip to be left for 2 or 16 weeks. 
+They randomly assigned each strip to be left for 2 or 16 weeks in soil
 
-Explanatory variable: number of days the polyester strip was left in landfill (qualitative---two discrete groups)
+The explanatory variable is the number of days the polyester strip was left in landfill (qualitative---two discrete groups).
 
-Response variable: breaking strength of each polyester strip after being left in the landfill
+The response variable is the breaking strength of each polyester strip after being left in the soil in the summer. 
 
-The samples are independent. They are not interacting with each other and hopefully randomized enough. We should use the multiple means procedure. 
+The samples are independent. They are not interacting with each other and hopefully randomized enough. We should use the multiple means procedure because we are dealing with means that are not dependent on each other. 
 
-The parameter of interest is the difference in means ($\mu$) between leaving the strip for 2 weeks and 16 weeks. 
+The parameter of interest is the difference in means ($\mu_{\text{diff}}$) between leaving the strip for 2 weeks and 16 weeks. 
 
 $H_0$: There is no difference in the amount of strength required to break polyester between being in a landfill for 2 weeks and being in a landfill for 16 weeks. 
 

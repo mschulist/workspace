@@ -128,6 +128,7 @@ class simulation(Slide):
     def construct(self):
         random.seed(123) # for reproducibility
         asteroids = []
+        asteroid_letters = []
         letters = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"]
         sizes = [1.4, 0.7, 0.5, 0.8, 0.9, 1, 1.3, 0.6, 1.1, 1.2]
         for i in range(10):
@@ -137,10 +138,16 @@ class simulation(Slide):
             y_coord = 3 * np.sin(i*2*np.pi/10)
             asteroids[i].move_to([x_coord, y_coord, 0])
 
+        for i in range(10):
+            asteroid_letters.append(MathTex(letters[i], font_size=24).next_to(asteroids[i], DOWN))
+
         def show_asteroid(i):
-            asteroid_letter = MathTex(letters[i], font_size=24).next_to(asteroids[i], DOWN)
-            self.add(asteroids[i], asteroid_letter)
-            self.play(FadeIn(asteroids[i]), Write(asteroid_letter))
+            self.add(asteroids[i], asteroid_letters[i])
+            self.play(FadeIn(asteroids[i]), Write(asteroid_letters[i]))
+
+        def hide_asteroid(i):
+            self.remove(asteroids[i], asteroid_letters[i])
+            self.play(FadeOut(asteroids[i]), Unwrite(asteroid_letters[i]))
 
         def x_coord(i):
             return 2.5 * np.cos(i*2*np.pi/10) - 3
@@ -148,7 +155,7 @@ class simulation(Slide):
         def y_coord(i):
             return 3 * np.sin(i*2*np.pi/10)
         
-        def move_person(person, i):
+        def move_person(i, person):
             self.play(person.animate.move_to([x_coord(i), y_coord(i), 0]))
 
         def show_numbers(i):
@@ -159,15 +166,35 @@ class simulation(Slide):
             self.play(Write(sizei), Write(sizei1), Write(sizei2))
         
 
-        def mcmc_sim(i):
-            # Start at asteroid i and show adjacent asteroids and their relative sizes
-            show_asteroid(i)
-            show_asteroid((i+1)%10)
-            show_asteroid((i-1)%10)
-            move_person(i)
+        def mcmc_sim(i, previous, start=False):
+            if start:
+                global person
+                person = ImageMobject("person.png").move_to([x_coord(i), y_coord(i), 0]).scale(0.2).set_z_index(10)
+                self.add(person)
+                self.play(FadeIn(person))
+                self.next_slide()
+                show_asteroid(i)
+                show_asteroid((i+1)%10)
+                show_asteroid((i-1)%10)
+                show_numbers(i)
 
-            show_numbers(i)
-            self.next_slide()
+
+            # Start at asteroid i and show adjacent asteroids and their relative sizes
+
+            print(previous == (i+1)%10)
+            print(previous == (i-1)%10)
+            
+            if previous == (i+1)%10:
+                move_person(i, person)
+                hide_asteroid((i+2)%10)
+                show_asteroid((i-1)%10)
+            
+            if previous == (i-1)%10:
+                move_person(i, person)
+                hide_asteroid((i-2)%10)
+                show_asteroid((i+1)%10)
+            
+          
 
             # Flip a coin
             coinHeads = Circle(radius=0.5, color=RED, fill_opacity=1).move_to([-3, 1, 0])
@@ -207,12 +234,15 @@ class simulation(Slide):
 
             # move the person
             if moving:
-                current = proposal
                 values[proposal] += 1
+                current = proposal
             else:
                 values[i] += 1
+                current = i
             print(current)
-            makeChart(values)
+            self.remove(coinHeads, coinTails, coinHeads2, coinTails2, heads, tails, heads2, tails2, arrow)
+            self.play(FadeOut(coinHeads), FadeOut(coinTails), FadeOut(coinHeads2), FadeOut(coinTails2), FadeOut(heads), FadeOut(tails), FadeOut(heads2), FadeOut(tails2), FadeOut(arrow))
+            return [current, i]
 
 
         
@@ -235,15 +265,13 @@ class simulation(Slide):
 
 
         # Run the simulation
-        global current
         current = 0
-        person = ImageMobject("person.png").move_to([x_coord(current), y_coord(current), 0]).scale(0.2).set_z_index(10)
-        self.add(person)
-        self.play(FadeIn(person))
-        mcmc_sim(current)
+        previous = 0
+        mcmc_sim(0, 0, True)
         for i in range(5):
-            self.remove(chart)
-            mcmc_sim(current)
+            results = mcmc_sim(current, previous)
+            current = results[0]
+            previous = results[1]
 
 
 

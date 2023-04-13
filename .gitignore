@@ -36,3 +36,4 @@ intro_assets/
 
 # python cache
 __pycache__/
+.vscode

@@ -127,6 +127,11 @@ class intro(Slide):
 class simulation(Slide):
     def construct(self):
         # random.seed(123) # for reproducibility
+        # pregenerate random numbers for manim-slides reverse animations
+        with open("random_numbers.txt", "r") as f:
+            random_numbers = f.read().splitlines()
+            f.close()
+        random_numbers = [float(i) for i in random_numbers]
         asteroids = []
         asteroid_letters = []
         letters = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"]
@@ -173,7 +178,7 @@ class simulation(Slide):
             self.play(Unwrite(sizei), Unwrite(sizei1), Unwrite(sizei2))
         
 
-        def mcmc_sim(i, previous, start=False):
+        def mcmc_sim(i, previous, start=False, fast=False, n=0):
             if start:
                 global person
                 person = ImageMobject("person.png").move_to([x_coord(i), y_coord(i), 0]).scale(0.2).set_z_index(10)
@@ -184,8 +189,8 @@ class simulation(Slide):
                 show_asteroid((i+1)%10)
                 show_asteroid((i-1)%10)
                 show_numbers(i)
-                self.next_slide()
-
+                if not fast:
+                    self.next_slide()
 
             # Start at asteroid i and show adjacent asteroids and their relative sizes
 
@@ -197,7 +202,8 @@ class simulation(Slide):
                 hide_asteroid((i+2)%10)
                 show_asteroid((i-1)%10)
                 show_numbers(i)
-                self.next_slide()
+                if not fast:
+                    self.next_slide()
 
             
             if previous == (i-1)%10:
@@ -207,7 +213,8 @@ class simulation(Slide):
                 hide_asteroid((i-2)%10)
                 show_asteroid((i+1)%10)
                 show_numbers(i)
-                self.next_slide()
+                if not fast:
+                    self.next_slide()
 
             # Flip a coin
             coinHeads = Circle(radius=0.5, color=RED, fill_opacity=1).move_to([-3, 1, 0])
@@ -215,7 +222,7 @@ class simulation(Slide):
             heads = Text("H", font_size=36).move_to(coinHeads.get_center())
             tails = Text("T", font_size=36, color=BLACK).move_to(coinTails.get_center())
             # random part of the simulation
-            flip1 = random.randint(0,1)
+            flip1 = round(random_numbers[n])
             proposal = (i-1)%10 if flip1 == 0 else (i+1)%10
             if flip1 == 0:
                 self.add(coinHeads, heads)
@@ -225,7 +232,8 @@ class simulation(Slide):
             arrow = Arrow([x_coord(i), y_coord(i), 0], [x_coord(proposal), y_coord(proposal), 0], color=WHITE)
             self.add(arrow)
             self.play(Create(arrow))
-            self.next_slide()
+            if not fast:
+                self.next_slide()
 
             # Flip a coin for second part
             coinHeads2 = Circle(radius=0.5, color=RED, fill_opacity=1).move_to([-3.5, -1, 0])
@@ -237,9 +245,11 @@ class simulation(Slide):
             coinprob = MathTex(f"p(H) = {round(prob, 2)}", font_size=24).move_to([-2.25, -1, 0])
             self.add(coinprob)
             self.play(Write(coinprob), run_time=0.5)
-            self.next_slide()
+            if not fast:
+                self.next_slide()
 
-            flip2 = random.random()
+            flip2 = random_numbers[n]
+            print(n, random_numbers[n])
             if flip2 < prob:
                 moving = True
                 self.add(coinHeads2, heads2)
@@ -248,7 +258,8 @@ class simulation(Slide):
                 moving = False
                 self.add(coinTails2, tails2)
                 self.play(Create(coinTails2))
-            self.next_slide()
+            if not fast:
+                self.next_slide()
 
             # move the person
             if moving:
@@ -261,7 +272,8 @@ class simulation(Slide):
             if start == False:
                 self.remove(chart)
             makeChart(values)
-            self.next_slide()
+            if not fast:            
+                self.next_slide()
 
             self.remove(coinHeads, coinTails, coinHeads2, coinTails2, heads, tails, heads2, tails2, coinprob)
             if flip2 < prob:
@@ -271,99 +283,6 @@ class simulation(Slide):
             self.remove(arrow)
             self.play(FadeOut(arrow))
             return [current, i]
-        
-        def mcmc_sim_fast(i, previous, start=False):
-            if start:
-                global person
-                person = ImageMobject("person.png").move_to([x_coord(i), y_coord(i), 0]).scale(0.2).set_z_index(10)
-                self.add(person)
-                self.play(FadeIn(person))
-                show_asteroid(i)
-                show_asteroid((i+1)%10)
-                show_asteroid((i-1)%10)
-                show_numbers(i)
-
-
-            # Start at asteroid i and show adjacent asteroids and their relative sizes
-
-            
-            if previous == (i+1)%10:
-                hide_numbers((i-1)%10)
-                hide_numbers(i)
-                hide_numbers((i+1)%10)
-                hide_asteroid((i+2)%10)
-                show_asteroid((i-1)%10)
-                show_numbers(i)
-
-            
-            if previous == (i-1)%10:
-                hide_numbers((i-1)%10)
-                hide_numbers(i)
-                hide_numbers((i+1)%10)
-                hide_asteroid((i-2)%10)
-                show_asteroid((i+1)%10)
-                show_numbers(i)
-
-            # Flip a coin
-            coinHeads = Circle(radius=0.5, color=RED, fill_opacity=1).move_to([-3, 1, 0])
-            coinTails = Circle(radius=0.5, color=YELLOW, fill_opacity=1).move_to([-3, 1, 0])
-            heads = Text("H", font_size=36).move_to(coinHeads.get_center())
-            tails = Text("T", font_size=36, color=BLACK).move_to(coinTails.get_center())
-            # random part of the simulation
-            flip1 = random.randint(0,1)
-            proposal = (i-1)%10 if flip1 == 0 else (i+1)%10
-            if flip1 == 0:
-                self.add(coinHeads, heads)
-                self.play(Create(coinHeads))
-            if flip1 == 1:
-                self.add(coinTails, tails)
-            arrow = Arrow([x_coord(i), y_coord(i), 0], [x_coord(proposal), y_coord(proposal), 0], color=WHITE)
-            self.add(arrow)
-            self.play(Create(arrow))
-
-            # Flip a coin for second part
-            coinHeads2 = Circle(radius=0.5, color=RED, fill_opacity=1).move_to([-3.5, -1, 0])
-            coinTails2 = Circle(radius=0.5, color=YELLOW, fill_opacity=1).move_to([-3.5, -1, 0])
-            heads2 = Text("H", font_size=36).move_to(coinHeads2.get_center())
-            tails2 = Text("T", font_size=36, color=BLACK).move_to(coinTails2.get_center())
-            # random part of the simulation
-            prob = sizes[proposal] / sizes[i]
-            coinprob = MathTex(f"p(H) = {round(prob, 2)}", font_size=24).move_to([-2.25, -1, 0])
-            self.add(coinprob)
-            self.play(Write(coinprob), run_time=0.5)
-
-            flip2 = random.random()
-            if flip2 < prob:
-                moving = True
-                self.add(coinHeads2, heads2)
-                self.play(Create(coinHeads2))
-            if flip2 >= prob:
-                moving = False
-                self.add(coinTails2, tails2)
-                self.play(Create(coinTails2))
-
-            # move the person
-            if moving:
-                values[proposal] += 1
-                current = proposal
-            else:
-                values[i] += 1
-                current = i
-            move_person(current, person)
-            if start == False:
-                self.remove(chart)
-            makeChart(values)
-
-            self.remove(coinHeads, coinTails, coinHeads2, coinTails2, heads, tails, heads2, tails2, coinprob)
-            if flip2 < prob:
-                self.play(Uncreate(coinHeads2), Uncreate(heads2), Uncreate(coinHeads), Uncreate(heads), Unwrite(coinprob), run_time=0.5)
-            if flip2 >= prob:
-                self.play(Uncreate(coinTails2), Uncreate(tails2), Uncreate(tails), Uncreate(coinTails), Unwrite(coinprob), run_time=0.5)
-            self.remove(arrow)
-            self.play(FadeOut(arrow))
-            return [current, i]
-
-
         
         # Make a graph showing the amount of time spent on each island
         values = [1,0,0,0,0,0,0,0,0,0] # number of days spent on island i
@@ -382,17 +301,21 @@ class simulation(Slide):
             self.add(chart)
         
 
-
+        
         # Run the simulation
+        n = 0
         current = 0
         previous = 0
-        results = mcmc_sim(current, previous, True)
+        results = mcmc_sim(current, previous, True, n=n)
+        n += 1
         current = results[0]
         previous = results[1]
-        for i in range(20):
-            results = mcmc_sim(current, previous)
+        for i in range(5):
+            results = mcmc_sim(current, previous, n=n)
             current = results[0]
             previous = results[1]
+            n += 1
+
 
 
 

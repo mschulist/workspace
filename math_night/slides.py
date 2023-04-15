@@ -128,12 +128,13 @@ class simulation(Slide):
     def construct(self):
         # random.seed(123) # for reproducibility
         # pregenerate random numbers for manim-slides reverse animations
-        with open("random_numbers.txt", "r") as f:
-            random_numbers = f.read().splitlines()
-            f.close()
-        random_numbers = [float(i) for i in random_numbers]
+        # with open("random_numbers.txt", "r") as f:
+        #     random_numbers = f.read().splitlines()
+        #     f.close()
+        # random_numbers = [float(i) for i in random_numbers]
         asteroids = []
         asteroid_letters = []
+        values = [0,0,0,0,0,0,0,0,0,0] # number of days spent on island i
         letters = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"]
         sizes = [1.4, 0.7, 0.5, 0.8, 0.9, 1, 1.3, 0.6, 1.1, 1.2]
         for i in range(10):
@@ -146,12 +147,15 @@ class simulation(Slide):
         for i in range(10):
             asteroid_letters.append(MathTex(letters[i], font_size=24).next_to(asteroids[i], DOWN))
 
-        def show_asteroid(i):
+        def show_asteroid(i, fast=False):
             self.add(asteroids[i], asteroid_letters[i])
-            self.play(FadeIn(asteroids[i]), FadeIn(asteroid_letters[i]))
+            if not fast:
+                self.play(FadeIn(asteroids[i]), FadeIn(asteroid_letters[i]))
 
-        def hide_asteroid(i):
-            self.play(FadeOut(asteroids[i]), FadeOut(asteroid_letters[i]), run_time=0.5)
+        def hide_asteroid(i, fast=False):
+            self.remove(asteroids[i], asteroid_letters[i])
+            if not fast:
+                self.play(FadeOut(asteroids[i]), FadeOut(asteroid_letters[i]), run_time=0.5)
 
         def x_coord(i):
             return 2.5 * np.cos(i*2*np.pi/10) - 3
@@ -159,11 +163,14 @@ class simulation(Slide):
         def y_coord(i):
             return 3 * np.sin(i*2*np.pi/10)
         
-        def move_person(i, person):
-            self.play(person.animate.move_to([x_coord(i), y_coord(i), 0]))
+        def move_person(i, person, fast=False):
+            if fast:
+                person.move_to([x_coord(i), y_coord(i), 0])
+            if not fast:
+                self.play(person.animate.move_to([x_coord(i), y_coord(i), 0]))
             
 
-        def show_numbers(i):
+        def show_numbers(i, fast=False):
             global sizei
             global sizei1
             global sizei2
@@ -171,68 +178,60 @@ class simulation(Slide):
             sizei1 = MathTex(str(round(sizes[(i+1)%10]/sizes[i], 2)), font_size=24).next_to(asteroids[(i+1)%10], RIGHT, buff=0.15)
             sizei2 = MathTex(str(round(sizes[(i-1)%10]/sizes[i], 2)), font_size=24).next_to(asteroids[(i-1)%10], RIGHT, buff=0.15)
             self.add(sizei, sizei1, sizei2)
-            self.play(Write(sizei), Write(sizei1), Write(sizei2))
+            if not fast:
+                self.play(Write(sizei), Write(sizei1), Write(sizei2))
         
-        def hide_numbers(i):
+        def hide_numbers(i, fast=False):
             self.remove(sizei, sizei1, sizei2)
-            self.play(Unwrite(sizei), Unwrite(sizei1), Unwrite(sizei2))
+            if not fast:
+                self.play(Unwrite(sizei), Unwrite(sizei1), Unwrite(sizei2))
         
 
-        def mcmc_sim(i, previous, start=False, fast=False, n=0):
+        def mcmc_sim(i, previous, start=False, fast=False):
             if start:
                 global person
                 person = ImageMobject("person.png").move_to([x_coord(i), y_coord(i), 0]).scale(0.2).set_z_index(10)
                 self.add(person)
-                self.play(FadeIn(person))
-                self.next_slide()
-                show_asteroid(i)
-                show_asteroid((i+1)%10)
-                show_asteroid((i-1)%10)
-                show_numbers(i)
                 if not fast:
+                    self.play(FadeIn(person))
+                self.next_slide()
+                show_asteroid(i, fast)
+                show_asteroid((i+1)%10, fast)
+                show_asteroid((i-1)%10, fast)
+                show_numbers(i, fast)
+                if not fast:
+                    self.wait()
                     self.next_slide()
 
             # Start at asteroid i and show adjacent asteroids and their relative sizes
 
-            
-            if previous == (i+1)%10:
-                hide_numbers((i-1)%10)
-                hide_numbers(i)
-                hide_numbers((i+1)%10)
-                hide_asteroid((i+2)%10)
-                show_asteroid((i-1)%10)
-                show_numbers(i)
+            if not start:
                 if not fast:
+                    self.wait()
                     self.next_slide()
-
             
-            if previous == (i-1)%10:
-                hide_numbers((i-1)%10)
-                hide_numbers(i)
-                hide_numbers((i+1)%10)
-                hide_asteroid((i-2)%10)
-                show_asteroid((i+1)%10)
-                show_numbers(i)
-                if not fast:
-                    self.next_slide()
-
             # Flip a coin
             coinHeads = Circle(radius=0.5, color=RED, fill_opacity=1).move_to([-3, 1, 0])
             coinTails = Circle(radius=0.5, color=YELLOW, fill_opacity=1).move_to([-3, 1, 0])
             heads = Text("H", font_size=36).move_to(coinHeads.get_center())
             tails = Text("T", font_size=36, color=BLACK).move_to(coinTails.get_center())
             # random part of the simulation
-            flip1 = round(random_numbers[n])
+            flip1 = random.randint(0, 1)
             proposal = (i-1)%10 if flip1 == 0 else (i+1)%10
             if flip1 == 0:
                 self.add(coinHeads, heads)
-                self.play(Create(coinHeads))
+                if not fast:
+                    self.play(Create(coinHeads))
             if flip1 == 1:
                 self.add(coinTails, tails)
+                if not fast:
+                    self.play(Create(coinTails))
             arrow = Arrow([x_coord(i), y_coord(i), 0], [x_coord(proposal), y_coord(proposal), 0], color=WHITE)
             self.add(arrow)
-            self.play(Create(arrow))
             if not fast:
+                self.play(Create(arrow))
+            if not fast:
+                self.wait()
                 self.next_slide()
 
             # Flip a coin for second part
@@ -244,48 +243,96 @@ class simulation(Slide):
             prob = sizes[proposal] / sizes[i]
             coinprob = MathTex(f"p(H) = {round(prob, 2)}", font_size=24).move_to([-2.25, -1, 0])
             self.add(coinprob)
-            self.play(Write(coinprob), run_time=0.5)
             if not fast:
+                self.play(Write(coinprob), run_time=0.5)
+            if not fast:
+                self.wait()
                 self.next_slide()
 
-            flip2 = random_numbers[n]
-            print(n, random_numbers[n])
+            flip2 = random.random()
             if flip2 < prob:
                 moving = True
                 self.add(coinHeads2, heads2)
-                self.play(Create(coinHeads2))
+                if not fast:
+                    self.play(Create(coinHeads2))
             if flip2 >= prob:
                 moving = False
                 self.add(coinTails2, tails2)
-                self.play(Create(coinTails2))
+                if not fast:
+                    self.play(Create(coinTails2))
             if not fast:
+                self.wait()
                 self.next_slide()
 
             # move the person
             if moving:
                 values[proposal] += 1
                 current = proposal
+                move_person(current, person, fast)
             else:
                 values[i] += 1
                 current = i
-            move_person(current, person)
-            if start == False:
+            
+            print(values)
+
+            if fast:
+                self.wait(1/60)
+            
+            
+            if not start:
                 self.remove(chart)
             makeChart(values)
-            if not fast:            
+            if not fast:          
+                self.wait()       
                 self.next_slide()
-
-            self.remove(coinHeads, coinTails, coinHeads2, coinTails2, heads, tails, heads2, tails2, coinprob)
+            
+            if flip1 == 0:
+                self.remove(coinHeads, heads)
+                if not fast:
+                    self.play(Uncreate(coinHeads), Uncreate(heads), run_time=0.5)
             if flip2 < prob:
-                self.play(Uncreate(coinHeads2), Uncreate(heads2), Uncreate(coinHeads), Uncreate(heads), Unwrite(coinprob), run_time=0.5)
+                self.remove(coinHeads2, heads2, coinprob)
+                if not fast:
+                    self.play(Uncreate(coinHeads2), Uncreate(heads2), Unwrite(coinprob), run_time=0.5)
+            if flip1 == 1:
+                self.remove(coinTails, tails)
+                if not fast:
+                    self.play(Uncreate(coinTails), Uncreate(tails), run_time=0.5)
             if flip2 >= prob:
-                self.play(Uncreate(coinTails2), Uncreate(tails2), Uncreate(tails), Uncreate(coinTails), Unwrite(coinprob), run_time=0.5)
+                self.remove(coinTails2, tails2, coinprob)
+                if not fast:
+                    self.play(Uncreate(coinTails2), Uncreate(tails2), Unwrite(coinprob), run_time=0.5)
             self.remove(arrow)
-            self.play(FadeOut(arrow))
+            if not fast:
+                self.play(FadeOut(arrow))
+
+            if i == (current+1)%10:
+                hide_numbers((current-1)%10, fast)
+                hide_numbers(current, fast)
+                hide_numbers((current+1)%10, fast)
+                hide_asteroid((current+2)%10, fast)
+                show_asteroid((current-1)%10, fast)
+                show_numbers(current, fast)
+            
+            if i == (current-1)%10:
+                hide_numbers((current-1)%10, fast)
+                hide_numbers(current, fast)
+                hide_numbers((current+1)%10, fast)
+                hide_asteroid((current-2)%10, fast)
+                show_asteroid((current+1)%10, fast)
+                show_numbers(current, fast)
+            
+            print(i == (current+1)%10)
+            print(i == (current-1)%10)
+
+
+            
+            if not fast:
+                self.wait()
             return [current, i]
         
         # Make a graph showing the amount of time spent on each island
-        values = [1,0,0,0,0,0,0,0,0,0] # number of days spent on island i
+
         def makeChart(values):
             global chart
             max_y = max(values)
@@ -303,18 +350,19 @@ class simulation(Slide):
 
         
         # Run the simulation
-        n = 0
         current = 0
         previous = 0
-        results = mcmc_sim(current, previous, True, n=n)
-        n += 1
+        results = mcmc_sim(current, previous, start=True)
         current = results[0]
         previous = results[1]
         for i in range(5):
-            results = mcmc_sim(current, previous, n=n)
+            results = mcmc_sim(current, previous, start=False)
             current = results[0]
             previous = results[1]
-            n += 1
+        for i in range(1000):
+            results = mcmc_sim(current, previous, fast=True)
+            current = results[0]
+            previous = results[1]
 
 
 

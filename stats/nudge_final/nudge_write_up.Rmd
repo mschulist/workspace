@@ -42,3 +42,5 @@ $$
 
 In order to simulate data and test our null hypothesis, we need to use 34 cards, each of them representing a person's score (the number of instances they record). 
 
+
+

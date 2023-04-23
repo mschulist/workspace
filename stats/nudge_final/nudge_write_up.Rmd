@@ -1,0 +1,44 @@
+---
+title: "Determining Availablity Bias on Campus"
+author: "Mark Schulist and Josh Khurin"
+date: "`r Sys.Date()`"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+
+# Will the nudge of asking students to think about their day in time increments make them recall more instances of stress in a day?
+
+# Study Design
+
+The experimental units in our study are MA students who responded to our email asking if they would like to take part in our study. We have [n] experimental units in our study. 
+
+There are two variables for the data: the type of test (nudge), and the number of instances of stress they record. 
+
+Parameter of interest $(\mu)$: the long-run mean difference in the number of events between the group who was reminded of all times of day and the group who was not reminded. 
+
+$H_0$: People who are reminded to think about times of the day will not think of more instances of stress compared to people who are not asked to think of times of day. 
+
+$H_a$: People who are reminded to think about times of the day will think of more instances of stress compared to people who are not asked to think of times of day. 
+
+$$
+\mu_1 = \text{group without nudge}
+$$
+
+$$
+\mu_2 = \text{group with nudge}
+$$
+
+$$
+H_0: \mu_1 = \mu_2
+$$
+
+$$
+H_a: \mu_1 < \mu_2
+$$
+
+# Draw Inferences
+
+In order to simulate data and test our null hypothesis, we need to use 34 cards, each of them representing a person's score (the number of instances they record). 
+

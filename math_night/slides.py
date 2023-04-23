@@ -364,6 +364,69 @@ class simulation(Slide):
             current = results[0]
             previous = results[1]
 
+class explanation(Slide):
+    def construct(self):
+        useful = Text("Why is this useful?", font_size=36)
+        self.add(useful)
+        self.play(Write(useful))
+        self.wait()
+        self.next_slide()
 
+        self.play(useful.animate.to_edge(UP))
+        self.wait()
+        self.next_slide()
 
+        reason1 = Text("1. Scalable", font_size=36).next_to(useful, DOWN).to_edge(LEFT)
+        self.add(reason1)
+        self.play(Write(reason1))
+        self.wait()
+        self.next_slide()
 
+        reason2 = Text("2. Multidimensional", font_size=36).next_to(reason1, DOWN).to_edge(LEFT)
+        self.add(reason2)
+        self.play(Write(reason2))
+        self.wait()
+        self.next_slide()
+
+        reason3 = Text("3. Compute Integrals", font_size=36).next_to(reason2, DOWN).to_edge(LEFT)
+        self.add(reason3)
+        self.play(Write(reason3))
+        self.wait()
+        self.next_slide()
+
+        crazy_posterior = FunctionGraph(lambda x: np.exp(-x**2) + np.exp(-(x-2)**2) + 0.5 * np.exp(-(x+1.5)**2), x_range=[-4, 4], color=BLUE).next_to(reason3, DOWN).move_to([0,0,0]).scale(1.5)
+        self.add(crazy_posterior)
+        self.play(Write(crazy_posterior))
+        self.wait()
+        self.next_slide()
+
+        crazy_integral = MathTex("\\int e^{-x^2} + e^{-(x-2)^2} + 0.5 e^{-(x+1.5)^2} dx", font_size=36).next_to(crazy_posterior, DOWN)
+        self.add(crazy_integral)
+        self.play(Write(crazy_integral))
+        self.wait()
+        self.next_slide()
+
+        self.remove(crazy_posterior, crazy_integral, reason1, reason2, reason3, useful)
+        self.play(FadeOut(crazy_posterior), FadeOut(crazy_integral), FadeOut(reason1), FadeOut(reason2), FadeOut(reason3), FadeOut(useful))
+        self.wait()
+        self.next_slide()
+
+        traceplot = ImageMobject("beta1_traceplot.png").scale(0.7).to_edge(UP)
+        self.add(traceplot)
+        self.play(FadeIn(traceplot))
+        self.wait()
+        self.next_slide()
+
+        description = Text("Traceplot", font_size=36).next_to(traceplot, DOWN)
+        self.add(description)
+        self.play(Write(description))
+        self.wait()
+        self.next_slide()
+
+        more_description = Text("Shows current value for each MCMC iteration", font_size=36).next_to(description, DOWN)
+        self.add(more_description)
+        self.play(Write(more_description))
+        self.wait()
+        self.next_slide()
+
+        

@@ -1,0 +1,21 @@
+---
+title: 'Statistical Rethinking: Chapter 5'
+author: "Mark Schulist"
+date: "`r Sys.Date()`"
+output: rmdformats::downcute
+downcute_theme: "chaos"
+---
+
+```{r message=FALSE, warning=FALSE, echo=FALSE}
+library(rethinking)
+library(tidyverse)
+```
+
+# Divorces and Wafflehouses
+
+How do we know if something causes something else? Just because they are correlated, it doesn't mean that they cause each other. 
+
+```{r}
+d <- data()
+```
+

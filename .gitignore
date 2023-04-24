@@ -37,3 +37,4 @@ intro_assets/
 # python cache
 __pycache__/
 .vscode
+.DS_Store

@@ -7,12 +7,17 @@ output:
   html_document: default
 ---
 
+```{r message=FALSE, warning=FALSE, include=FALSE}
+library(tidyverse)
+library(here)
+```
+
 
 # Will the nudge of asking students to think about their day in time increments make them recall more instances of stress in a day?
 
 # Study Design
 
-The experimental units in our study are MA students who responded to our email asking if they would like to take part in our study. We have [n] experimental units in our study. 
+The experimental units in our study are MA students who responded to our email asking if they would like to take part in our study. We have 27 experimental units in our study. 
 
 There are two variables for the data: the type of test (nudge), and the number of instances of stress they record. 
 
@@ -38,9 +43,60 @@ $$
 H_a: \mu_1 < \mu_2
 $$
 
+# Explore Data
+
+```{r}
+data <- read_csv(here("stats/nudge_final/data.csv"), show_col_types = F)
+nudge_mean <- mean(data$nudge, na.rm = T)
+no_nudge_mean <- mean(data$no_nudge)
+sample_stat <- nudge_mean - no_nudge_mean
+data
+```
+
+Our sample size is 27. Our sample statistic (difference in means) is `r round(sample_stat, 3)`. 
+
 # Draw Inferences
 
-In order to simulate data and test our null hypothesis, we need to use 34 cards, each of them representing a person's score (the number of instances they record). 
+In order to simulate data and test our null hypothesis, we need to use 27 cards, each of them representing a person's score (the number of instances they record). We would then randomize the cards and place them into two piles of sizes 14 and 13. These piles represent our different groups. We will then take the means of the two groups and draw a dot plot representing the difference in means. After doing this many times, we would see where are sample statistic falls in the t-distribution. 
 
+```{r}
+all_vals <- c(data$no_nudge, data$nudge)
+all_vals <- all_vals[!is.na(all_vals)]
 
+simulation <- function(all_vals) {
+  shuffle <- sample(all_vals)
+  no_nudge_sim <- shuffle[1:14]
+  nudge_sim <- shuffle[15:27]
+  difference <- mean(nudge_sim) - mean(no_nudge_sim)
+  difference
+}
+
+sim_vals <- replicate(10000, simulation(all_vals))
+
+p_value <- sum(sim_vals > sample_stat) / length(sim_vals)
+
+hist(sim_vals)
+abline(v = sample_stat, col = "red", lwd = 5, lty = "dashed")
+text(x = 1.25, y = 2500, paste("p-value =", p_value))
+```
+
+Our p-value is `r round(p_value, 4)`, which means that if the true difference in means between the two groups is 0, there is a `r round(p_value * 100, 4)`% chance of seeing our observed difference in means. 
+
+```{r}
+null_sd <- sd(sim_vals)
+null_mean <- mean(sim_vals)
+
+t_score <- (sample_stat - null_mean) / null_sd
+t_score
+```
+
+Our observed statistic is `r round(t_score, 4)` standard deviations away from the mean of the null distribution. 
+
+```{r}
+t.test(data$nudge, data$no_nudge)
+```
+
+The validity conditions are *mostly* met for the theory-based method (t test) because we have at least 10 observations in each group. There was one outlier in the not nudge group, which does make our p-values between the theory-based and simulation methods a little different. 
+
+Both the theory-based and simulated p-value are very small, so they are both suitable in this experiment. The theory-based p-value might be biased since there is one outlier in the no nudge group. 
 

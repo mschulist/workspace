@@ -1,0 +1,185 @@
+{
+  "slides": [
+    {
+      "type": "slide",
+      "start_animation": 0,
+      "end_animation": 2,
+      "number": 1,
+      "terminated": false
+    },
+    {
+      "type": "slide",
+      "start_animation": 2,
+      "end_animation": 4,
+      "number": 2,
+      "terminated": false
+    },
+    {
+      "type": "slide",
+      "start_animation": 4,
+      "end_animation": 6,
+      "number": 3,
+      "terminated": false
+    },
+    {
+      "type": "slide",
+      "start_animation": 6,
+      "end_animation": 8,
+      "number": 4,
+      "terminated": false
+    },
+    {
+      "type": "slide",
+      "start_animation": 8,
+      "end_animation": 10,
+      "number": 5,
+      "terminated": false
+    },
+    {
+      "type": "slide",
+      "start_animation": 10,
+      "end_animation": 12,
+      "number": 6,
+      "terminated": false
+    },
+    {
+      "type": "slide",
+      "start_animation": 12,
+      "end_animation": 14,
+      "number": 7,
+      "terminated": false
+    },
+    {
+      "type": "slide",
+      "start_animation": 14,
+      "end_animation": 16,
+      "number": 8,
+      "terminated": false
+    },
+    {
+      "type": "slide",
+      "start_animation": 16,
+      "end_animation": 18,
+      "number": 9,
+      "terminated": false
+    },
+    {
+      "type": "slide",
+      "start_animation": 18,
+      "end_animation": 20,
+      "number": 10,
+      "terminated": false
+    },
+    {
+      "type": "slide",
+      "start_animation": 20,
+      "end_animation": 22,
+      "number": 11,
+      "terminated": false
+    },
+    {
+      "type": "slide",
+      "start_animation": 22,
+      "end_animation": 24,
+      "number": 12,
+      "terminated": false
+    },
+    {
+      "type": "slide",
+      "start_animation": 24,
+      "end_animation": 26,
+      "number": 13,
+      "terminated": false
+    },
+    {
+      "type": "slide",
+      "start_animation": 26,
+      "end_animation": 28,
+      "number": 14,
+      "terminated": false
+    },
+    {
+      "type": "slide",
+      "start_animation": 28,
+      "end_animation": 30,
+      "number": 15,
+      "terminated": false
+    },
+    {
+      "type": "slide",
+      "start_animation": 30,
+      "end_animation": 32,
+      "number": 16,
+      "terminated": false
+    },
+    {
+      "type": "slide",
+      "start_animation": 32,
+      "end_animation": 37,
+      "number": 17,
+      "terminated": false
+    },
+    {
+      "type": "slide",
+      "start_animation": 37,
+      "end_animation": 39,
+      "number": 18,
+      "terminated": false
+    },
+    {
+      "type": "last",
+      "start_animation": 39,
+      "end_animation": 41,
+      "number": 19,
+      "terminated": false
+    }
+  ],
+  "files": [
+    "slides/files/explanation/4266129954_2443432451_1076849017.mp4",
+    "slides/files/explanation/1442284246_3315967912_715364568.mp4",
+    "slides/files/explanation/1442284246_1513355294_2086235915.mp4",
+    "slides/files/explanation/1442284246_3315967912_3558072187.mp4",
+    "slides/files/explanation/1442284246_3193699905_3328338005.mp4",
+    "slides/files/explanation/1442284246_3315967912_4286459132.mp4",
+    "slides/files/explanation/1442284246_2237189324_4109329327.mp4",
+    "slides/files/explanation/1442284246_3315967912_1546504695.mp4",
+    "slides/files/explanation/1442284246_1283126686_778420969.mp4",
+    "slides/files/explanation/1442284246_3315967912_1594958598.mp4",
+    "slides/files/explanation/1442284246_1246270701_3378903870.mp4",
+    "slides/files/explanation/1442284246_3315967912_3946830688.mp4",
+    "slides/files/explanation/1442284246_3341052406_572415686.mp4",
+    "slides/files/explanation/1442284246_3315967912_2562076454.mp4",
+    "slides/files/explanation/1442284246_3194713770_2477307031.mp4",
+    "slides/files/explanation/1442284246_3315967912_2239806390.mp4",
+    "slides/files/explanation/1442284246_2774717681_3871484442.mp4",
+    "slides/files/explanation/1442284246_3315967912_1068187109.mp4",
+    "slides/files/explanation/1442284246_851107284_1588649738.mp4",
+    "slides/files/explanation/1442284246_3315967912_3124740332.mp4",
+    "slides/files/explanation/1442284246_3493528941_3908654708.mp4",
+    "slides/files/explanation/1442284246_3315967912_2546572722.mp4",
+    "slides/files/explanation/1442284246_2921558567_1343226740.mp4",
+    "slides/files/explanation/1442284246_3315967912_3265830818.mp4",
+    "slides/files/explanation/1442284246_1009130004_2996684166.mp4",
+    "slides/files/explanation/1442284246_3315967912_1443801359.mp4",
+    "slides/files/explanation/1442284246_2614347505_3274931230.mp4",
+    "slides/files/explanation/1442284246_3315967912_2944595140.mp4",
+    "slides/files/explanation/1442284246_2214260678_2881216966.mp4",
+    "slides/files/explanation/1442284246_3315967912_3701483957.mp4",
+    "slides/files/explanation/1442284246_2316972072_2050446667.mp4",
+    "slides/files/explanation/1442284246_3315967912_3408667239.mp4",
+    "slides/files/explanation/1442284246_641382611_1493902548.mp4",
+    "slides/files/explanation/1442284246_648434015_3019746243.mp4",
+    "slides/files/explanation/1442284246_2649960079_3019746243.mp4",
+    "slides/files/explanation/1442284246_2208218614_77987496.mp4",
+    "slides/files/explanation/1442284246_3315967912_565756889.mp4",
+    "slides/files/explanation/1442284246_677662020_979237320.mp4",
+    "slides/files/explanation/1442284246_3315967912_3195086040.mp4",
+    "slides/files/explanation/1442284246_2041988587_2987756710.mp4",
+    "slides/files/explanation/1442284246_3315967912_2957129241.mp4"
+  ],
+  "resolution": [
+    854,
+    480
+  ],
+  "background_color": "black"
+}

@@ -443,7 +443,7 @@ class explanation(Slide):
         self.wait()
         self.next_slide()
 
-        crazy_integral = MathTex("k \\int e^{-x^2} + e^{-(x-2)^2} + 0.5 e^{-(x+1.5)^2} dx", font_size=36).next_to(crazy_posterior, DOWN)
+        crazy_integral = MathTex("1 = k \\int e^{-x^2} + e^{-(x-2)^2} + 0.5 e^{-(x+1.5)^2} dx", font_size=36).next_to(crazy_posterior, DOWN)
         self.add(crazy_integral)
         self.play(Write(crazy_integral))
         self.wait()
@@ -460,21 +460,60 @@ class explanation(Slide):
         self.wait()
         self.next_slide()
 
-        MARC_description = Text("Modeling Bird Occupancy", font_size=36).next_to(MARC_title, DOWN)
+        MARC_description = Text("Modeling Bird Response to Fire", font_size=36).next_to(MARC_title, DOWN)
         self.add(MARC_description)
         self.play(Write(MARC_description))
-        gcki = ImageMobject("gcki.png").scale(0.33).next_to(MARC_description, DOWN).to_edge(LEFT)
-        bbwo = ImageMobject("bbwo.png").scale(0.33).next_to(MARC_description, DOWN).to_edge(RIGHT)
-        self.add(gcki, bbwo)
-        self.play(FadeIn(gcki), FadeIn(bbwo))
         self.wait()
         self.next_slide()
 
-        self.remove(MARC_title, MARC_description, gcki, bbwo)
-        self.play(FadeOut(MARC_title), FadeOut(MARC_description), FadeOut(gcki), FadeOut(bbwo))
+        caples_burn = ImageMobject("caples_burn.png").scale(0.7).next_to(MARC_description, DOWN).to_edge(LEFT)
+        caples_description = Text("Controlled Burn", font_size=36).next_to(caples_burn, DOWN)
+        self.add(caples_burn, caples_description)
+        self.play(FadeIn(caples_burn), Write(caples_description))
         self.wait()
         self.next_slide()
 
+        caldor_burn = ImageMobject("caldor_burn.png").scale(0.7).next_to(MARC_description, DOWN).to_edge(RIGHT)
+        caldor_description = Text("Caldor Wildfire", font_size=36).next_to(caldor_burn, DOWN)
+        self.add(caldor_burn, caldor_description)
+        self.play(FadeIn(caldor_burn), Write(caldor_description))
+        self.wait()
+        self.next_slide()
+
+        # gcki = ImageMobject("gcki.png").scale(0.33).next_to(MARC_description, DOWN).to_edge(LEFT)
+        # bbwo = ImageMobject("bbwo.png").scale(0.33).next_to(MARC_description, DOWN).to_edge(RIGHT)
+        # self.add(gcki, bbwo)
+        # self.play(FadeIn(gcki), FadeIn(bbwo))
+        # self.wait()
+        # self.next_slide()
+
+        self.remove(MARC_title, MARC_description, caples_burn, caples_description, caldor_burn, caldor_description)
+        self.play(FadeOut(MARC_title), FadeOut(MARC_description), FadeOut(caples_burn), FadeOut(caples_description), FadeOut(caldor_burn), FadeOut(caldor_description))
+        self.wait()
+        self.next_slide()
+
+        bbwo_regression = ImageMobject("bbwo_beta1_regres.png").scale(0.6).to_edge(UP).to_edge(LEFT)
+        self.add(bbwo_regression)
+        self.play(FadeIn(bbwo_regression))
+        self.wait()
+        self.next_slide()
+
+        bbwo_distribution = ImageMobject("bbwo_dist.png").scale(1.3).to_edge(UP).to_edge(RIGHT)
+        self.add(bbwo_distribution)
+        self.play(FadeIn(bbwo_distribution))
+        self.wait()
+        self.next_slide()
+
+        sidenote = Text("Unexpected! Black-backed Woodpeckers\nare more abundant in burned areas", font_size=24).next_to(bbwo_regression, DOWN)
+        self.add(sidenote)
+        self.play(Write(sidenote))
+        self.wait()
+        self.next_slide()
+
+        self.remove(sidenote)
+        self.play(Unwrite(sidenote), run_time=0.5)
+        self.play(bbwo_distribution.animate.scale(0.45), bbwo_regression.animate.scale(0.75))
+        self.play(bbwo_distribution.animate.to_edge(DOWN), bbwo_regression.animate.to_edge(DOWN))
         traceplot = ImageMobject("beta1_traceplot.png").scale(0.7).to_edge(UP)
         self.add(traceplot)
         self.play(FadeIn(traceplot))
@@ -493,4 +532,4 @@ class explanation(Slide):
         self.wait()
         self.next_slide()
 
-        
+

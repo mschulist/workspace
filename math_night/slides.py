@@ -378,7 +378,7 @@ class simulation(Slide):
             results = mcmc_sim(current, previous, start=False)
             current = results[0]
             previous = results[1]
-        for i in range(1):
+        for i in range(1200):
             results = mcmc_sim(current, previous, fast=True)
             current = results[0]
             previous = results[1]
@@ -546,12 +546,12 @@ class explanation(Slide):
         self.play(Unwrite(sidenote), run_time=0.5)
         self.play(bbwo_distribution.animate.scale(0.45), bbwo_regression.animate.scale(0.75))
         self.play(bbwo_distribution.animate.to_edge(DOWN), bbwo_regression.animate.to_edge(DOWN))
-        traceplot = ImageMobject("beta1_traceplot.png").scale(0.7).to_edge(UP)
+        traceplot = ImageMobject("beta1_traceplot.png").scale(0.45).to_edge(UP)
         self.add(traceplot)
         self.play(FadeIn(traceplot))
         self.wait()
         self.next_slide()
 
-        
+
 
 

@@ -378,7 +378,7 @@ class simulation(Slide):
             results = mcmc_sim(current, previous, start=False)
             current = results[0]
             previous = results[1]
-        for i in range(1200):
+        for i in range(1):
             results = mcmc_sim(current, previous, fast=True)
             current = results[0]
             previous = results[1]
@@ -402,10 +402,42 @@ class simulation(Slide):
                             "font_size": 0.001,}
         ).to_edge(LEFT).to_edge(UP)
         chart_subtitle = Text("True Asteroid Sizes", font_size=32).next_to(true_chart, DOWN)
-        self.add(true_chart, chart_subtitle)
-        self.play(Write(chart_subtitle), Create(true_chart))
+        simulation_subtitle = Text("1200 Simulations", font_size=32).next_to(chart, DOWN)
+        self.add(true_chart, chart_subtitle, simulation_subtitle)
+        self.play(Write(chart_subtitle), Create(true_chart), Write(simulation_subtitle))
         self.wait()
         self.next_slide()
+
+        def flip(p):
+            return True if random.random() < p else False
+
+        def sample(current, sizes):
+            toss1 = random.randint(0, 1)
+            proposal = (current-1)%10 if toss1 == 0 else (current+1)%10
+            if sizes[proposal] > sizes[current]:
+                return proposal
+            else:
+                prob = sizes[proposal] / sizes[current]
+                if flip(prob):
+                    return proposal
+                else:
+                    return current
+                
+        for i in range(18800):
+            current = sample(current, sizes)
+            values[current] += 1
+
+        self.remove(chart, simulation_subtitle)
+        self.play(Uncreate(chart), Unwrite(simulation_subtitle))
+        makeChart(values)
+        more_sim_title = Text("20,000 Simulations", font_size=32).next_to(chart, DOWN)
+        self.add(more_sim_title)
+        self.play(Write(more_sim_title), Create(chart))
+        self.wait()
+        self.next_slide()
+
+
+
 
 class explanation(Slide):
     def construct(self):

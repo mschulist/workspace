@@ -520,16 +520,6 @@ class explanation(Slide):
         self.wait()
         self.next_slide()
 
-        description = Text("Traceplot", font_size=36).next_to(traceplot, DOWN)
-        self.add(description)
-        self.play(Write(description))
-        self.wait()
-        self.next_slide()
-
-        more_description = Text("Shows current value for each MCMC iteration", font_size=36).next_to(description, DOWN)
-        self.add(more_description)
-        self.play(Write(more_description))
-        self.wait()
-        self.next_slide()
+        
 
 

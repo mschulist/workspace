@@ -573,7 +573,22 @@ class explanation(Slide):
         self.add(people)
         self.play(AddTextLetterByLetter(people), run_time=5)
         self.wait()
-        self.play()
         self.next_slide()
 
+        book = ImageMobject("book.png").scale(0.5).next_to(people, DOWN)
+        self.add(book)
+        self.play(SpiralIn(book))
+        self.wait()
+        self.next_slide()
+
+        self.play(FadeOut(book, shift=DOWN), FadeOut(people, shift=RIGHT), FadeOut(thanks, shift=UP))
+        self.wait()
+        self.next_slide()
+
+
+        questions = Text("Questions?", font_size=36)
+        self.add(questions)
+        self.play(Write(questions))
+        self.wait()
+        self.next_slide()
 

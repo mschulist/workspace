@@ -28,13 +28,13 @@ vignettes/*.pdf
 .Renviron
 # Rsconnect stuffs
 *.dcf
-
 # manim stuffs
 media/
 files/
 intro_assets/
-
 # python cache
 __pycache__/
 .vscode
 .DS_Store
+.manim-slides.json
+*.pptx

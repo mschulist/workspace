@@ -573,6 +573,7 @@ class explanation(Slide):
         self.add(people)
         self.play(AddTextLetterByLetter(people), run_time=5)
         self.wait()
+        self.play()
         self.next_slide()
 
 

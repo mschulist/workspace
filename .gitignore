@@ -38,3 +38,5 @@ __pycache__/
 .DS_Store
 .manim-slides.json
 *.pptx
+node_modules/
+

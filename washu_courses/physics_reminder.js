@@ -2,7 +2,7 @@ import puppeteer from 'puppeteer';
 import axios from 'axios';
 import textbelt from 'textbelt';
 
-const url = 'https://acadinfo.wustl.edu/CourseListings/CourseInfo.aspx?sem=FL2023&sch=L&dept=L31&crs=191l';
+const url = 'https://acadinfo.wustl.edu/CourseListings/CourseInfo.aspx?sem=FL2023&sch=L&dept=L24&crs=132';
 
 const main = async () => {
 
@@ -16,8 +16,8 @@ const getPhysicsReminder = async () => {
     await page.goto(url);
     
     const physicsReminder = await page.evaluate(() => {
-        const seats = document.getElementsByClassName('ItemRowCenter')[9].innerText;
-        const enrolled = document.getElementsByClassName('ItemRowCenter')[10].innerText;
+        const seats = document.getElementsByClassName('ItemRowCenter')[3].innerText;
+        const enrolled = document.getElementsByClassName('ItemRowCenter')[4].innerText;
         return [seats, enrolled];
     });
     
@@ -43,8 +43,8 @@ console.log(seats);
 console.log(seats[0] > seats[1]);
 
 if (seats[0] > seats[1]) {
-    sendText(`There are ${seats[0] - seats[1]} seats left in Physics 191l at 9am!`);
-    console.log(`There are ${seats[0] - seats[1]} seats left in Physics 191l at 9am!`);
+    sendText(`There are ${seats[0] - seats[1]} seats left in Shaefer Calc 2 at 9am!`);
+    console.log(`There are ${seats[0] - seats[1]} seats left in Shaefer Calc 2 at 9am!`);
     process.exit();
 }
 }

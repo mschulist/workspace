@@ -1,0 +1,19 @@
+{
+  "name": "washu_courses",
+  "version": "1.0.0",
+  "description": "",
+  "main": "physics_reminder.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^1.4.0",
+    "puppeteer": "^20.8.3",
+    "sloth": "^1.0.0",
+    "sloth-cli": "^1.0.2",
+    "textbelt": "^0.0.4"
+  }
+}

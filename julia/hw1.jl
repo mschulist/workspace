@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.14.9
+# v0.19.32
 
 using Markdown
 using InteractiveUtils
@@ -7,8 +7,9 @@ using InteractiveUtils
 # This Pluto notebook uses @bind for interactivity. When running this notebook outside of Pluto, the following 'mock version' of @bind gives bound variables a default value (instead of an error).
 macro bind(def, element)
     quote
+        local iv = try Base.loaded_modules[Base.PkgId(Base.UUID("6e696c72-6542-2067-7265-42206c756150"), "AbstractPlutoDingetjes")].Bonds.initial_value catch; b -> missing; end
         local el = $(esc(element))
-        global $(esc(def)) = Core.applicable(Base.get, el) ? Base.get(el) : missing
+        global $(esc(def)) = Core.applicable(Base.get, el) ? Base.get(el) : iv(el)
         el
     end
 end
@@ -17,12 +18,6 @@ end
 begin
 	import Pkg
 	Pkg.activate(mktempdir())
-end
-
-# ╔═╡ 6b30dc38-ed6b-11ea-10f3-ab3f121bf4b8
-begin
-	Pkg.add("PlutoUI")
-	using PlutoUI
 end
 
 # ╔═╡ 74b008f6-ed6b-11ea-291f-b3791d6d1b35
@@ -438,6 +433,12 @@ The image is unrecognisable with intensity ...
 # ╔═╡ 81510a30-ee0e-11ea-0062-8b3327428f9d
 
 
+# ╔═╡ 6b30dc38-ed6b-11ea-10f3-ab3f121bf4b8
+# begin
+# 	Pkg.add("PlutoUI")
+# 	using PlutoUI
+# end
+
 # ╔═╡ e3b03628-ee05-11ea-23b6-27c7b0210532
 decimate(image, ratio=5) = image[1:ratio:end, 1:ratio:end]
 
@@ -796,7 +797,7 @@ md"""
 function convolve_image(M::AbstractMatrix, K::AbstractMatrix)
 	r,c = size(M)
 	kr,kc = size(K)
-	len = kr ÷ 2
+	len = (kr-1) ÷ 2
 	Mext = [extend_mat(M, i, j) for i in 1-len:r+len, j in 1-len:c+len]
 	convolved = Matrix(undef, r, c)
 	for i in 1:r, j in 1:c
@@ -804,9 +805,9 @@ function convolve_image(M::AbstractMatrix, K::AbstractMatrix)
 		g = 0
 		b = 0
 		for k in 1:kr, l in 1:kc
-			r += K[k,l] * Mext[i-len+k, j-len+l].r
-			b += K[k,l] * Mext[i-len+k, j-len+l].b
-			g += K[k,l] * Mext[i-len+k, j-len+l].g
+			r += K[k,l] * Mext[i+k-1, j+l-1].r
+			b += K[k,l] * Mext[i+k-1, j+l-1].b
+			g += K[k,l] * Mext[i+k-1, j+l-1].g
 		end
 		convolved[i,j] = RGB(r, g, b)
 	end
@@ -859,10 +860,15 @@ $$G(x,y)=\frac{1}{2\pi \sigma^2}e^{\frac{-(x^2+y^2)}{2\sigma^2}}$$
 
 # ╔═╡ aad67fd0-ee15-11ea-00d4-274ec3cda3a3
 function with_gaussian_blur(image)
+	size = 5
+	hsize = (size - 1) ÷ 2
 	g(x,y) = 1/(2π) * exp(-(x^2 + y^2) / 2)
-	K = [g(x,y) for x in 1:15, y in 1:15]
+	K = [g(x,y) for x in -hsize:hsize, y in -hsize:hsize]
 	return convolve_image(image, K)
 end
+
+# ╔═╡ 035fd151-d9fb-429e-8549-30e74ac9f3b7
+with_gaussian_blur(philip)
 
 # ╔═╡ 8ae59674-ee18-11ea-3815-f50713d0fa08
 md"_Let's make it interactive. 💫_"
@@ -1650,6 +1656,7 @@ webcam
 # ╟─8a335044-ee19-11ea-0255-b9391246d231
 # ╟─7c50ea80-ee15-11ea-328f-6b4e4ff20b7e
 # ╠═aad67fd0-ee15-11ea-00d4-274ec3cda3a3
+# ╠═035fd151-d9fb-429e-8549-30e74ac9f3b7
 # ╟─8ae59674-ee18-11ea-3815-f50713d0fa08
 # ╟─94c0798e-ee18-11ea-3212-1533753eabb6
 # ╠═a75701c4-ee18-11ea-2863-d3042e71a68b

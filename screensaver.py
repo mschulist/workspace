@@ -3,6 +3,7 @@ import random
 
 class screensaver(Scene):
     def construct(self):
+        random.seed(123)
         # Create a list of colors
         colors = [RED_E, ORANGE, YELLOW_E, GREEN_E, BLUE_E, PURPLE_E, TEAL_E, MAROON_E, GOLD_E, PINK]
 
@@ -56,7 +57,7 @@ class screensaver(Scene):
         shape_list = [star1]
         color_list = [RED_E]
         self.play(Create(shape_list[0]))
-        for i in range(1, 10):
+        for i in range(1, 1000):
             new = get_new_shape(shape_list[i-1], color_list[i-1])
             shape_list.append(new[0])
             color_list.append(new[1])

@@ -111,3 +111,4 @@ When asking people to reflect on the past, we found that it is important to ask 
 In the future, we could look at how age, gender, courseload affect our results. There are other covariates that we could also have an impact on people's ability to remember events further in the past. 
 
 Our new research question: Will the nudge of asking students to think about their day in time increments make them recall more instances of happiness in a day? We believe that asking people about a different emotion might change our results---people might be more likely to remember positive experiences than negative ones. 
+

@@ -25,6 +25,12 @@ begin
 	using Images
 end
 
+# ╔═╡ 6b30dc38-ed6b-11ea-10f3-ab3f121bf4b8
+begin
+	# Pkg.add("PlutoUI")
+	using PlutoUI
+end
+
 # ╔═╡ 83eb9ca0-ed68-11ea-0bc5-99a09c68f867
 md"_homework 1, version 4_"
 
@@ -432,12 +438,6 @@ The image is unrecognisable with intensity ...
 
 # ╔═╡ 81510a30-ee0e-11ea-0062-8b3327428f9d
 
-
-# ╔═╡ 6b30dc38-ed6b-11ea-10f3-ab3f121bf4b8
-# begin
-# 	Pkg.add("PlutoUI")
-# 	using PlutoUI
-# end
 
 # ╔═╡ e3b03628-ee05-11ea-23b6-27c7b0210532
 decimate(image, ratio=5) = image[1:ratio:end, 1:ratio:end]
@@ -918,9 +918,21 @@ For simplicity you can choose one of the "channels" (colours) in the image to ap
 
 # ╔═╡ 9eeb876c-ee15-11ea-1794-d3ea79f47b75
 function with_sobel_edge_detect(image)
+	x = [1,2,1] * [1,0,-1]' / 2
+	y = [1,0,-1] * [1,2,1]' / 2
+	# x, y = Kernel.sobel()
+	v = convolve_image(image, x)
+	h = convolve_image(image, y)
+	total = h
 	
-	return missing
+	return total
 end
+
+# ╔═╡ e536f765-1e2e-46c6-b268-9bbec568ca3a
+with_sobel_edge_detect(philip)
+
+# ╔═╡ b182f1ef-d6a7-4546-84ef-2269a01ce6e4
+
 
 # ╔═╡ 1b85ee76-ee10-11ea-36d7-978340ef61e6
 md"""
@@ -1663,9 +1675,11 @@ webcam
 # ╟─f461f5f2-ee18-11ea-3d03-95f57f9bf09e
 # ╟─7c6642a6-ee15-11ea-0526-a1aac4286cdd
 # ╠═9eeb876c-ee15-11ea-1794-d3ea79f47b75
+# ╠═e536f765-1e2e-46c6-b268-9bbec568ca3a
 # ╟─1a0324de-ee19-11ea-1d4d-db37f4136ad3
 # ╠═1bf94c00-ee19-11ea-0e3c-e12bc68d8e28
-# ╟─1ff6b5cc-ee19-11ea-2ca8-7f00c204f587
+# ╠═1ff6b5cc-ee19-11ea-2ca8-7f00c204f587
+# ╠═b182f1ef-d6a7-4546-84ef-2269a01ce6e4
 # ╟─0001f782-ee0e-11ea-1fb4-2b5ef3d241e2
 # ╠═1b85ee76-ee10-11ea-36d7-978340ef61e6
 # ╠═477d0a3c-ee10-11ea-11cf-07b0e0ce6818

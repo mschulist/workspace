@@ -40,3 +40,4 @@ __pycache__/
 *.pptx
 node_modules/
 
+data/

@@ -10,7 +10,7 @@ a. Each row represents an observational unit in the data set, in this case, they
 
 b. There were $1691$ participants in the study---it's the number of rows in the data set. 
 
-c. sex: nominal; age: discrete; marital: nominal; grossIncome: ordinal; smoke: nominal; amtWeekends: ordinal; amtWeekdays: ordinal
+c. sex: categorical, nominal; age: numerical, continuous; marital: categorical, nominal; grossIncome: categorical, ordinal; smoke: categorical, nominal; amtWeekends: categorical, ordinal; amtWeekdays: categorical, ordinal
 
 2. 
 
@@ -20,11 +20,41 @@ b. Maybe drinking more coffee makes people have more cramps. Less sleep could al
 
 3. 
 
-a. 
+a. You will get a nice sample from the area, but you might miss out on some areas more than others because of randomness. It could also be more expensive to go to 200 random households across the entire city than just a few neighborhoods. 
 
-b. Depending on how you split the neighborhoods, you might over represent certain neighborhoods. 
+b. Depending on how you split the neighborhoods, you might over represent certain neighborhoods. Certain neighborhoods might have larger populations, so you'd want to sample more from that area. Of course, this depends on the type of survey being conducted and if different neighborhoods are significantly different in their opinions on the survey. 
 
 c. You will miss out on $\frac{17}{20}$ of the neighborhoods, but you will get a good sample from the ones you sample. This strategy could be good if the neighborhoods you sample are representative of the rest of the city. 
+
+4. 
+
+5. 
+
+a. (1) 3, 5, 6, 7, 9   (2) 3, 5, 6, 7, 20
+
+They have the same median and IQR because `20` is the last number in the ordered list. (2) will have a longer right tail (right skewed) because of the `20`, in fact it is considered an outlier. 
+
+b. (1) 3, 5, 6, 7, 9   (2) 3, 5, 7, 8, 9
+
+(1) will have a slightly smaller IQR and median due to it having 2 smaller numbers. (1) will be normal whereas (2) will be slightly left skewed as there are more large numbers than small numbers. 
+
+c. (1) 1, 2, 3, 4, 5    (2) 6, 7, 8, 9, 10
+
+They have the same IQR, but (2) has a higher median due to there being higher numbers. The shape will be the same because they are both 5 numbers with increasing by one. 
+
+d. (1) 0, 10, 50, 60, 100   (2) 0, 100, 500, 600, 1000
+
+The median and IQR will be larger for (2) because the numbers are bigger and spread out more. Both will have the same shape because they are just scaled versions of each other. 
+
+6. 
+
+a. Normal, low of 50 and high of 70. `(2)`
+
+b. Uniform, low of 0 and high of 100. `(3)`
+
+c. Right skewed, low of 0 and high of 8. `(1)`
+
+7. 
 
 9. 
 

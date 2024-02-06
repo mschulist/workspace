@@ -42,4 +42,6 @@ P(B \cap E) = 0.042 \\
 P(B)P(E) = 0.03022
 $$
 
-Because these are not equal, they are independent. Living below the poverty line and speaking a foreign language at home are not indepedent events and knowing one gives us some information about the other. 
+Because these are not equal, they are independent. Living below the poverty line and speaking a foreign language at home are not independent events and knowing one gives us some information about the other. 
+
+2. 

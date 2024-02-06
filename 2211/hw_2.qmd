@@ -1,0 +1,45 @@
+---
+title: "Homework 2"
+author: "Mark Schulist"
+format: pdf
+---
+
+
+1. 
+
+a. No, $4.2%$ of people fall into both categories, so they are not disjoint. 
+
+b. 
+
+![](HW_2_Pr_1_Venn.svg)
+
+c. 
+
+live below poverty line = B
+
+only speak English = E
+
+$$
+P(B \cap E) = 0.042
+$$
+
+d. 
+
+$$
+P(B \cup E) = P(B) + P(E) - P(B \cap E) = 0.146 + 0.207 - 0.042 = 0.311
+$$
+
+e. 
+
+$$
+P(B^c \cap E) = P(B^c) P(E) = 0.854 \cdot 0.207 \approx 0.178
+$$
+
+f. 
+
+$$
+P(B \cap E) = 0.042 \\
+P(B)P(E) = 0.03022
+$$
+
+Because these are not equal, they are independent. Living below the poverty line and speaking a foreign language at home are not indepedent events and knowing one gives us some information about the other. 

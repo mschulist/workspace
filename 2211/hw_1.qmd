@@ -16,23 +16,25 @@ c. sex: categorical, nominal; age: numerical, continuous; marital: categorical, 
 
 a. No, this is an observational study and not an experiment. They did not prescribe treatments to different randomized groups. 
 
-b. Maybe drinking more coffee makes people have more cramps. Less sleep could also make people get cramps. These are counfounding variables that might indirectly be the cause of the relationship between stress and muscle cramps. 
+b. Maybe drinking more coffee makes people have more cramps. Less sleep could also make people get cramps. These are confounding variables that might indirectly be the cause of the relationship between stress and muscle cramps. 
 
 3. 
 
-a. You will get a nice sample from the area, but you might miss out on some areas more than others because of randomness. It could also be more expensive to go to 200 random households across the entire city than just a few neighborhoods. 
 
-b. Depending on how you split the neighborhoods, you might over represent certain neighborhoods. Certain neighborhoods might have larger populations, so you'd want to sample more from that area. Of course, this depends on the type of survey being conducted and if different neighborhoods are significantly different in their opinions on the survey. 
+a. You will get a nice sample from the area, but you might miss out on some areas more than others because of randomness. It could also be more expensive to go to 200 random households across the entire city than just a few neighborhoods. It takes a lot of effort to go to many spread out households. 
 
-c. You will miss out on $\frac{17}{20}$ of the neighborhoods, but you will get a good sample from the ones you sample. This strategy could be good if the neighborhoods you sample are representative of the rest of the city. 
+b. Depending on how you split the neighborhoods, you might over represent certain neighborhoods. Certain neighborhoods might have larger populations, so you'd want to sample more from that area. Of course, this depends on the type of survey being conducted and if different neighborhoods are significantly different in their opinions on the survey. This will still be challenging to sample as you are going to many random homes across all neighborhoods. 
 
-4. 
+
+c. You will miss out on $\frac{17}{20}$ of the neighborhoods, but you will get a good sample from the ones you sample. This strategy could be good if the neighborhoods you sample are representative of the rest of the city. It will also be easy to sample as you only visit 3 out of the 20 neighborhoods. 
+
+4. In the field of data science, there are many times that bias might occur. Let's say that, theoretically, I work for a company that collects data on the political viewpoints of users of a certain website, let's say a [website that makes comics about computers and math](https://xkcd.com). If we tried to use these samples to determine the outcome of an election, we would most likely get the wrong result, even if our sample size was large. The people using this website are most likely very academic and are probably more likely to be liberal than conservative. Trying to extrapolate the results of this sample to the population of Americans would not work very well due to the bias of the type of people who are interested in computers and math. 
 
 5. 
 
 a. (1) 3, 5, 6, 7, 9   (2) 3, 5, 6, 7, 20
 
-They have the same median and IQR because `20` is the last number in the ordered list. (2) will have a longer right tail (right skewed) because of the `20`, in fact it is considered an outlier. 
+They have the same median and IQR because `20` is the last number in the ordered list, and the median and IQR are not affected by the last and first numbers in a list. (2) will have a longer right tail (right skewed) because of the `20`, in fact it is considered an outlier. 
 
 b. (1) 3, 5, 6, 7, 9   (2) 3, 5, 7, 8, 9
 
@@ -56,11 +58,44 @@ c. Right skewed, low of 0 and high of 8. `(1)`
 
 7. 
 
+a. Right skewed. Median as there is a lot of skew. IQR would be best as the standard deviation will be affected a lot by the super expensive homes. There are a lot of cheap homes, and few expensive ones. 
+
+b. Symmetric. Mean would be best as it is not skewed. Standard deviation would also be best as it is not skewed and symmetric. There are a similar number of expensive homes as cheap homes, so there is less skew than the previous question. 
+
+c. Left skewed. Most people drink few or zero, but a small number of people drink a LOT. Median and IQR because of the skew. 
+
+8. 
+
+```{r}
+survey <- matrix(c(57, 121, 179, 15, 120, 113, 126, 4, 101, 28, 45, 1), 
+                 nrow = 4, ncol = 3)
+
+percent_conserv <- sum(survey[,1]) / sum(survey)
+percent_cit_op <- sum(survey[1,]) / sum(survey)
+percent_conserv_cit_op <- sum(survey[1,1]) / sum(survey)
+
+percent_are_con_cit_op <- sum(survey[1,1]) / sum(survey[,1])
+percent_are_mod_cit_op <- sum(survey[1,2]) / sum(survey[,2])
+percent_are_lib_cit_op <- sum(survey[1,3]) / sum(survey[,3])
+```
+
+a. Percent conservative = `r round(percent_conserv, 2) * 100`%
+
+b. Percent in favor of citizenship option = `r round(percent_cit_op, 2) * 100`%
+
+c. Percent conservative and in favor of citizenship option = `r round(percent_conserv_cit_op, 2) * 100`%
+
+d. Conservatives in favor of citizenship option = `r round(percent_are_con_cit_op, 2) * 100`%
+
+Moderates in favor of citizenship option = `r round(percent_are_mod_cit_op, 2) * 100`%
+
+Liberals in favor of citizenship option = `r round(percent_are_lib_cit_op, 2) * 100`%
+
+e. Political leaning and views on immigration do not appear to be independent. Conservatives, moderates, and liberals have very different amounts of support for the immigration law and there is a large sample size. We can get information on their views of immigration through their political leaning. 
+
 9. 
 
 ```{r setup, warning=FALSE, message=FALSE}
-library(tidyverse)
-library(gridExtra)
 source("https://www.openintro.org/data/R/acs12.R")
 
 median = median(acs12$income, na.rm = T)
@@ -68,17 +103,7 @@ IQR = IQR(acs12$income, na.rm = T)
 
 grad_prop <- table(acs12$edu)["grad"] / length(acs12$edu)
 
-acs12 <- acs12 %>% 
-  mutate(
-    edu_int = as.numeric(edu)
-  )
-
-income <- ggplot(acs12) +
-  geom_boxplot(aes(income))
-edu <- ggplot(acs12) +
-  geom_boxplot(aes(edu_int))
-
-grid.arrange(income, edu)
+boxplot(acs12$income ~ acs12$edu, xlab = "Education Level", ylab = "Income")
 
 ```
 
@@ -87,3 +112,5 @@ Median = `r median`
 IQR = `r IQR`
 
 Grad Proportion = `r grad_prop`
+
+

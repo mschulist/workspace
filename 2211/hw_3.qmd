@@ -1,0 +1,107 @@
+---
+title: "Homework 3"
+author: "Mark Schulist"
+format: pdf
+---
+1. 
+
+|Event|$x$|$P(X = x)$|
+|-----|---|----------|
+| Red Card | \$0 | 0.5 |
+| Spade | \$5 | 0.25 |
+| Club | \$10 | 0.25 |
+| Ace of Clubs | \$30 | $\frac{1}{52} \approx 0.0192$|
+
+$$
+E(X) = \sum_x xP(X=x)
+$$
+
+$$
+0 \cdot 0.5 + 5 \cdot 0.25 + 10 \cdot 0.25 + 30 \cdot \frac{1}{52} \approx 4.33
+$$
+
+The maximum amount I would be willing to pay is \$4.33 as that is the amount of money I expect to receive back. Although if I were paying \$4.33, I would have to assume my opportunity cost is \$0...
+
+2. 
+
+|Number of Bags|$x$|$P(X = x)$|
+|-----|---|----------|
+| 0 | \$0 | 0.54 |
+| 1 | \$25 | 0.34 |
+| 2 | \$35 | 0.12 |
+
+$$
+E(X) = 0 \cdot 0.54 + 25 \cdot 0.34 + 35 \cdot 0.12 = 12.7
+$$
+
+\$12.7 is the average revenue per person. 
+
+For a flight of 120 passengers, they should expect $12.7 \cdot 120 = 1524$ dollars of revenue. 
+
+$$
+\mathrm{Var}(X) = \sum_x (x-\mu)^2P(X=x)
+$$
+
+$$
+\mathrm{Var}(X) = 0.54(0-12.7)^2 + 0.34(25-12.7)^2 + 0.12(35-12.7)^2 = 198.21
+$$
+
+$$
+\mathrm{SD}(X) = \sqrt{198.21} \approx 14.08
+$$
+
+This assumes that our airline passengers are representative of all passengers. For example, if we were traveling further we would expect more bags as people would be bring more things when they travel further distances. In our case, I would say that we can negate this as the average flight follows this average distribution, but we would need more information on the type of flight. Also, 120 passengers is pretty small, so this is probably not a super far flight. 
+
+We can first calculate the variance of the revenue for our 120 person flight. This is a linear combination.
+
+$$
+\mathrm{Var}(120X) = 120^2\mathrm{Var}(X) = 120^2 \cdot 198.21 = 2854224
+$$
+
+$$
+\mathrm{SD}(120X) = \sqrt{2854224} \approx 1689
+$$
+
+3. 
+
+$$
+P(X = 2) = {10 \choose 2} 0.07^2 (1-0.07)^8 \approx 0.123
+$$
+
+$$
+P(X = 0) + P(X = 1) = {10 \choose 0} 0.07^0 (1-0.07)^{10} + {10 \choose 1} 0.07^1 (1-0.07)^9 \approx 0.848
+$$
+
+Yes, it is reasonable as there is about an 85\% chance that each group will not have more than one person with arachnophobia.
+
+4. 
+
+$$
+\lambda = 2.2
+$$
+
+$$
+P(X = 0) = \frac{e^{-\lambda} \lambda^0}{0!} \approx 0.111
+$$
+
+$$
+P(X = 0) + P(X = 1) + P(X = 2)
+$$
+
+```{r}
+lambda <- 2.2
+dpois(0, lambda) + dpois(1, lambda) + dpois(2, lambda)
+ppois(2,lambda)
+```
+
+No, when you add more flights, the number of lost bags will increase, meaning that using this mean will not be a good model.
+
+5.
+
+```{r}
+pnorm(-1.13, lower.tail = F) # P(Z > −1.13)
+qnorm(0.35) # 35th percentile
+```
+
+6. 
+

@@ -9,7 +9,7 @@ format: pdf
 |-----|---|----------|
 | Red Card | \$0 | 0.5 |
 | Spade | \$5 | 0.25 |
-| Club | \$10 | 0.25 |
+| Club (except ace) | \$10 | $\frac{12}{52} \approx  0.231$|
 | Ace of Clubs | \$30 | $\frac{1}{52} \approx 0.0192$|
 
 $$
@@ -17,7 +17,7 @@ E(X) = \sum_x xP(X=x)
 $$
 
 $$
-0 \cdot 0.5 + 5 \cdot 0.25 + 10 \cdot 0.25 + 30 \cdot \frac{1}{52} \approx 4.33
+0 \cdot 0.5 + 5 \cdot 0.25 + 10 \cdot \frac{12}{52} + 30 \cdot \frac{1}{52} \approx 4.135
 $$
 
 The maximum amount I would be willing to pay is \$4.33 as that is the amount of money I expect to receive back. Although if I were paying \$4.33, I would have to assume my opportunity cost is \$0...
@@ -94,7 +94,7 @@ dpois(0, lambda) + dpois(1, lambda) + dpois(2, lambda)
 ppois(2,lambda)
 ```
 
-No, when you add more flights, the number of lost bags will increase, meaning that using this mean will not be a good model.
+No, when you add more flights, the number of lost bags will increase, meaning that using this mean will not be a good model. I would recalculate the mean every year to update the model to account for the change in the number of flights. 
 
 5.
 
@@ -104,4 +104,36 @@ qnorm(0.35) # 35th percentile
 ```
 
 6. 
+
+Men, ages 30-34: $N(4313, 583)$
+
+Women, ages 25-29: $N(5261, 807)$
+
+```{r}
+leo <- 4948
+mary <- 5513
+men_mean <- 4313
+men_sd <- 583
+women_mean <- 5261
+women_sd <- 807
+
+leo_z <- (leo - men_mean) / men_sd
+mary_z <- (mary - women_mean) / women_sd
+```
+
+Leo's z-score is `r round(leo_z, 2)` and Mary's z-score is `r round(mary_z, 2)`. These tell you the number of standard deviations above or below the mean Leo and Mary are in their respective triathlon races. 
+
+Mary did better because her z-score is lower, meaning she placed in a higher percentile for her finish position within her group. 
+
+```{r}
+leo_p <- pnorm(leo, men_mean, men_sd)
+mary_p <- pnorm(mary, women_mean, women_sd)
+```
+
+Leo finished faster than `r round(1-leo_p, 3)*100`\% of the athletes in his group. 
+
+Mary finished faster than `r round(1-mary_p, 3)*100`\% of the athletes in her group. 
+
+They both did worse than average because their z-score is positive (meaning they finished slower than half of the participants).
+
 

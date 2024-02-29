@@ -1,0 +1,235 @@
+---
+title: "Central Limit Theorem and Confidence Intervals"
+author: 
+date: 
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Word Length in The Great Gatsby
+
+We can simulate the population of words in The Great Gatsby using the gamma distribution.  Each element of `words` gives the number of characters in one word in the novel.  We can find the population mean (5.44), the population standard deviation (3.48).
+
+```{r}
+set.seed(123)
+words <- ceiling(rgamma(47000, shape = 1.992, scale = 2.480))
+mean(words)
+sd(words)
+hist(words)
+```
+
+Now, let's take a random sample of words and compute the sample average (xbar).  We'll start with a sample of size n = 5.  We'll use the `sample` function.  Here, we are taking a random sample of size 5 from `words`.  `replace = FALSE` means that we are sampling without replacement.
+
+```{r}
+n <- 5
+words_sample <- sample(words, n, replace = FALSE)
+```
+
+```{r}
+words_sample
+mean(words_sample)
+```
+
+If we repeatedly take random samples of size 5, we can see how this sample mean behaves.  We can take 10,000 samples of size 5 and compute the sample mean for each sample.
+
+```{r}
+# number of observations in each sample
+n <- 5
+
+# number of samples to take
+samples <- 10000   
+
+# this is where we will put our xbars for each sample
+xbars <- rep(0, samples)          
+```
+
+```{r}
+head(xbars)
+tail(xbars)
+xbars[100]                   #the 100th element of xbars
+```
+
+```{r}
+set.seed(456)
+for(i in 1:samples){
+  words_sample <- sample(words, n, replace = FALSE)
+  xbars[i] <- mean(words_sample)
+}
+```
+
+```{r}
+head(xbars)
+tail(xbars)
+xbars[100]
+```
+
+We can make a histogram of the 10,000 xbars we obtained, and obtain the mean and standard deviation.
+
+```{r}
+hist(xbars)
+mean(xbars)
+sd(xbars)
+```
+
+What happens if we change our sample size, n?
+
+```{r}
+get_var <- function(n) {
+  n <- n
+  samples <- 10000   
+  xbars <- rep(0, samples)    
+  
+  set.seed(789)
+  for(i in 1:samples){
+    words_sample <- sample(words, n, replace = FALSE)
+    xbars[i] <- mean(words_sample)
+  }
+  
+  hist(xbars)
+  m <- mean(xbars)
+  s <- sd(xbars)
+  return(c(m,s))
+}
+```
+
+```{r}
+get_var(10)
+get_var(50)
+get_var(1000)
+```
+
+
+```{r}
+vars <- map(1:20, get_var) %>% unlist
+```
+
+
+## Proportion of Articles about Politics
+
+Let's start by taking one random sample of size n = 4.  We can generate X using the `rbinom` function in R.  We can then compute phat as X/n.
+
+```{r}
+n <- 4
+X <- rbinom(1, n, 0.2)
+phat <- X/n
+X
+phat
+```
+
+If we repeatedly take random samples of size 4, we can see how this sample mean behaves.  We can take 10,000 samples of size 4 and compute the sample proportion for each sample.
+
+```{r}
+# number of observations in each sample
+n <- 4
+
+# number of samples to take
+samples <- 10000 
+```
+
+```{r}
+set.seed(321)
+X <- rbinom(samples, n, 0.2)
+head(X)
+```
+
+```{r}
+phats <- X/n
+head(phats)
+```
+
+We can make a histogram of the 10,000 phats we obtained, and obtain the mean and standard deviation.
+
+```{r}
+hist(phats)
+mean(phats)
+sd(phats)
+```
+
+What happens if we increase the value of n?
+
+```{r}
+n <- 4
+samples <- 10000
+set.seed(654)
+X <- rbinom(samples, n, 0.2)
+phats <- X/n
+hist(phats)
+mean(phats)
+sd(phats)
+```
+
+## Confidence Intervals for Proportions 
+
+We can compute confidence intervals but providing `prop.test()` with the number of individuals who supported Biden (602) and number of observations (1400)
+
+```{r}
+prop.test(602, 1400)
+```
+
+In `R`, the default confidence level is 95%.  We can change this with the `conf.level` option.
+
+```{r}
+prop.test(602, 1400, conf.level = 0.99)
+```
+
+## Interpretation of the Confidence Interval
+
+Let's start by generating 10,000 samples from the population of registered voters.  `support` contains the number of voters who supported Biden in each sample.
+
+```{r}
+n <- 1400
+samples <- 10000
+set.seed(93)
+support <- rbinom(samples, n, 0.44)
+head(support)
+```
+
+For the first sample, we can compute the 95% confidence interval and determine if 0.44 is within the interval.
+
+```{r}
+prop.test(support[1], n)
+#int <- prop.test(support[1], n)
+#int
+#int$conf.int
+#int$conf.int[1]
+#int$conf.int[2]
+#x <- 0.44 >= int$conf.int[1] & 0.44 <= int$conf.int[2]
+#x
+```
+
+Now, let's do this for all of our samples using a `for` loop.
+
+```{r}
+# a vector for our TRUEs and FALSEs (Note TRUE = 1 and FALSE = 0)
+is_it_in <- rep(0, samples)
+
+for(i in 1:samples){
+   int <- prop.test(support[i], n)
+   is_it_in[i] <- 0.44 >= int$conf.int[1] & 0.44 <= int$conf.int[2]
+}
+```
+
+We can look at `is_it_in`:
+
+```{r}
+head(is_it_in)
+
+# The number of intervals containing 0.44
+sum(is_it_in)
+
+# The proportion of intervals containing 0.44
+sum(is_it_in)/samples
+```
+
+## Small Sample Confidence Intervals for Proportions
+
+In our example there were complications in 3 of the consultants 62 clients.  We can use to use `binom.test` to compute a 95% confidence interval.
+
+```{r}
+binom.test(3, 62)
+```
+
+

@@ -151,7 +151,7 @@ sd(phats)
 What happens if we increase the value of n?
 
 ```{r}
-n <- 4
+n <- 1000
 samples <- 10000
 set.seed(654)
 X <- rbinom(samples, n, 0.2)

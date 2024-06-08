@@ -1,5 +1,8 @@
-url = "hereiscoolurl";
+url = "tau";
 url = url.substring(0, 10); // max length of 10 for url
+if (url.length != 10) {
+    url = url + Math.random().toString(36).substring(2, 12 - url.length);
+}
 
 title = "Enter title here";
 

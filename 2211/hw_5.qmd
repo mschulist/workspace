@@ -1,0 +1,101 @@
+---
+title: "Homework 5"
+author: "Mark Schulist"
+format: pdf
+---
+
+1. 
+
+$$
+H_0: p = 0.6
+$$
+$$
+H_a: p > 0.6
+$$
+
+```{r}
+t <- prop.test(289, 400, p = 0.6, alternative = "greater")
+t
+```
+
+There is evidence to suggest that the over 60\% of university students as this particular university did not get enough sleep. The p-value is much less than $0.05$. 
+
+A Type I error would be if we reject the null hypothesis $(p = 0.6)$ when the true proportion is not greater than $0.6$. There is 5\% chance of this happening because that is our value for $\alpha$. 
+
+A Type II error would be if we do not reject the null hypothesis but the alternative hypothesis is true. Because we did reject the null, this couldn't happen with these data. In other words, this would mean that more than 60\% of students don't get enough sleep but our tests concluded that it was likely that 60\% of students got enough sleep. 
+
+2. 
+
+$$
+H_0: p = 0.08
+$$
+$$
+H_a: p \neq 0.08
+$$
+
+
+
+```{r}
+n <- prop.test(21, 194, p = 0.08)
+n
+```
+
+Our p-value is above 0.05, so we do not reject the null. This means that we do not have evidence to suggest that the nearsighted percentage (8\%) is inaccurate. It could or couldn't be accurate, we just can't tell from this test and the data given. 
+
+3. 
+
+a. True, the 99\% CI is wider, so it will always contains the smaller CIs.
+
+b. False, decreasing $\alpha$ will decrease the probability of making a type I error, but it will increase the probability of making a type II error. 
+
+c. False, we can never say that the null hypothesis is true from a hypothesis test. We can only tell if the alternative is true. In this case, we can say that $p=0.5$ is a likely possibility (but not necessarily true).
+
+d. True, as $n$ increases, the variance of the null distribution decreases and therefore you can have smaller absolute differences and still be considered significantly different. 
+
+4. 
+
+```{r}
+source("https://www.openintro.org/data/R/gss2010.R")
+grass <- gss2010$grass[!is.na(gss2010$grass)]
+total <- length(grass)
+legal <- sum(grass == "LEGAL")
+```
+
+```{r}
+l <- prop.test(legal, total)
+lower <- l$conf.int[1]
+upper <- l$conf.int[2]
+l
+```
+
+
+$$
+H_0:p = 0.5
+$$
+$$
+H_a: p \neq 0.5
+$$
+
+p-value = `r round(l$p.value, 4)`
+
+The p-value is above 0.05, so we do not have evidence to suggest that the true proportion of American adults who favored legalizing marijuana is different from 0.5. 
+
+The 95\% confidence interval is (`round(lower, 3)`, `r round(upper, 3)`). This interval contains 0.5, our null hypothesis, which shows that it is not a significant value. This confirms our result from the previous part. 
+
+5. 
+
+```{r}
+library(pwr)
+
+pow = pwr.p.test(ES.h(0.55, 0.5), sig.level = 0.05, n = 300, alternative = "greater")
+pow
+```
+
+For a sample size of 300, the power would be `r round(pow$power, 4)` if the true proportion is 0.55. 
+
+```{r}
+surv = pwr.p.test(ES.h(0.55, 0.5), sig.level = 0.05, power = 0.8, alternative = "greater")
+surv
+```
+
+They would need 617 individuals to have a power of 80\%, assuming the true population proportion is 0.55. 

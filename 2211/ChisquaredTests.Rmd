@@ -1,0 +1,168 @@
+---
+title: "Chi-squared Tests"
+author: 
+date: 
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Goodness of fit test
+
+To perform a goodness of fit test in R, we need to provide a vector containing the observed counts and a vector containing the hypothesized distribution.  For our jury example:
+
+```{r}
+obs_counts <- c(205, 26, 25, 19)
+probs <- c(0.72, 0.07, 0.12, 0.09)
+```
+
+The hypothesis test is performed using the `chisq.test()` function.
+
+```{r}
+chisq.test(obs_counts, p = probs)
+```
+
+We can obtain the expected counts in R by performing the hypothesis test and assigning the results to an object.
+
+```{r}
+t <- chisq.test(obs_counts, p = probs)
+t
+```
+
+This object contains many items, two of which are the p-value and the expected counts.
+
+```{r}
+t$p.value
+t$expected
+```
+
+```{r}
+bites <- c(24750, 25250, 24800, 25200)
+moon_probs <- rep(1/4, 4)
+sum(bites)
+bites/sum(bites)
+```
+
+```{r}
+d <- chisq.test(bites, p = moon_probs)
+d
+```
+
+
+
+## Tests of Independence/Dependence
+
+To perform a test of independence/dependence, we need to provide R with a matrix containing our observed counts.  For the depression example:
+
+```{r}
+obs_counts <- c(16, 29, 9, 22, 33, 14, 19, 14, 3)
+obs_counts
+```
+
+When creating `obs_counts`, enter the numbers by columns, not by row.
+
+```{r}
+obs_matrix <- matrix(obs_counts, nrow = 3, ncol = 3)
+obs_matrix
+```
+
+The hypothesis test is also performed using the `chisq.test()` function.
+
+```{r}
+chisq.test(obs_matrix)
+```
+
+## Immigration Example
+
+We can load in the dataset `immigration`:
+
+```{r}
+source("https://www.openintro.org/data/R/immigration.R")
+```
+
+Let's start by briefly exploring the dataset:
+
+```{r}
+head(immigration)
+```
+
+```{r}
+summary(immigration)
+```
+
+We can obtain the contingency table that cross-classifies respondents using `table()`.
+
+```{r}
+table(immigration$response, immigration$political)
+table(immigration)
+```
+
+If we assign our table a name, we can send it directly to the `chisq.test()` function.
+
+```{r}
+obs_table <- table(immigration)
+t <- chisq.test(obs_table)
+t
+```
+
+Let's check our expected counts:
+
+```{r}
+t$expected
+```
+
+We can remove the `Not sure` category from our analysis, and redo our hypothesis test.
+
+```{r}
+obs_table2 <- table(immigration, exclude = "Not sure")
+obs_table2
+```
+
+```{r}
+t2 <- chisq.test(obs_table2)
+t2
+t2$expected
+```
+
+## Example 1
+
+```{r}
+obs_count <- c(17, 26, 22, 23, 19, 15, 25)
+probs <- rep(1 / length(obs_count), length(obs_count))
+chisq.test(obs_count, p = probs)
+```
+
+## Example 2
+
+```{r}
+obs_count <- matrix(c(113,92,934,1070), ncol = 2, nrow = 2)
+t <- chisq.test(obs_count)
+t
+```
+
+
+
+## Comparing Proportions
+
+```{r}
+left_handed <- c(113, 92)
+right_handed <- c(1047, 1162)
+prop.test(left_handed, right_handed, alternative = "greater")
+```
+
+Creating our matrix of observed counts:
+
+```{r}
+obs_counts <- c(370, 218, 480, 362)
+obs_matrix <- matrix(obs_counts, nrow = 2, ncol = 2)
+obs_matrix
+```
+
+Doing our chi-squared test:
+
+```{r}
+chisq.test(obs_matrix)
+```
+

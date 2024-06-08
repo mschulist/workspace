@@ -1,0 +1,165 @@
+---
+title: "Linear Regression"
+author: 
+date: 
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Blood Alcohol Content
+
+We can load our dataset into R:
+
+```{r}
+source("https://www.openintro.org/data/R/bac.R")
+```
+
+A scatterplot of x and y using the `plot(x, y)` function:
+
+```{r}
+plot(bac$beers, bac$bac)
+```
+
+We can find the correlation between two variables using the `cor()` function.
+
+```{r}
+cor(bac$beers, bac$bac)
+cor(bac$bac, bac$beers)
+cor(bac$bac, bac$beers * 12)
+```
+
+```{r}
+x <- 1:10
+y <- rep(10, 10)
+cor(y,x)
+cor(x,y)
+plot(x ~ y)
+```
+
+
+The `lm` function will estimate a linear regression model.  We express the model using `y ~ x`.  
+
+```{r}
+model1 <- lm(bac ~ beers, data = bac)
+model1
+model2 <- lm(bac$bac ~ bac$beers)
+model2
+```
+
+We can add this estimated line to our scatterplot.  `abline()` adds the estimated line contained in `model1`.
+
+```{r}
+plot(bac$beers, bac$bac)
+abline(model1)
+```
+
+We can use R to help us with our predicted values:
+
+```{r}
+# create a new value of beer
+new_beer <- data.frame(beers = 5)
+
+# find the predicted value
+predict(model1, newdata = new_beer)
+```
+
+The object `model1` also contains the residuals and fitted values.
+
+```{r}
+# observation 8 has x=5, y=0.060.
+model1$residuals
+model1$fitted.values
+```
+
+The information we need to perform a hypothesis test for the slope is also stored in `model1`.
+
+```{r}
+summary(model1)
+```
+
+The `Estimate` column provides the estimated intercept and slope.  The `Std. Error` column provides SE.  The `t value` provides T, the test statistic, and `Pr(>|t|)` gives the p-value for our hypothesis test.
+
+We can use the `predict()` function in R to obtain errors and intervals for prediction.
+
+```{r}
+# create a new value of beer
+new_beer <- data.frame(beers = 5)
+
+# find the predicted value
+predict(model1, newdata = new_beer)
+```
+
+```{r}
+# predict an average value
+predict(model1, newdata = new_beer, interval = "confidence", level = 0.95)
+```
+
+```{r}
+# predict an individual value
+predict(model1, newdata = new_beer, interval = "predict", level = 0.95)
+```
+
+We can obtain diagnostic plots in R:
+
+```{r}
+plot(model1)
+```
+
+## Births in 2014
+
+We can load the dataset into R:
+
+```{r}
+source("https://www.openintro.org/data/R/births14.R")
+```
+
+1. Make a scatterplot of weight vs. mage.
+
+```{r}
+plot(weight ~ mage, data = births14)
+```
+
+2. What is the correlation between weight and mage? What does this tell
+us about the relationship between these variables?
+
+```{r}
+cor(births14$mage, births14$weight)
+```
+
+3. Estimate the linear regression line. What is the interpretation of the estimated intercept and slope?
+
+```{r}
+model_b <- lm(weight ~ mage, data = births14)
+summary(model_b)
+```
+
+4. What is r2? Interpret this value.
+
+```{r}
+
+```
+
+5. Test whether mother’s age and birthweight have a linear relationship.
+
+```{r}
+
+```
+
+6. Suppose an expectant mother, Emma (age 35), wants to predict the birth weight of her infant. What value would you predict? To quantify the uncertainty in this prediction would you use a confidence interval or a prediction interval?
+
+```{r}
+new_mage <- data.frame(mage = 35)
+predict(model_b, newdata = new_mage, interval = "prediction")
+```
+
+7. Check the conditions for regression.
+
+```{r}
+plot(model_b)
+```
+
+
+

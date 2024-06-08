@@ -1,0 +1,163 @@
+---
+title: "Exam 3"
+author: "Mark Schulist"
+format: pdf
+---
+
+
+```{r}
+source("https://www.openintro.org/data/R/acs12.R")
+```
+
+a. 
+```{r}
+plot(income ~ hrs_work, data = acs12)
+```
+
+b. 
+```{r}
+model <- lm(income ~ hrs_work, data = acs12)
+summary(model)
+```
+
+
+$$
+\hat{y} = 1391.5 x - 12905.5
+$$
+
+c. The intercept is -12905.5, which represents the number of dollars someone can expect to make if they work zero hours per week. This value does not make much sense as someone cannot earn negative money, and working zero hours should earn zero dollars. 
+
+d. The slope is 1391.5, which represents the additional dollars of income someone can expect to get for every additional hour worked each week. 
+
+e. 
+
+```{r}
+r_squared <- cor(acs12$income, acs12$hrs_work, use = "complete.obs") ^ 2
+r_squared
+```
+
+11.7\% of the variation in someone's income can be explained by the number of hours they work each week. 
+
+f. 
+$$
+H_0: \text{There is not a linear relationship between the number of hours worked and someone's income}
+$$
+$$
+H_a: \text{There is a linear relationship between the number of hours worked and someone's income}
+$$
+
+The slope has a p-value of nearly zero (as shown in the summary), so we reject the null hypothesis and can conclude that there is a linear relationship between the number of hours worked each week and someone's income. 
+
+f. 
+
+```{r}
+new_hrs <- data.frame(hrs_work = 40)
+predict(model, newdata = new_hrs, interval = "confidence")
+```
+
+We estimate that the average income of someone working 40 hours a week is \$42755.28. The 95\% confidence interval is (39445.29, 46065.28).
+
+h. 
+
+```{r}
+plot(model)
+```
+
+This test is not very valid, as shown by both the residuals vs. fitted plot and the QQ plot. The residuals are not evenly spread around the best fit line, with a lot of the points with positive residuals being further away than the negative residuals. The edges of the QQ plot are not close to the ideal line, which shows that the residuals are not normally distributed, as required by this model. 
+
+2. 
+
+```{r}
+source("https://www.openintro.org/data/R/exam_grades.R")
+```
+
+a. 
+
+```{r}
+boxplot(exam_grades$exam1, exam_grades$exam3, 
+        names = c("Exam 1", "Exam 3"), 
+        main = "Boxplot of Exam Scores"
+        )
+```
+
+b. 
+
+$$
+H_0: \mu_1 = \mu_2
+$$
+$$
+H_a: \mu_1 \neq \mu_2
+$$
+
+
+```{r}
+t.test(exam_grades$exam1, exam_grades$exam3, paired = T)
+```
+
+The p-value is far below 0.05, so we reject the null hypothesis. We have evidence to show that the mean test scores between Exam 1 and 3 are different. 
+
+c. Looking at the boxplots, the data appear to be normally distributed. There is a small amount of left skew, but the same size is large enough that the test will be robust to this skew. 
+
+3. 
+
+```{r}
+source("https://www.openintro.org/data/R/ppp_201503.R")
+```
+
+a. 
+
+$$
+H_0: \text{There is no association with political party and opinion on tax raises}
+$$
+$$
+H_a: \text{Political party and opinion on tax raises are associated}
+$$
+
+```{r}
+obs <- table(ppp_201503)
+t <- chisq.test(obs)
+t
+```
+
+Our p-value is essentially 0, so we reject the null hypothesis. We have evidence to conclude that there is an association between political party and opinion on tax raises. 
+
+b.
+
+```{r}
+t$expected
+```
+
+Our expected values are all above 5, so the chi-squared test is valid. 
+
+4. 
+
+```{r}
+source("https://www.openintro.org/data/R/oscars.R")
+```
+
+```{r}
+boxplot(oscars$age ~ oscars$award)
+```
+
+It is pretty clear that actors are older when receiving an Oscar than actresses. The median, as well as every quantile, are larger for actors than actresses. 
+
+b. 
+
+$$
+H_0: \mu_1 = \mu_2
+$$
+$$
+H_a: \mu_1 \neq \mu_2
+$$
+
+```{r}
+t.test(oscars$age ~ oscars$award)
+```
+
+The p-value is far below 0.05, so we reject the null hypothesis. We have evidence to suggest that true difference in means ages of actors and actresses when they get an Oscar is not equal to zero. 
+
+c. The two distributions (actors and actresses' ages) are mostly normal, with some right skew overall. Because of the large sample size (92 for each), the t test will be robust to this deviation from the assumptions. 
+
+d. If the conditions did not hold, we should use a nonparametric test such as a Wilcoxon Rank Sum Test. This test compares the medians (technically the entire distribution) and does not have the same conditions as parametric tests. This test only requires that the data are independent, not that they are normal. 
+
+

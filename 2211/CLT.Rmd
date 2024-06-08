@@ -191,13 +191,13 @@ For the first sample, we can compute the 95% confidence interval and determine i
 
 ```{r}
 prop.test(support[1], n)
-#int <- prop.test(support[1], n)
-#int
-#int$conf.int
-#int$conf.int[1]
-#int$conf.int[2]
-#x <- 0.44 >= int$conf.int[1] & 0.44 <= int$conf.int[2]
-#x
+int <- prop.test(support[1], n)
+int
+int$conf.int
+int$conf.int[1]
+int$conf.int[2]
+x <- 0.44 >= int$conf.int[1] & 0.44 <= int$conf.int[2]
+x
 ```
 
 Now, let's do this for all of our samples using a `for` loop.
@@ -221,7 +221,7 @@ head(is_it_in)
 sum(is_it_in)
 
 # The proportion of intervals containing 0.44
-sum(is_it_in)/samples
+mean(is_it_in)
 ```
 
 ## Small Sample Confidence Intervals for Proportions
@@ -229,7 +229,7 @@ sum(is_it_in)/samples
 In our example there were complications in 3 of the consultants 62 clients.  We can use to use `binom.test` to compute a 95% confidence interval.
 
 ```{r}
-binom.test(3, 62)
+binom.test(3, 62, p = 0.1)
 ```
 
 

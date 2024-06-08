@@ -1,0 +1,165 @@
+---
+title: "Hypothesis Tests"
+author: 
+date: 
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Lupine Example Hypothesis Test
+
+For this example we had 142 out of 200 plants that were blue flowering.  Our hypothesized value was 0.75.
+
+```{r}
+prop.test(142, 200, p = 0.75, correct = FALSE)
+```
+
+R does not report Z, instead it reports Z^2, which it calls X-squared.
+
+## Nuclear Arms Reduction
+
+```{r}
+prop.test(576, 1028, p = 0.5, correct = FALSE, alternative = "greater")
+```
+
+If our alternative hypothesis is p < p0, we would use the `alternative = "less"` option.
+
+## Uniformity of p-values
+
+Suppose in our population the true value of p is 0.3.  We take a random sample of 5000 individuals in our population and perform a hypothesis test:
+$$H_0: p = 0.3 \\ H_a: p \ne 0.3$$
+Note here that H0 is true.
+
+```{r}
+# sample size
+n <- 5000
+
+# generate the number of successes for our random sample
+X <- rbinom(1, n, 0.3)
+```
+
+```{r}
+# perform our hypothesis test
+test <- prop.test(X, n, p = 0.3, correct = "FALSE")
+test
+```
+
+We can obtain just the p-value from our hypothesis test:
+
+```{r}
+test$p.value
+```
+
+Now, let's take 100,000 random samples of size 5000, perform 100,000 hypothesis tests, and obtain 100,000 p-values.
+
+```{r}
+n <- 5000
+samples <- 100000
+
+set.seed(6)
+X <- rbinom(samples, n, 0.3)
+```
+
+X contains the number of successes in each of our 100,000 random samples.
+
+```{r}
+# a vectors for our p-values to go in
+pvalues <- rep(0, samples)    
+
+# performing 100,000 tests and getting 100,000 p-values
+for(i in 1:samples){
+  test <- prop.test(X[i], n, p = 0.3, correct = "FALSE")
+  pvalues[i] <- test$p.value
+}
+```
+
+Now, let's make a histogram of the p-values:
+
+```{r}
+hist(pvalues)
+```
+
+## Small Sample Size
+
+We can use `binom.test()` to perform a hypothesis test for the organ donation example.
+
+```{r}
+binom.test(3, 62, p = 0.10, alternative = "less")
+```
+
+
+Now, let's take 100,000 random samples of size 10, perform 100,000 hypothesis tests, and obtain 100,000 p-values.  We will still assume that in our population the true value of p is 0.3, and we will still test the hypotheses:
+$$H_0: p = 0.3\\ H_a: p \ne 0.3$$
+
+```{r}
+n <- 10
+samples <- 100000
+
+set.seed(341)
+X <- rbinom(samples, n, 0.3)
+```
+
+X contains the number of successes in each of our 100,000 random samples.
+
+```{r}
+# a vectors for our p-values to go in
+pvalues <- rep(0, samples)    
+
+# performing 100,000 tests and getting 100,000 p-values
+for(i in 1:samples){
+  test <- suppressWarnings(prop.test(X[i], n, p = 0.3, correct = "FALSE"))
+  pvalues[i] <- test$p.value
+}
+```
+
+Now, let's make a histogram of the p-values:
+
+```{r}
+hist(pvalues)
+```
+
+## Power
+
+R has some built in functions to help us compute power.  The function we will use for a hypothesis test for a single proportion is in the package `pwr`.  We first need to install this package using the command `install.packages("pwr")`.  Installing a package only needs to be done once.  However, we will need to load this package every time we use it.
+
+```{r}
+library(pwr)
+```
+
+The function we will use is `pwr.p.test()`.  The syntax:
+
+```{r}
+# 0.65 is the true value of the proportion
+# 0.6 is our hypothesized proportion
+# 100 is our proposed sample size 
+# 0.05 is our significance level
+# We are doing a two.sided test (the other options are "less" and "greater")
+
+pwr.p.test(ES.h(0.65, 0.60), n = 100, sig.level = 0.05, alternative = "two.sided")
+```
+
+Now let's modify some of our settings and see what happens.
+
+```{r}
+pwr.p.test(ES.h(0.65, 0.6), n = 1000, sig.level = 0.05, alternative = "two.sided")
+```
+
+We can also use `pwr.p.test()` to compute the sample size needed to reach a desired power.
+
+```{r}
+pwr.p.test(ES.h(0.65, 0.6), power = 0.90, sig.level = 0.05, alternative = "two.sided")
+```
+
+```{r}
+pwr.p.test(ES.h(0.57, 0.6), sig.level = 0.05, n = 600, alternative = "less")
+```
+
+```{r}
+pwr.p.test(ES.h(0.57, 0.6), sig.level = 0.05, power = 0.9, alternative = "less")
+```
+
+
+

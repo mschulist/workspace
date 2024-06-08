@@ -1,0 +1,21 @@
+---
+title: "ImagePlot Test"
+author: "Mark Schulist"
+format: html
+---
+
+
+```{r}
+library(magick)
+```
+
+```{r}
+gatsby <- image_read("gastby_cover.jpg")
+gatsby
+```
+
+
+```{r}
+bitmap <- gatsby[[2]]
+```
+

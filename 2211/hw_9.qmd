@@ -1,0 +1,84 @@
+---
+title: "Homework 9"
+author: "Mark Schulist"
+format: pdf
+---
+
+1. 
+
+```{r}
+source("https://www.openintro.org/data/R/gpa.R")
+```
+
+```{r}
+boxplot(gpa ~ gender, data = gpa)
+```
+
+```{r}
+model <- lm(gpa ~ gender, data = gpa)
+summary(model)
+```
+
+The slope is -0.05126, which shows that being male will, on average, lower someone's gpa by about 5\% compared to being female. 
+
+$$
+\mu_1 = \mu_2
+$$
+$$
+\mu_1 \neq \mu_2
+$$
+
+Where $\mu_1$ is the avg gpa for a male and $\mu_2$ is the avg gpa for a female. 
+
+The slope has a p-value of 0.664, which mean that we do not have evidence that the gpa is significantly different for male and female students. 
+
+2. 
+
+```{r}
+pairs(gpa)
+```
+
+None of the numerical variables look to be strong predictors for someone's gpa. Studyweek might have some correlation (stronger than the rest), but it does not appear to be super strong. 
+
+```{r}
+model1 <- lm(gpa ~ studyweek + sleepnight + out + gender, data = gpa)
+summary(model1)
+```
+
+On average, sleeping one more hour per night will increase someone's gpa by 0.57\% holding the other variables constant. 
+
+On average, being male decreases someone's gpa by 7.98\% compared to being female, holding the other variables constant. 
+
+There is not a linear relationship between gpa and the number of hours slept per night accounting for the other predictor variables as the p-value is 0.909. 
+
+```{r}
+model_s <- lm(gpa ~ out, data = gpa)
+summary(model_s)
+```
+
+All of the variables remain insignificant, even after removing the most significant one-by-one. The most significant variable to remain is out, which measures the number of nights they go out in a week. 
+
+3. 
+
+```{r}
+source("https://www.openintro.org/data/R/gifted.R")
+```
+
+```{r}
+pca_result <- prcomp(gifted, scale = TRUE)
+pca_result
+```
+
+
+The first principal component explains 2.92 (out of a total of 8) of the variance. 
+
+```{r}
+plot(pca_result, type = 'l')
+```
+
+I think that 5 principal components are all that are needed to capture most of the variance of the data. After 5, the amount of variance is very small, below 0.5. 
+
+```{r}
+biplot(pca_result, scale = 0)
+```
+

@@ -1,0 +1,103 @@
+---
+title: "Homework 8"
+author: "Mark Schulist"
+format: pdf
+---
+
+
+1. 
+
+```{r}
+source("https://www.openintro.org/data/R/gpa.R")
+```
+
+```{r}
+plot(gpa ~ studyweek, data = gpa)
+```
+
+```{r}
+cor(gpa$gpa, gpa$studyweek)
+```
+
+The correlation is very small, basically 0. There is pretty much no relationship between someone's gpa and the amount they study each week. 
+
+```{r}
+model <- lm(gpa ~ studyweek, data = gpa)
+summary(model)
+```
+
+The intercept is 3.57, which is the estimated gpa of a student given they have studied zero hours. 
+
+The slope is 0.001127, which is the estimated boost to someone's gpa per additional hour of studying. 
+
+The $r^2$ value is 0.001731, which is very small. 0.17\% of the variability in someone's gpa can be explained by the number of hours they study per week. 
+
+$$
+H_0: \text{There is not a linear relationship between gpa and number of hours studied}
+$$
+$$
+H_a: \text{There is a linear relationship between gpa and number of hours studied}
+$$
+
+As we saw above, the p-value of the slope is 0.763, which is far above our $\alpha$. Therefore we do not have evidence to show that there is a linear relationship between gpa and number of hours studied. 
+
+```{r}
+new_studyweek <- data.frame(studyweek = 40)
+predict(model, newdata = new_studyweek, interval = "prediction")
+```
+
+We would predict his GPA to be 3.62. We use a prediction interval because this is a single observation, not the mean of the population. The 95\% prediction interval is (2.92, 4.33). 
+
+```{r}
+plot(model)
+```
+
+The residuals vs. fitted plot looks like it fits the assumptions of our model. There is even spread around 0. The QQ plot is also very close to the model's assumptions, although near the edges there is a little bit of deviation (although not too bad to say that this model is not worth using).
+
+
+2. 
+
+```{r}
+source("https://www.openintro.org/data/R/gss2010.R")
+```
+
+```{r}
+plot(mntlhlth ~ hrsrelax, data = gss2010)
+```
+
+```{r}
+cor(gss2010$mntlhlth, gss2010$hrsrelax, use = "complete.obs")
+```
+
+There is a (very) small negative correlation between someone's mental health and the number of hours relaxed. 
+
+```{r}
+model1 <- lm(mntlhlth ~ hrsrelax, data = gss2010)
+summary(model1)
+```
+
+The intercept is the estimated number of days an individual would rate their mental health as "not good" when the number of hours they spend on enjoyable activities after work is zero. 
+
+The slope is the estimated additional number of days an individual would rate their mental health as "not good" for each additional hour they spend on enjoyable activities after work. 
+
+$r^2$ is 0.00364, which says that 0.364\% of the variation in the number of days with bad mental health can be explained by the number of hours spent on enjoyable activities. 
+
+$H_0$: There is not a linear association between the number of days an individual rates their mental health as "not good" and the number of hours they spend on enjoyable activities after work. 
+
+$H_a$: There is a linear association between the number of days an individual rates their mental health as "not good" and the number of hours they spend on enjoyable activities after work. 
+
+The p-value is 0.0415, so we would (barely) reject the null hypothesis. We have evidence to suggest that there is a linear relationship between the two variables. Although there is statistical significance, the slope is not particularly large. The reason we have significance is because of our large sample size. 
+
+```{r}
+new_hrs <- data.frame(hrsrelax = 5)
+predict(model1, newdata = new_hrs, interval = "confidence")
+```
+
+The average number of poor mental health days in a month for individuals who have 5 hours to spend on enjoyable activities is 3.6. The confidence interval is (3.13, 4.08). We use a confidence interval because it is for the population, not a single person. 
+
+```{r}
+plot(model1)
+```
+
+
+These plots reveal that a linear model is definitely not a good model for these data. In the first plot, the residuals are not evenly spread around 0, there are far more on the positive side and for larger fitted values. In the QQ plot, the points are nowhere near the ideal line, showing that the residuals are definitely not normally distributed. These data do not meet the conditions for a single regression analysis. 

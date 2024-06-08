@@ -1,0 +1,125 @@
+---
+title: "Homework 7"
+author: "Mark Schulist"
+format: pdf
+---
+
+
+1. 
+
+$$
+H_0: \text{Barking Deer do not prefer one habitat over the other when foraging}
+$$ 
+$$
+H_a: \text{Barking Deer do not prefer one habitat over the other when foraging}
+$$
+
+```{r}
+obs_counts <- c(4, 16, 61, 345)
+probs <- c(0.048, 0.147, 0.396, 0.409)
+expected <- sum(obs_counts) * probs
+```
+
+If $H_0$ is true, we would expect the following counts:
+
+|      Woods      | Cultivated grassplot | Deciduous forests |      Other      |
+|:---------------:|:--------------------:|:-----------------:|:---------------:|
+| `r expected[1]` |   `r expected[2]`    |  `r expected[3]`  | `r expected[4]` |
+
+```{r}
+t <- chisq.test(obs_counts, p = probs)
+t
+```
+
+Our test statistic $\chi^2$ is `r t$statistic` and our p-value is `r t$p.value` (essentially zero). 
+
+Because our p-value is smaller than $\alpha$, we reject the null hypothesis and have evidence to conclude that Barking Deer prefer certain habitats over other habitats when foraging. 
+
+2. 
+
+```{r}
+source("https://www.openintro.org/data/R/env_regulation.R")
+```
+
+|      Regulations necessary      | Private marketplaces will ensure | Don't know|
+|:---------------:|:--------------------:|:-----------------:|
+| 45\% |  45\%    |  10\%  | 
+
+$$
+H_0: \text{The proportions in each group concerning gov't regulations correspond to the above proportions}
+$$
+$$
+H_a: \text{The proportions in each group concerning gov't regulations do not correspond to the above proportions}
+$$
+
+```{r}
+obs_counts <- table(env_regulation)
+probs <- c(0.1, 0.45, 0.45)
+t <- chisq.test(obs_counts, p = probs)
+t
+```
+
+The p-value is much below our $\alpha$, so we reject the null hypothesis. We have evidence to show that the true proportions of people in each group does not correspond with our belief of the proportions that should fall into each group. 
+
+3. 
+
+$$
+H_0: \text{Party affiliation is independent of opinion of use of x-ray scanners}
+$$
+$$
+H_a: \text{Party affiliation is associated with opinion of use of x-ray scanners}
+$$
+
+```{r}
+obs <- c(264, 38, 16, 299, 55, 15, 351, 77, 22)
+obs_counts <- matrix(obs, nrow = 3, ncol = 3)
+t <- chisq.test(obs_counts)
+t
+```
+
+Our test statistic is `r t$statistic` and our p-value is `r t$p.value`. The p-value is above $\alpha$, so we do not reject the null. We do not have evidence to suggest that party affiliation is associated with their opinion on the use of x-ray scanners. 
+
+```{r}
+t$expected
+```
+
+The smallest expected value is 17.2, which is above 5 so our conditions are met. Our samples are also random and independent. 
+
+4. 
+
+```{r}
+source("https://www.openintro.org/data/R/global_warming_pew.R")
+```
+
+$$
+H_0: \text{Party ideology and reponse to question on global warming are independent}
+$$
+$$
+H_a: \text{Party ideology and response to question on global warming are associated}
+$$
+
+```{r}
+obs <- table(global_warming_pew)
+```
+
+```{r}
+t <- chisq.test(obs)
+t
+```
+
+The p-value is far below $\alpha$, so we reject the null hypothesis. We have evidence to suggest that party ideology and their response to the question on global warming are associated. 
+
+5. 
+
+$H_0$: Proportion of Americans who said govt shutdown affected them is not associated with making more or less than 40,000
+
+$H_a$: Proportion of Americans who said govt shutdown affected them is associated with making more or less than 40,000
+
+```{r}
+obs <- c(100,109,223,182)
+obs_matrix <- matrix(obs, nrow = 2, ncol = 2)
+chisq.test(obs_matrix)
+```
+
+Our p-value is more than 0.05, so we do not reject the null hypothesis. We do not have evidence to suggest that the
+proportion of Americans who said government shutdown affected them is associated with making more or less than 40,000.

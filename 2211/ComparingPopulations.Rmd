@@ -1,0 +1,309 @@
+---
+title: "Comparing Populations"
+author: 
+date: 
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Word Length in The Great Gatsby and Harry Potter: The Sorcerer's Stone
+
+We can simulate the population of words in The Great Gatsby using the gamma distribution.  Each element of `gatsby_pop` gives the number of characters in one word in the novel.
+
+```{r}
+set.seed(123)
+gatsby_pop <- ceiling(rgamma(47000, shape = 1.992, scale = 2.480))
+mean(gatsby_pop)
+sd(gatsby_pop)
+hist(gatsby_pop)
+```
+
+We can also simulate the population of words in The Sorcerer's Stone.  Each element of `potter_pop` gives the number of characters in one word in the novel.
+
+```{r}
+set.seed(456)
+potter_pop <- ceiling(rgamma(77000, shape = 2.397, scale = 2.102))
+mean(potter_pop)
+sd(potter_pop)
+hist(potter_pop)
+```
+
+Let's take random samples of size 100 from each book.
+
+```{r}
+n <- 100
+set.seed(193)
+gatsby_sample <- sample(gatsby_pop, n, replace = FALSE)
+potter_sample <- sample(potter_pop, n, replace = FALSE)
+```
+
+Obtaining some summary statistics and a side-by-side boxplot:
+
+```{r}
+#boxplot
+boxplot(gatsby_sample, potter_sample, beside = TRUE)
+
+#gatsby mean, sd, n
+mean(gatsby_sample)
+sd(gatsby_sample)
+length(gatsby_sample)
+
+#potter mean, sd, n
+mean(potter_sample)
+sd(potter_sample)
+length(potter_sample)
+```
+
+We can perform our hypothesis test using the function `t.test()`.
+
+```{r}
+t.test(gatsby_sample, potter_sample)
+```
+
+## Robustness of the Two Sample T-test
+
+We'll start by performing hypothesis tests comparing population means from two normal populations with equal means.  Population 1 will have a normal distribution with mean 10 and standard deviation 2; Population 2 will have a normal distribution with mean 10 and standard deviation 5.  The hypotheses we will test are 
+$$H_0: \mu_1 = \mu_2 \\ H_a: \mu_1 \ne \mu_2$$
+Note that the null hypothesis is true.
+
+We will take 10,000 samples of size n, perform the two-sample t-test, and obtain the p-value for each test.
+
+
+```{r}
+n <- 1000
+samples <- 10000
+
+# a vectors for our p-values to go in
+pvalues <- rep(0, samples)    
+
+set.seed(29)
+for(i in 1:samples){
+  data1 <- rnorm(n, 10, 2)              #sample 1
+  data2 <- rnorm(n, 10, 5)              #sample 2
+  test <- t.test(data1, data2)          #do t-test
+  pvalues[i] <- test$p.value            #get p-value
+}
+```
+
+We can obtain a histogram of the p-values.
+
+```{r}
+hist(pvalues)
+```
+
+We can obtain the proportion of p-values less than or equal to 0.05 (this should be close to 0.05), our Type I error.
+
+```{r}
+# the number of p-values less than or equal to 0.05
+sum(pvalues <= 0.05)
+
+# the proportion of p-values less than or equal to 0.05
+sum(pvalues <= 0.05)/samples
+```
+
+Now, let's comparing population means from two non-normal populations with equal means.  Population 1 and 2 will both have exponential distributions with population means of 5.  The hypotheses we will test are 
+$$H_0: \mu_1 = \mu_2 \\ H_a: \mu_1 \ne \mu_2$$
+Note that the null hypothesis is true.
+
+The exponential distribution is a highly-skewed continuous distribution.
+
+```{r}
+x <- rexp(1000, rate = 0.2)
+hist(x)
+```
+
+We will take 10,000 samples of size n, perform the two-sample t-test, and obtain the p-value for each test.
+
+```{r}
+n <- 50
+samples <- 10000
+
+# a vectors for our p-values to go in
+pvalues <- rep(0, samples)    
+
+set.seed(951)
+for(i in 1:samples){
+  data1 <- rexp(n, rate = 0.2)          #sample 1
+  data2 <- rexp(n, rate = 0.2)          #sample 2
+  test <- t.test(data1, data2)          #do t-test
+  pvalues[i] <- test$p.value            #get p-value
+}
+```
+
+We can obtain a histogram of the p-values.
+
+```{r}
+hist(pvalues)
+```
+
+We can obtain the proportion of p-values less than or equal to 0.05 (this should be close to 0.05), our Type I error.
+
+```{r}
+# the number of p-values less than or equal to 0.05
+sum(pvalues <= 0.05)
+
+# the proportion of p-values less than or equal to 0.05
+sum(pvalues <= 0.05)/samples
+```
+
+## Body temperature
+
+```{r}
+source("https://www.openintro.org/data/R/thermometry.R")
+summary(thermometry)
+```
+
+We can make side-by-side boxplots:
+
+```{r}
+boxplot(thermometry$body.temp ~ thermometry$gender)
+```
+
+To do the hypothesis test in R we need to modify our code slightly.  In this example we do not have two separate vectors for male and female body temperatures.  This means that we won't use `t.test(sample1, sample2)`.  Instead, we'll use the same code we used in our side-by-side boxplot command.
+
+```{r}
+t.test(thermometry$body.temp ~ thermometry$gender)
+```
+
+## Wilcoxon Rank-Sum Test
+
+Our toy example:
+
+```{r}
+x1 <- c(2.8, 1.2, 4.9)
+x2 <- c(3.5, 6.9, 1.4, 2.1)
+wilcox.test(x1, x2)
+```
+
+The Wilcoxon rank-sum test for The Great Gatsby and The Sorcerer's Stone:
+
+```{r}
+wilcox.test(gatsby_sample, potter_sample)
+```
+
+We can verify that this test has the correct Type I error rate by simulation.  We will take 10,000 samples of size n from two exponential distributions with the same median (i.e., H0 is true), perform the Wilcoxon rank sum test, and obtain the p-value for each test.  We can obtain the proportion of p-values less than or equal to 0.05 (this should be close to 0.05), our Type I error.
+
+```{r}
+n <- 8
+samples <- 10000
+
+# a vectors for our p-values to go in
+pvalues <- rep(0, samples)    
+
+set.seed(437)
+for(i in 1:samples){
+  data1 <- rexp(n, rate = 0.2)          #sample 1
+  data2 <- rexp(n, rate = 0.2)          #sample 2
+  test <- wilcox.test(data1, data2)     #do the W R-S test
+  pvalues[i] <- test$p.value            #get p-value
+}
+
+# the number of p-values less than or equal to 0.05
+sum(pvalues <= 0.05)
+
+# the proportion of p-values less than or equal to 0.05
+sum(pvalues <= 0.05)/samples
+```
+
+```{r}
+xi = rep(0, 100)
+for (i in 1:100) {
+  xi[i] = mean(pvalues <= (i / 100)) - (i / 100)
+}
+```
+
+
+## Paired Data
+
+Let's load in the textbook prices dataset.
+
+```{r}
+source("https://www.openintro.org/data/R/textbooks.R")
+```
+
+We will analyze the difference between the variables `ucla_new` and `amaz_new`. This variable already exists in the dataset as `diff`. However, if this variable wasn't part of the dataset, we could create it.
+
+```{r}
+difference <- textbooks$ucla_new - textbooks$amaz_new
+```
+
+```{r}
+difference
+textbooks$diff
+```
+
+We can find some summary measures for the variable `difference` and make a boxplot:
+
+```{r}
+mean(difference)
+sd(difference)
+boxplot(difference)
+```
+
+We can test whether there is an average difference in new textbook prices for the UCLA bookstore and Amazon using `t.test()`.
+
+```{r}
+t.test(textbooks$ucla_new, textbooks$amaz_new, paired = TRUE)
+```
+
+## Husbands/Wives Example
+
+```{r}
+# Reading the data into R
+source("https://www.openintro.org/data/R/husbands_wives.R")
+```
+
+```{r}
+# Creating a difference variable
+h_w_m_diff <- husbands_wives$age_husb_at_marriage - husbands_wives$age_wife_at_marriage
+```
+
+```{r}
+# Obtaining summary statistics and a boxplot
+summary(h_w_m_diff)
+sd(h_w_m_diff, na.rm = T)
+boxplot(h_w_m_diff)
+```
+
+```{r}
+# Perform the hypothesis test
+x <- map(100:300, ~
+t.test(h_w_m_diff, mu = . * 0.01)$p.value) %>% unlist
+```
+
+## Checking for normality
+
+Histogram:
+
+```{r}
+hist(difference) # textbook price diff
+```
+
+Boxplot:
+
+```{r}
+boxplot(difference)
+```
+
+Normal Q-Q plot:
+
+```{r}
+qqnorm(difference)   # plots the points
+qqline(difference)   # adds the straight line
+```
+
+What do these plots look like if the data do arise from a normal random variable?
+
+```{r}
+set.seed(288)
+x <- rnorm(25, mean = 35, sd = 4)
+hist(x)
+density(x) %>% plot
+boxplot(x)
+qqnorm(x)
+qqline(x)
+```
+

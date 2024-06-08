@@ -1,0 +1,125 @@
+---
+title: "Multiple Regression and PCA"
+author: 
+date: 
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Births in 2014: Multiple Regression
+
+We can load the dataset into R:
+
+```{r}
+source("https://www.openintro.org/data/R/births14.R")
+```
+
+We can make scatterplots for the response variable with the numeric predictors.
+
+```{r}
+plot(births14$fage, births14$weight)
+plot(births14$mage, births14$weight)
+plot(births14$weeks, births14$weight)
+plot(births14$visits, births14$weight)
+plot(births14$gained, births14$weight)
+```
+
+We can also create a *scatterplot matrix* for the numeric variables.
+
+```{r}
+num <- c(1, 2, 4, 6, 7, 8) # the columns 1, 2, 4, 6, 7, and 8 contain the numeric variables
+pairs(births14[num])
+```
+
+We can create boxplots to look at the relationship between `weight` and the categorical predictors.
+
+```{r}
+boxplot(births14$weight ~ births14$premie)
+boxplot(births14$weight ~ births14$sex)
+boxplot(births14$weight ~ births14$habit)
+boxplot(births14$weight ~ births14$marital)
+boxplot(births14$weight ~ births14$whitemom)
+```
+
+Using `habit` as an explanatory variable:
+
+```{r}
+model1 <- lm(weight ~ habit, data = births14)
+summary(model1)
+```
+
+```{r}
+t.test(births14$weight ~ births14$habit, var.equal = T)
+```
+
+
+Estimating the multiple linear regression model:
+
+```{r}
+model2 <- lm(weight ~ fage + mage + weeks + premie + visits + gained + sex + habit + marital + whitemom, data = births14)
+summary(model2)
+```
+
+Performing model selection:
+
+```{r}
+m <- lm(weight ~ mage + weeks + premie + gained + sex + habit + whitemom, data = births14)
+summary(m)
+plot(m)
+```
+
+```{r}
+new <- data.frame(mage = 30, weeks = 36, premie = "full term", gained = 20, sex = "male", habit = "nonsmoker", whitemom = "not white")
+predict(m, newdata = new, interval = "prediction")
+```
+
+
+## USArrests: Principal Component Analysis
+
+```{r}
+View(USArrests)
+```
+
+In this case, the number of variables is fairly small, so we can look at a scatterplot matrix.
+
+```{r}
+pairs(USArrests)
+```
+
+We can obtain the sample variances for our four variables.
+
+```{r}
+var(USArrests$Murder)
+var(USArrests$Assault)
+var(USArrests$UrbanPop)
+var(USArrests$Rape)
+```
+
+The `prcomp` performs PCA.  The option `scale = TRUE` scales all the variables to have a standard deviation of 1.
+
+```{r}
+pca_result <- prcomp(USArrests, scale = TRUE)
+pca_result
+```
+
+Plotting the explained variances:
+
+```{r}
+plot(pca_result, type = "l")
+```
+
+Making a biplot:
+
+```{r}
+biplot(pca_result, scale = 0)
+```
+
+
+ 
+ 
+ 
+ 
+ 

@@ -1,0 +1,31 @@
+```{r}
+library(MASS)
+```
+
+
+## Exercise 1
+
+```{r}
+m1 <- matrix(c(2,1,6,5,2,7,3,4,0), nrow = 3, ncol = 3)
+
+sums <- c()
+
+sums["col1"] <- sum(m1[,1])
+sums["col2"] <- sum(m1[,2])
+sums["col3"] <- sum(m1[,3])
+
+sums["row1"] <- sum(m1[1,])
+sums["row2"] <- sum(m1[2,])
+sums["row3"] <- sum(m1[3,])
+
+print(sums)
+```
+
+## Exercise 2
+
+```{r}
+data(Boston)
+
+plot(Boston$nox, Boston$rad)
+```
+

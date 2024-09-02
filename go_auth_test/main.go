@@ -29,6 +29,6 @@ func main() {
 		ReadTimeout:  15 * time.Second,
 	}
 
-	log.Println("Server started!")
+	log.Println("Server started on port 8000")
 	srv.ListenAndServe()
 }

@@ -1,0 +1,40 @@
+```{r}
+library(tidyverse)
+library(xkcd)
+```
+
+```{r}
+edu <- read.table("https://media.pearsoncmg.com/cmg/pmmg_mml_shared/mathstatsresources/Akritas/EducationData.txt")
+edu$Region <- as.factor(edu$Region)
+```
+
+```{r}
+ggplot(edu, aes(X1, Y, color = Region, shape = Region)) +
+  geom_point(size = 3) +
+  labs(title = "Education Expenditure vs. Per Capita Income", 
+       y = "Per Capita Education Expenditure",
+       x = "Per Capita Income") +
+  theme_xkcd()
+```
+
+
+
+```{r}
+flu <- read.table("https://media.pearsoncmg.com/cmg/pmmg_mml_shared/mathstatsresources/Akritas/FluShotData.txt")
+shot_map <- list("0" = "No flu Shot", "1" = "flu shot")
+flu <- flu %>% mutate(
+  Shot = as.character(shot_map[as.character(Shot)]),
+)
+flu$Shot <- as.factor(flu$Shot)
+```
+
+```{r}
+ggplot(flu, aes(Age, Health.Aware, color = Shot, shape = Shot)) +
+  geom_point(size = 3) +
+  labs(title = "How Does Age Affect a Person's Health Awareness?") +
+  xlab("Age") +
+  ylab("Health Awareness Index") +
+  theme_xkcd()
+```
+
+

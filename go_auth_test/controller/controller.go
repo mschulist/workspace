@@ -68,6 +68,13 @@ func AddUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// check to see if the user already exists by uuid
+	_, err = db.GetUserByUUID(tmpUser.UUID, false)
+	if err == nil {
+		http.Error(w, "User already exists", http.StatusConflict)
+		return
+	}
+
 	// hash the password
 	hashedPass, err := auth.HashPassword(tmpUser.Password)
 	if err != nil {

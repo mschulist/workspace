@@ -4,7 +4,7 @@ import { router } from "expo-router";
 
 const AUTH_KEY = "auth_key";
 
-export async function setAuth(auth: AuthModel) {
+export async function setLocalAuth(auth: AuthModel) {
   setItemAsync(AUTH_KEY, JSON.stringify(auth));
 }
 

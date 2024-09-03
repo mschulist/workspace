@@ -1,12 +1,12 @@
 import { router } from "expo-router";
-import { LoginRequest, User } from "./authModel";
-import { setAuth } from "./localAuth";
+import { LoginRequest, SignupRequest, User } from "./authModel";
 
 export const SERVER_URL = "http://localhost:8000";
 
 export async function login(
   studentID: string,
-  password: string
+  password: string,
+  setAuth: (auth: { jwt: string }) => void
 ): Promise<void> {
   const loginRequest: LoginRequest = {
     uuid: studentID,
@@ -30,6 +30,7 @@ export async function login(
   });
 }
 
+// to be used by the auth provider
 export async function getUserData(jwt: string): Promise<User> {
   return fetch(`${SERVER_URL}/getuser`, {
     method: "GET",
@@ -44,6 +45,29 @@ export async function getUserData(jwt: string): Promise<User> {
     } else {
       console.log(response);
       throw new Error("Get user data failed");
+    }
+  });
+}
+
+// used by components
+export async function signup(
+  signupDetails: SignupRequest,
+  setAuth: (auth: { jwt: string }) => void
+): Promise<void> {
+  return fetch(`${SERVER_URL}/adduser`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(signupDetails),
+  }).then(async (response) => {
+    if (response.status === 200) {
+      const res = await response.json();
+      console.log(res);
+      setAuth({ jwt: res.jwt });
+      router.replace("/");
+    } else {
+      throw new Error("Signup failed");
     }
   });
 }

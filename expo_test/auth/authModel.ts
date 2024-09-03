@@ -11,6 +11,9 @@ export type SessionModel = {
   auth: AuthModel | null;
   loading: boolean;
   user: User | null;
+  logout: () => void;
+  setAuth: (auth: AuthModel) => void;
+  getUser: () => void;
 };
 
 export type User = {
@@ -19,15 +22,25 @@ export type User = {
   password: string;
   id: string;
   phone: string;
-  firstName: string;
-  lastName: string;
+  first_name: string;
+  last_name: string;
   purchases: Purchase[];
-  currentPoints: number;
+  current_points: number;
   admin: boolean;
 }
 
 export type Purchase = {
-  datetime: Date;
+  datetime: string;
   id: string;
-  properties: Map<string, string>;
+  properties: Object;
 }
+
+export type SignupRequest = {
+  uuid: string;
+  password: string;
+  email: string;
+  phone?: string;
+  firstName: string;
+  lastName: string;
+  id: string; // this is studentID, and we will set id = uuid
+};

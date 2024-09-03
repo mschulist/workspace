@@ -1,34 +1,41 @@
 import React from "react";
 import { useState } from "react";
-import { Button, Text, TextInput } from "react-native-paper";
+import { Button, Card, Text, TextInput } from "react-native-paper";
 import { login } from "@/auth/login";
+import { View } from "react-native";
+import { useAuth } from "./Auth";
 
 export function Login() {
   const [studentID, setStudentID] = useState("");
   const [password, setPassword] = useState("");
 
+  const { setAuth } = useAuth();
+
   return (
-    <>
-      <Text>Student ID</Text>
-      <TextInput value={studentID} onChangeText={setStudentID} />
-      <Text>Password</Text>
-      <PasswordTextInput password={password} setPassword={setPassword} />
-      <Button
-        mode="contained-tonal"
-        onPress={() => {
-          login(studentID, password).catch((error) => {
-            console.log(error.message);
-            alert(error.message);
-          });
-        }}
-      >
-        Login
-      </Button>
-    </>
+    <Card>
+      <Card.Title title="Login" />
+      <Card.Content>
+        <Text>Student ID</Text>
+        <TextInput value={studentID} onChangeText={setStudentID} />
+        <Text>Password</Text>
+        <PasswordTextInput password={password} setPassword={setPassword} />
+        <Button
+          mode="contained-tonal"
+          onPress={() => {
+            login(studentID, password, setAuth).catch((error) => {
+              console.log(error.message);
+              alert(error.message);
+            });
+          }}
+        >
+          Login
+        </Button>
+      </Card.Content>
+    </Card>
   );
 }
 
-function PasswordTextInput({
+export function PasswordTextInput({
   password,
   setPassword,
 }: {

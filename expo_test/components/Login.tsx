@@ -1,15 +1,13 @@
 import React from "react";
 import { useState } from "react";
 import { Button, Card, Text, TextInput } from "react-native-paper";
-import { login } from "@/auth/login";
-import { View } from "react-native";
 import { useAuth } from "./Auth";
 
 export function Login() {
   const [studentID, setStudentID] = useState("");
   const [password, setPassword] = useState("");
 
-  const { setAuth } = useAuth();
+  const { login } = useAuth();
 
   return (
     <Card>
@@ -22,10 +20,7 @@ export function Login() {
         <Button
           mode="contained-tonal"
           onPress={() => {
-            login(studentID, password, setAuth).catch((error) => {
-              console.log(error.message);
-              alert(error.message);
-            });
+            login(studentID, password);
           }}
         >
           Login

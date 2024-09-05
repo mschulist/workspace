@@ -3,11 +3,11 @@ import { LoginRequest, SignupRequest, User } from "./authModel";
 
 export const SERVER_URL = "http://localhost:8000";
 
-export async function login(
+// used by auth provider
+export async function loginWithServer(
   studentID: string,
-  password: string,
-  setAuth: (auth: { jwt: string }) => void
-): Promise<void> {
+  password: string
+): Promise<{jwt: string}> {
   const loginRequest: LoginRequest = {
     uuid: studentID,
     password: password,
@@ -22,8 +22,7 @@ export async function login(
     if (response.status === 200) {
       const res = await response.json();
       console.log(res);
-      setAuth({ jwt: res.jwt });
-      router.replace("/");
+      return res as { jwt: string };
     } else {
       throw new Error("Login failed");
     }
@@ -65,7 +64,7 @@ export async function signup(
       const res = await response.json();
       console.log(res);
       setAuth({ jwt: res.jwt });
-      router.replace("/");
+      router.replace("/user");
     } else {
       throw new Error("Signup failed");
     }

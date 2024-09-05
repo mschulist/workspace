@@ -1,10 +1,10 @@
 import { Text } from "react-native";
 import { Redirect, Slot, Stack } from "expo-router";
 
-import { useAuth } from "@/components/Auth";
+import { Auth, useAuth } from "@/components/Auth";
 import React from "react";
 import { ActivityIndicator, MD2Colors } from "react-native-paper";
-import Home from ".";
+import AdminHome from ".";
 
 export default function AppLayout() {
   const { auth, loading } = useAuth();
@@ -12,10 +12,10 @@ export default function AppLayout() {
   // You can keep the splash screen open, or render a loading screen like we do here.
   if (loading) {
     return <ActivityIndicator animating={true} color={MD2Colors.red800} />;
-  } else if (auth === null || auth.jwt === "") {
-    // On web, static rendering will stop here as the user is not authenticated
-    // in the headless Node process that the pages are rendered in.
-    return <Redirect href="/login" />;
   }
-  return <Home />;
+  return (
+    <Auth>
+      <AdminHome />
+    </Auth>
+  );
 }

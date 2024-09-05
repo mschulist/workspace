@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { Button, Card, Text } from "react-native-paper";
+import React, { useEffect, useState } from "react";
+import { ActivityIndicator, Button, Card, Text } from "react-native-paper";
 import { useAuth } from "./Auth";
 import { Purchase } from "@/auth/authModel";
 import { RefreshControl, ScrollView } from "react-native";
@@ -9,13 +9,16 @@ export function Purchases() {
 
   const { user, getUser } = useAuth();
 
+  useEffect(() => {
+    getUser();
+  }, []);
+
   const onRefresh = React.useCallback(() => {
     setRefreshing(true);
     getUser();
     setRefreshing(false);
   }, []);
 
-  console.log("User2: ", user);
   return (
     <ScrollView
       refreshControl={
@@ -51,7 +54,10 @@ function PurchaseComponent(purchase: Purchase) {
   }
   return (
     <Card>
-      <Card.Title title={`Purchase ID: ${purchase.id}`} subtitle={toDateTimeString(date)} />
+      <Card.Title
+        title={`Purchase ID: ${purchase.id}`}
+        subtitle={toDateTimeString(date)}
+      />
       <Card.Content>
         <PurchaseProperties properties={purchase.properties} />
       </Card.Content>
@@ -65,7 +71,7 @@ function PurchaseProperties({
   properties: Object;
 }): React.ReactElement {
   if (!properties) {
-    return <></>
+    return <></>;
   }
   return (
     <Card.Content>

@@ -9,6 +9,7 @@ import (
 	"cloud.google.com/go/firestore"
 	firebase "firebase.google.com/go"
 	"github.com/mitchellh/mapstructure"
+	"google.golang.org/api/iterator"
 	"google.golang.org/api/option"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
@@ -72,23 +73,49 @@ func (d *DB) InsertUser(u auth.User) error {
 	return nil
 }
 
-// GetUserByUUID retrieves a user from the database by their UUID
-func (d *DB) GetUserByUUID(UUID string, includePassword bool) (*auth.User, error) {
+// GetUsersByUUID retrieves all users whose UUID starts with the given prefix.
+func (d *DB) GetUsersByUUID(UUIDPrefix string, includePassword bool, limit int) ([]*auth.User, error) {
 	ctx := context.Background()
-	userDoc, err := d.Client.Collection(UserCollectionName).Doc(UUID).Get(ctx)
-	if err != nil {
-		return nil, err
+
+	if limit == -1 {
+		limit = 10
 	}
-	userDocMap := userDoc.Data()
-	user := &auth.User{}
-	err = mapstructure.Decode(userDocMap, user)
-	if err != nil {
-		return nil, err
+
+	query := d.Client.Collection(UserCollectionName).
+		Where("uuid", ">=", UUIDPrefix).
+		Where("uuid", "<=", UUIDPrefix+"\uf8ff").
+		Limit(limit)
+
+	iter := query.Documents(ctx)
+	defer iter.Stop()
+
+	var users []*auth.User
+
+	// Iterate over all matching documents.
+	for {
+		doc, err := iter.Next()
+		if err == iterator.Done {
+			break
+		}
+		if err != nil {
+			return nil, err
+		}
+
+		userDocMap := doc.Data()
+		user := &auth.User{}
+		err = mapstructure.Decode(userDocMap, user)
+		if err != nil {
+			return nil, err
+		}
+
+		if !includePassword {
+			user.Password = ""
+		}
+
+		users = append(users, user)
 	}
-	if !includePassword {
-		user.Password = ""
-	}
-	return user, nil
+
+	return users, nil
 }
 
 func (d *DB) AddPurchaseToDB(UUID string, p auth.Purchase) error {

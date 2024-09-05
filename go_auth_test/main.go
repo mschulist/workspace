@@ -8,20 +8,37 @@ import (
 
 	"github.com/gorilla/mux"
 	_ "github.com/joho/godotenv/autoload"
+	"github.com/ulule/limiter/v3"
+	"github.com/ulule/limiter/v3/drivers/middleware/stdlib"
+	"github.com/ulule/limiter/v3/drivers/store/memory"
 )
 
 func main() {
+	// Define a rate limit: 5 requests per minute per IP
+	rate := limiter.Rate{
+		Period: 1 * time.Minute,
+		Limit:  5,
+	}
+
+	// Create a store for the rate limiter
+	store := memory.NewStore()
+
+	// Create the rate limiter middleware
+	middleware := stdlib.NewMiddleware(limiter.New(store, rate))
+
+	// Initialize the router
 	router := mux.NewRouter()
 	router.HandleFunc("/login", controller.Login).Methods("POST")
 	router.HandleFunc("/adduser", controller.AddUser).Methods("POST")
 	router.HandleFunc("/getuser", controller.GetUser).Methods("GET")
 	router.HandleFunc("/addpurchase", controller.AddPurchase).Methods("PUT")
-	router.HandleFunc("/getuseradmin", controller.GetUserAdmin).Methods("GET")
+	router.HandleFunc("/getuseradmin", controller.GetUserAdmin).Methods("POST")
 
-	http.Handle("/", router)
+	// Apply the rate limiter middleware to all routes
+	http.Handle("/", middleware.Handler(router))
 
+	// Set the server address and timeouts
 	addr := "0.0.0.0:8000"
-
 	srv := &http.Server{
 		Handler:      router,
 		Addr:         addr,

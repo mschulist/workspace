@@ -1,10 +1,14 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { ActivityIndicator, Card, Text } from "react-native-paper";
 import { useAuth } from "./Auth";
 import { Logout } from "./Logout";
 
 export function UserInfo() {
-  const { user } = useAuth();
+  const { user, getUser } = useAuth();
+
+  useEffect(() => {
+    getUser();
+  }, []);
 
   if (!user) {
     return <ActivityIndicator />;

@@ -14,6 +14,7 @@ export type SessionModel = {
   logout: () => void;
   setAuth: (auth: AuthModel) => void;
   getUser: () => void;
+  login: (studentID: string, password: string) => void;
 };
 
 export type User = {
@@ -27,13 +28,13 @@ export type User = {
   purchases: Purchase[];
   current_points: number;
   admin: boolean;
-}
+};
 
 export type Purchase = {
   datetime: string;
   id: string;
   properties: Object;
-}
+};
 
 export type SignupRequest = {
   uuid: string;

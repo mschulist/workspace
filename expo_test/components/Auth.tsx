@@ -1,9 +1,9 @@
 import { AuthModel, SessionModel, User } from "@/auth/authModel";
-import { clearAuth, getAuth } from "@/auth/localAuth";
-import { getUserData, login, signup } from "@/auth/login";
+import { clearAuth, getAuth, setLocalAuth } from "@/auth/localAuth";
+import { getUserData, loginWithServer, signup } from "@/auth/login";
+import { router } from "expo-router";
 import { createContext, useContext, useEffect, useState } from "react";
 import React from "react";
-import { get } from "react-native/Libraries/TurboModule/TurboModuleRegistry";
 
 const AuthContext = createContext<SessionModel>({
   auth: null,
@@ -12,6 +12,7 @@ const AuthContext = createContext<SessionModel>({
   logout: () => {},
   setAuth: () => {},
   getUser: () => {},
+  login: () => {},
 });
 
 export function Auth(props: { children: React.ReactNode }): React.ReactElement {
@@ -20,21 +21,54 @@ export function Auth(props: { children: React.ReactNode }): React.ReactElement {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Load auth from secure storage
-    getAuth().then((auth) => {
-      setAuthModel(auth);
+    console.log("Auth useEffect");
+    console.log("AuthModel: ", authModel);
+    if (authModel === null || authModel.jwt === "") {
+      getAuth().then((auth) => {
+        if (auth === null) {
+          setLoading(false);
+          return;
+        }
+        setAuthModel(auth);
+        setLoading(false);
+      });
+    }
+    if (authModel === null || authModel.jwt === "") {
+      return;
+    }
+    getUserData(authModel.jwt).then((user) => {
+      console.log("User: ", user);
+      setUser(user);
       setLoading(false);
+      if (user.admin === true) {
+        router.replace("/admin");
+      } else {
+        router.replace("/user");
+      }
     });
   }, []);
 
-  useEffect(() => {
-    if (authModel?.jwt !== "" && authModel?.jwt !== undefined) {
-      getUserData(authModel.jwt).then((user) => {
-        console.log("User: ", user.purchases);
-        setUser(user);
+  function login(studentID: string, password: string) {
+    loginWithServer(studentID, password)
+      .then((auth) => {
+        setAuthModel(auth);
+        setLocalAuth(auth);
+        getUserData(auth.jwt).then((user) => {
+          setUser(user);
+          setLocalAuth(auth);
+          console.log("Login Auth: ", auth);
+          setLoading(false);
+          if (user.admin === true) {
+            router.replace("/admin");
+          } else {
+            router.replace("/user");
+          }
+        });
+      })
+      .catch((e) => {
+        alert(e as string);
       });
-    }
-  }, [authModel]);
+  }
 
   function logout() {
     clearAuth();
@@ -59,7 +93,15 @@ export function Auth(props: { children: React.ReactNode }): React.ReactElement {
 
   return (
     <AuthContext.Provider
-      value={{ auth: authModel, loading, user, logout, setAuth, getUser }}
+      value={{
+        auth: authModel,
+        loading,
+        user,
+        logout,
+        setAuth,
+        getUser,
+        login,
+      }}
     >
       {props.children}
     </AuthContext.Provider>

@@ -11,7 +11,7 @@ a. The population is air in airplanes on domestic flights.
 
 b. The sample is the 175 air samples from 175 flights.
 
-c. The characteristic of interest is the "degree of staleness" of the air from the air quality tests.
+c. The characteristic of interest is the "degree of staleness" of the air from the air quality tests. We want to know if the air is stale on planes. 
 
 ## 1.3.2
 
@@ -37,7 +37,7 @@ pairs(temp[,2:4])
 
 ```
 
-Latitude seems to be a better predictor as there is a clear (negative) relationship between JanTemp and Lat. There does not appear to be any relationship between JanTemp and Long.
+Latitude seems to be a better predictor as there is a clear (negative) relationship between `JanTemp` and `Lat`. There does not appear to be any relationship between `JanTemp` and `Long`.
 
 b.
 

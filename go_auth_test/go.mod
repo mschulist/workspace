@@ -5,6 +5,7 @@ go 1.22.5
 require (
 	firebase.google.com/go v3.13.0+incompatible
 	github.com/gorilla/mux v1.8.1
+	github.com/ulule/limiter/v3 v3.11.2
 	google.golang.org/api v0.195.0
 )
 
@@ -29,6 +30,7 @@ require (
 	github.com/googleapis/gax-go/v2 v2.13.0 // indirect
 	github.com/joho/godotenv v1.5.1
 	github.com/mitchellh/mapstructure v1.5.0
+	github.com/pkg/errors v0.9.1 // indirect
 	go.opencensus.io v0.24.0 // indirect
 	go.opentelemetry.io/contrib/instrumentation/google.golang.org/grpc/otelgrpc v0.49.0 // indirect
 	go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp v0.49.0 // indirect

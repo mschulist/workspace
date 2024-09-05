@@ -21,11 +21,16 @@ func Login(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	user, err := db.GetUserByUUID(tmpUser.UUID, true) // we need the password to verify it
+	users, err := db.GetUsersByUUID(tmpUser.UUID, true, 1) // we need the password to verify it
 	if err != nil {
 		http.Error(w, fmt.Sprint("Unable to retrieve user from database: ", err), http.StatusInternalServerError)
 		return
 	}
+	if len(users) == 0 {
+		http.Error(w, "User not found", http.StatusNotFound)
+		return
+	}
+	user := users[0]
 
 	// check if the password is correct
 	err = auth.VerifyPassword(user.Password, tmpUser.Password)
@@ -69,7 +74,7 @@ func AddUser(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// check to see if the user already exists by uuid
-	_, err = db.GetUserByUUID(tmpUser.UUID, false)
+	_, err = db.GetUsersByUUID(tmpUser.UUID, false, 1)
 	if err == nil {
 		http.Error(w, "User already exists", http.StatusConflict)
 		return
@@ -114,15 +119,19 @@ func GetUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	user, err := db.GetUserByUUID(uuid, false)
+	users, err := db.GetUsersByUUID(uuid, false, 1)
 	if err != nil {
 		http.Error(w, fmt.Sprint("Unable to retrieve user from database: ", err), http.StatusInternalServerError)
+		return
+	}
+	if len(users) == 0 {
+		http.Error(w, "User not found", http.StatusNotFound)
 		return
 	}
 
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
-	json.NewEncoder(w).Encode(user)
+	json.NewEncoder(w).Encode(users[0])
 }
 
 // AddPurchase is a handler that adds a purchase to the user's purchases and returns the updated user
@@ -165,19 +174,24 @@ func AddPurchase(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// get the updated user
-	user, err := db.GetUserByUUID(purchaseReq.UUID, false)
+	users, err := db.GetUsersByUUID(purchaseReq.UUID, false, 1)
 	if err != nil {
 		http.Error(w, fmt.Sprint("Unable to retrieve user from database: ", err), http.StatusInternalServerError)
+		return
+	}
+	if len(users) == 0 {
+		http.Error(w, "User not found", http.StatusNotFound)
 		return
 	}
 
 	w.WriteHeader(http.StatusOK)
 	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(user)
+	json.NewEncoder(w).Encode(users[0])
 }
 
 func GetUserAdmin(w http.ResponseWriter, r *http.Request) {
 	jwt := r.Header.Get("Authorization")
+	fmt.Println("getuseradmin", jwt)
 	admin, err := auth.ExtractTokenAdmin(jwt)
 	if err != nil {
 		http.Error(w, fmt.Sprint("Unable to extract admin from token: ", err), http.StatusBadRequest)
@@ -211,13 +225,12 @@ func GetUserAdmin(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	user, err := db.GetUserByUUID(userReq.UUID, false)
+	users, err := db.GetUsersByUUID(userReq.UUID, false, -1)
 	if err != nil {
-		http.Error(w, fmt.Sprint("Unable to retrieve user from database: ", err), http.StatusInternalServerError)
-		return
+		users = []*auth.User{}
 	}
 
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
-	json.NewEncoder(w).Encode(user)
+	json.NewEncoder(w).Encode(users)
 }

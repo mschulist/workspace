@@ -1,0 +1,201 @@
+---
+title: "Homework 3"
+author: "Mark Schulist"
+format: pdf
+pdf-engine: typst
+---
+
+## 2.3.15
+
+Total number of unique hands: ${52 \choose 5} = 2598960$.
+
+a. 
+
+$$
+\frac{48}{2598960} \approx 0.0000185 = 1.85 \times 10^{-5}
+$$
+
+b. 
+
+$$
+\frac{{4 \choose 2}^2 \cdot 44}{52 \choose 5} \approx 0.000609
+$$
+
+c.
+
+$$
+\frac{4^2 \cdot {4 \choose 3} \cdot {12 \choose 2}}{52 \choose 5} \approx 0.00163
+$$
+
+## 2.4.6
+
+- $E_1$: machine $A$ produces a batch with no defective components
+- $E_2$: machine $B$ produces a batch with no defective components
+
+- $P(E_1) = 0.95$
+- $P(E_2) = 0.92$
+- $P(E_1 \cap E_2) = 0.88$
+
+a. 
+
+$$
+P(E_1 | E_2^C) = P(E_1) - P(E_1 \cap E_2) = 0.95 - 0.88 = 0.07
+$$
+
+b. 
+
+$$
+P(E_2 | E_1^C) = P(E_2) - P(E_1 \cap E_2) = 0.92 - 0.88 = 0.04
+$$
+
+c.
+
+$$
+P(E_2 | E_1^C) + P(E_1 | E_2^C) = 0.11
+$$
+
+d.
+
+$$
+P(E_1) + P(E_2) - P(E_1 \cap E_2) = 0.99
+$$
+
+
+## 2.5.12
+
+- $D = \text{discovered airplane}$
+- $L = \text{has locator}$
+
+- $P(D) = 0.7$
+- $P(L | D) = 0.6$
+- $P(L | D^C) = 0.1$
+
+a. 
+
+$$
+P(L \cap D^C) = P(L | D^C)P(D^C) = 0.1 \cdot 0.3 = 0.03
+$$
+
+b.
+
+$$
+P(L) = P(D \cap L) + P(D^C \cap L) = 0.6 \cdot 0.7 + 0.03 = 0.45
+$$
+
+c.
+
+$$
+P(D^C|L) = \frac{P(L|D^C)P(D^C)}{P(L)} = \frac{0.1 \cdot 0.3}{0.45} \approx 0.0667
+$$
+
+
+## 2.6.7
+
+a.
+
+```{=typst}
+Total-female: $1 - 0.65$
+
+$P(F|T) = P(F)$
+
+$P(M|T) = P(M)$
+
+#figure(
+table(
+	columns: (auto,auto,auto,auto,auto),
+	stroke: black,
+ 	[],[Football],[Basketball],[Track],[Total],
+ 	[Male],[0.3],[0.22],[0.13],[0.65],
+ 	[Female],[0],[0.28],[0.07],[0.35],
+ 	[Total],[0.3],[0.5],[0.2],[1]
+),
+caption:[Probilities of males and females playing certain sports]
+)
+```
+
+b.
+
+$$
+P(F|B) = \frac{0.28}{0.5} = 0.56
+$$
+
+c.
+
+No they are not. $P(F|B) \neq P(F) \implies 0.56 \neq 0.35$.
+
+
+## 3.2.4
+
+```{=typst}
+#figure(
+table(
+  stroke: black,
+	columns: (auto,auto),
+	inset: 10pt,
+ 	[$x$],[$P(X = x)$],
+ 	[0],[$7/10 dot 6/9 dot 5/8 = 0.292$],
+ 	[1],[$(binom(3,1) dot binom(7, 2))/binom(10,3) = 0.525$],
+ 	[2],[$(binom(3, 2) dot binom(7, 1))/binom(10,3) = 0.175$],
+ 	[3],[$3/10 dot 2/9 dot 1/8 = 0.00833$]
+),
+caption:[Probability mass function]
+)
+
+$
+"CDF"(x) = cases(
+  0 "if" x < 0,
+  0.292 "if" 0 <= x < 1,
+  0.817 "if" 1 <= x < 2,
+  0.992 "if" 2 <= x < 3,
+  1 "if" x >= 3
+)
+$
+```
+
+## 3.2.8
+
+```{=typst}
+$
+F(x) = cases(
+  0 "if" x < 0,
+  x^2 / 4 "if" 0 <= x <= 2,
+  1 "if" x > 2
+  )
+$
+```
+
+a.
+
+```{=typst}
+$
+P(0.5 < X < 1) \ 
+F(1) - F(0.5) = 1/4 - 1/16 = 3/16 = 0.1875
+$
+```
+
+b.
+
+```{=typst}
+$
+  Y = 60X => X = Y / 60 \
+  d/(d x) F(x) = x/2 \
+  f(x) = cases(
+    0 "if" x <= 0,
+    x/2 "if" 0 < x <= 2,
+    0 "if" x > 2
+  )
+$
+```
+
+c.
+
+```{=typst}
+$
+"CDF":& F_(y)(y) = (y/60)^2 / 4  = y^2/ 14400 \
+"PDF":& d/(d y) F_(y)(y) = f_(y)(y) = cases(
+  y/(60 dot 120) "if" 0 < x < 120,
+  0 "otherwise"
+)
+$
+```
+

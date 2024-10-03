@@ -131,6 +131,10 @@ func (d *DB) AddPurchaseToDB(UUID string, p auth.Purchase) error {
 		return err
 	}
 	user.Purchases = append(user.Purchases, p)
+
+	// add point to user
+	user.CurrentPoints += p.Points
+
 	_, err = d.Client.Collection(UserCollectionName).Doc(UUID).Set(ctx, user)
 	if err != nil {
 		return err

@@ -1,0 +1,183 @@
+---
+title: "Homework 5"
+author: "Mark Schulist"
+format: pdf
+pdf-engine: typst
+---
+
+## 3.4.8
+
+a. negative binomial
+
+b. 
+
+```{=typst}
+$
+S = {5, 6, 7, 8, 9, ...}
+$
+
+$
+X = "nbinom"(r = 5, p = 0.05) \
+p(X = x) = binom(x - 1, 4) 0.05^5(0.95)^(x - 5)
+$
+```
+
+c.
+
+
+```{r}
+1 - pnbinom(34, size = 5, prob = 0.05)
+```
+
+## 3.4.19
+
+a.
+
+```{=typst}
+$
+X_1 &= "pois"(lambda = 2.6) \
+X_2 &= "pois"(lambda = 3.8)
+$
+
+$
+"var"(X_1) &= 2.6 \
+"var"(X_2) &= 3.8
+$
+```
+
+b.
+
+```{=typst}
+$
+0.6P(X_1 = 0) + 0.4P(X_2 = 0) = 0.6 e^(-2.6) + 0.4 e^(-3.8) = 0.0535
+$
+```
+
+c.
+
+```{=typst}
+$
+P(X_2 | "no error") = (P("no error" | X_2)P(X_2)) / P("no error") = (e^(-3.8) dot 0.4) / 0.0535 = 0.167
+$
+```
+
+## 3.5.1
+
+a.
+
+```{=typst}
+$
+B = "Exp"(lambda = 1 / 6)
+$
+
+P(B > 4) = e^(-2 / 3) = 0.513
+```
+
+b.
+
+```{=typst}
+$
+"var"(B) = 1 / (1 / 36) = 36
+$
+
+$
+0.95 &= 1 - e^(-1 / 6 x) \
+ln(0.05) &= - 1 / 6 x \
+-6ln(0.05) &= x \
+17.97 &= x_(0.95)
+$
+```
+
+c.
+
+```{=typst}
+i. 
+
+$
+P(B > 5) = e ^ (-5 / 6) = 0.435
+$
+
+ii. $E(B) = 6$, so $6$ more years (memoryless). 
+```
+
+## 3.5.8
+
+a.
+
+```{r}
+college_a_percent <- 1 - pnorm(600, mean = 500, sd = 80)
+```
+
+The percentage of people who can get into College A is `r college_a_percent * 100`%.
+
+b.
+
+```{r}
+min_score_college_b <- qnorm(0.99, mean = 500, sd = 80)
+```
+
+The minimum score to get into college B is `r min_score_college_b`.
+
+
+## 4.2.3
+
+a. 
+
+$$
+P(X \leq 10, Y \leq 2) = 0.3 + 0.12 + 0.15 + 0.135 = 0.705
+$$
+
+$$
+P(X \leq 10, Y = 2) = 0.135 + 0.12 = 0.255
+$$
+
+b.
+
+```{=typst}
+$
+f_X(8) &= 0.42 \
+f_X(10) &= 0.15 + 0.135 + 0.025 = 0.31 \
+f_X(12) &= 0.03 + 0.15 + 0.09 = 0.27
+$
+
+$
+f_Y(1.5) &= 0.3 + 0.15 + 0.03 = 0.48 \
+f_Y(2) &= 0.12 + 0.135 + 0.15 = 0.405 \
+f_Y(2.5) &= 0.115
+$
+```
+
+c. 
+
+$$
+P(X \leq 10 | Y = 2) = \frac{0.135 + 0.12}{0.12 + 0.135 + 0.15} = 0.63
+$$
+
+## 4.2.8
+
+a. 
+
+```{=typst}
+$
+2 integral_0^(1.5) e^(-x) integral_x^(3 - x) e^(-y) d y d x \
+-2 integral_0^1.5 e^(-x)(e^(x - 3) - e^(-x)) d x \
+-2e^(-3) - 2(e^(-3) - 1) \
+-4e^(-3) + 1
+$
+```
+
+b.
+
+```{=typst}
+$
+f_(x)(x) &= 2e^(-x) integral_x^infinity e^(-4) d y \
+&=2e^(-2x) "for" x >= 0 \
+0 "otherwise"
+$
+
+$
+f_(y)(y) &= 2e^(-y) integral_0^y e^(-x) d x \
+&= -2e^(-y)(e^(-y) - 1) "for" y >= 0 \
+0 "otherwise"
+$
+```

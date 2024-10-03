@@ -39,7 +39,7 @@ pairs(temp[,2:4])
 
 Latitude seems to be a better predictor as there is a clear (negative) relationship between `JanTemp` and `Lat`. There does not appear to be any relationship between `JanTemp` and `Long`.
 
-b.
+b (this is not actually in the problem set...).
 
 ```{r}
 library(scatterplot3d)

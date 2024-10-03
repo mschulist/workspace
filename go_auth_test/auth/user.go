@@ -22,6 +22,7 @@ type Purchase struct {
 	DateTime   time.Time      `json:"datetime" firestore:"datetime" mapstructure:"datetime"`
 	Properties map[string]any `json:"properties" firestore:"properties" mapstructure:"properties"`
 	ID         string         `json:"id" firestore:"id" mapstructure:"id"`
+	Points     int            `json:"points" firestore:"points" mapstructure:"points"`
 }
 
 type PurchaseRequest struct {

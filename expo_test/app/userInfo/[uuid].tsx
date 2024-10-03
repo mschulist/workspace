@@ -5,6 +5,8 @@ import { router, useLocalSearchParams } from "expo-router";
 import React, { useEffect, useState, useCallback } from "react";
 import { Card, Text, ActivityIndicator, Button } from "react-native-paper";
 import { ScrollView, RefreshControl, StyleSheet, View } from "react-native";
+import { AdminAddPurchase } from "@/components/AdminAddPurchase";
+import { AdminRedeem } from "@/components/AdminRedeem";
 
 export default function UserInfo() {
   const [user, setUser] = useState<User | null>(null);
@@ -70,15 +72,19 @@ export default function UserInfo() {
         }
       >
         {user ? (
-          <Card>
-            <Card.Title title={name} />
-            <Card.Content>
-              <Text>Student ID: {user.id}</Text>
-              <Text>Email: {user.email}</Text>
-              <Text>Phone: {user.phone}</Text>
-              <Text>Current Points: {user.current_points}</Text>
-            </Card.Content>
-          </Card>
+          <>
+            <Card>
+              <Card.Title title={name} />
+              <Card.Content>
+                <Text>Student ID: {user.id}</Text>
+                <Text>Email: {user.email}</Text>
+                <Text>Phone: {user.phone}</Text>
+                <Text>Current Points: {user.current_points}</Text>
+              </Card.Content>
+            </Card>
+            <AdminAddPurchase user={user} />
+            <AdminRedeem user={user} />
+          </>
         ) : (
           <Text>No user found</Text>
         )}

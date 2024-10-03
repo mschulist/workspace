@@ -31,7 +31,7 @@ class Profile:
     def beats(self, a: str, b: str):
         count_a_beats_b = sum(1 for vote in self.votes if self.prefers(a, b, vote))
         count_b_beats_a = sum(1 for vote in self.votes if self.prefers(b, a, vote))
-        return count_a_beats_b > count_b_beats_a
+        return count_a_beats_b >= count_b_beats_a
 
     def prefers(self, a: str, b: str, vote: List[str]):
         return vote.index(a) < vote.index(b)

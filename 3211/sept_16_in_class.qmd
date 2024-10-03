@@ -1,0 +1,11 @@
+---
+title: "Sept 16 in Class"
+author: "Mark Schulist"
+format: pdf
+---
+
+
+```{r}
+integrate(function(x){x^3 * exp(-x)}, 0, Inf)
+```
+

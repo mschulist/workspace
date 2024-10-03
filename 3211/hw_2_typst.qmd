@@ -1,0 +1,93 @@
+---
+title: "Homework 2"
+author: "Mark Schulist"
+date: "`r Sys.Date()`"
+format: typst
+pdf-engine: typst
+---
+
+
+## 1.6.16
+
+```{r}
+salaries <- c(
+  152, 169, 178, 179, 185, 188, 195, 196, 198, 203, 204, 209, 210, 212, 214
+  )
+```
+
+a. 
+
+```{r}
+xbar <- mean(salaries)
+s2 <- var(salaries)
+```
+
+The mean is `r xbar` and the variance is `r s2`.
+
+b. 
+
+```{r}
+salaries_5000 <- salaries + 5
+salaries_5 <- salaries * 1.05
+```
+
+i. The mean is `r mean(salaries_5000)` and the variance is `r var(salaries_5000)`.
+
+ii. The mean is `r mean(salaries_5)` and the variance is `r var(salaries_5)`.
+
+
+## 1.7.4
+
+```{r}
+si <- read.table(
+  "https://media.pearsoncmg.com/cmg/pmmg_mml_shared/mathstatsresources/Akritas/SolarIntensAuData.txt",
+  header = T
+  )
+```
+
+a. 
+
+```{r}
+boxplot(si$SI, main="Solar Intensity Measurements")
+```
+
+b.
+
+```{r}
+quants <- quantile(si$SI, c(0.3, 0.6, 0.9))
+```
+
+The 30th quantile is `r quants[1]`, the 60th `r quants[2]`, and the 90th `r quants[3]`.
+
+## 2.2.10 
+
+a. 
+
+- $E_1 = 21$
+- $E_2 = 14$
+- $E_3 = 30$
+- $RR$
+
+c. 
+
+- $E_1 \cap E_2$: Disks that are both low hardness and low shock absorption. 
+- $E_1 \cup E_2$: Disks that are low hardness or low shock absorption. 
+- $E_1 - E_2$: Disks that are low hardness but not low shock absorption. 
+- $(E_1 - E_2)  (E_2 - E_1)$: Disks that are either low hardness or low shock absorption, but not both. 
+
+d. 
+
+- $E_1 union E_2$: 5
+- $E_1 \cup E_2$: 30
+- $E_1 - E_2$: 16
+- $(E_1 - E_2) \cup (E_2 - E_1)$: 25
+
+## 2.3.9
+
+a. ${12 \choose 4} = 495$
+
+b. ${5 \choose 2} \cdot {4 \choose 1} \cdot {3 \choose 1} = 120$
+
+c. $\dfrac{120}{495} \approx 0.242$
+
+

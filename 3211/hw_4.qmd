@@ -1,0 +1,208 @@
+---
+title: "Homework 4"
+author: "Mark Schulist"
+format: pdf
+pdf-engine: typst
+---
+
+## 3.3.3
+
+a. 
+
+$$
+X = \text{amount spent on flat screen TVs by two random customers}
+$$
+
+```{=typst}
+  #figure(
+  table(
+    stroke: black,
+  	columns: (auto,auto),
+   	[$x$],[$P(X = x)$],
+   	[0],[`dbinom(0, 2, 0.3)` $= 0.49$],
+   	[400],[$2 dot 0.7 dot 0.3 dot 0.4 = 0.168$],
+   	[750],[$2 dot 0.7 dot 0.3 dot 0.6 = 0.252$],
+   	[800],[`dbinom(2, 2, 0.3)` $dot 0.4^2 = 0.0144$],
+   	[1150],[`dbinom(1, 2, 0.4)` $dot 0.3^2 = 0.0432$],
+   	[1500],[`dbinom(2, 2, 0.3)` $dot 0.6^2 = 0.0324$]
+  ),
+  caption:[PMF of X]
+  )
+```
+
+b. 
+
+$$
+E(X) = 400 \cdot 0.168 + 750 \cdot 0.252 + 800 \cdot 0.0144 + 1150 \cdot 0.0432 + 1500 \cdot 0.0324 = 366
+$$
+
+```{=typst}
+$
+"var"(X) = 0.49(366)^2 + 0.168(400 - 366)^2 + 0.252(750 - 366)^2 + \ 0.0144(800 - 366)^2 + 0.0432(1150 - 366)^2 + 0.0324(1500 - 366)^2 = 173922
+$
+```
+
+
+## 3.3.7
+
+a. 
+
+```{=typst}
+$
+F(x) = x^2 / 4 
+$
+
+Median is when CDF = 0.5
+
+$
+0.5 &= x^2 / 4 \
+2 &= x^2 \
+sqrt(2) = x
+$
+
+Median is $sqrt(2)$. We can ignore negative case because $F(x)$ is only valid $0<x<=2$.
+
+We can do the same for the 0.25 and 0.75 quantiles. 
+
+$
+0.25 &= x^2 / 4 \
+1 &= x
+$
+
+$Q_1 = 1$
+
+$
+0.75 &= x^2 / 4 \
+sqrt(3) &= x
+$
+
+$Q_3 = sqrt(3)$
+
+IQR = $Q_3 - Q_1 = 0.732$
+```
+
+
+b.
+
+```{=typst}
+$
+E(X) &= integral_0^2 x / 2 dot x d x \
+&= lr(x^3 / 6 |)_(x=0)^(2) \
+&= 4/3
+$
+
+$
+"var"(X) &= E(X^2) - E(X)^2 \
+&= integral_0^2 x / 2 dot x^2 d x - 16 / 9\
+&= lr(x^4 / 8|)_(x=0)^(x=2) - 16 / 9\
+&= 2 - 16 / 9 \
+&= 2 / 9
+$
+
+"sd"(X) = sqrt(2/9) = 0.471
+```
+
+
+## 3.4.4
+
+a.
+
+```{=typst}
+$
+n = 10, p = 0.5
+$
+
+$
+E(X) = n p = 5
+$
+
+$
+"var"(X) = n p(1-p) = 2.5
+$
+```
+
+b.
+
+```{=typst}
+$
+P(X = 5) = binom(10, 5) 0.5^5 dot 0.5^5 = 0.246
+$
+```
+
+c.
+
+```{r}
+most_5 <- pbinom(5, 10, 0.5)
+```
+
+The $P(X \leq 5) =$ `r most_5`.
+
+d.
+
+When $Y = 10 - X$, $Y$ represents the number of questions incorrectly answered. There are 10 total questions, so the complement $(10 - X)$ is the number that are not included in $X$. 
+
+e.
+
+We know the distribution is symmetric, so $P(2 \leq Y \leq 5) = P(2 \leq X \leq 5)$. 
+
+```{r}
+sym <- pbinom(5, 10, 0.5) - pbinom(1, 10, 0.5)
+actual <- pbinom(8, 10, 0.5) - pbinom(4, 10, 0.5)
+sym == actual
+```
+
+We can see that the two methods are equivalent, and both return a probability of `r sym`.
+
+## 3.4.13
+
+b.
+
+$$
+S = {0, 1, 2, 3}
+$$
+
+$$
+\text{PMF}(X = x) = \frac{{3 \choose x}{17 \choose 5 - x}}{20 \choose 5}
+$$
+
+c.
+
+$$
+P(X = 1) = \frac{{3 \choose 1}{17 \choose 5 - 1}}{20 \choose 5} \approx 0.461
+$$
+
+d. 
+
+```{=typst}
+$
+E(X) = 5 dot 3 / 20 = 3 / 4
+$
+
+$
+"var"(X) = 3 / 4 (1 - 3 / 20) 15 / 19 approx 0.503
+$
+
+```
+
+## Additional Problem
+
+```{=typst}
+$
+f(x) = cases(
+  1 "if" 0 <= x <= 1,
+  0 "elsewhere"
+)
+$
+
+$
+"MGF"_(X)(t) &= E(e^(t x)) \
+&= integral_0^1 e^(t x) 1 d x \
+&= lr(e^(t x) / t|)_(x=0)^1 \
+&= e^t / t - 1 / t \
+&= (e^t - 1) / t
+$
+```
+
+When $t \neq 0$, the moment generating function of $X$ is $\frac{e^t - 1}{t}$.
+
+When $t = 0$, the MGF is equal to one. This is because the MGF when $t = 0$ takes the form of $E(X^0) = E(1) = 1$. 

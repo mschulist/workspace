@@ -28,11 +28,11 @@ func main() {
 
 	// Initialize the router
 	router := mux.NewRouter()
-	router.HandleFunc("/login", controller.Login).Methods("POST")
-	router.HandleFunc("/adduser", controller.AddUser).Methods("POST")
-	router.HandleFunc("/getuser", controller.GetUser).Methods("GET")
-	router.HandleFunc("/addpurchase", controller.AddPurchase).Methods("PUT")
-	router.HandleFunc("/getuseradmin", controller.GetUserAdmin).Methods("POST")
+	router.HandleFunc("/login", controller.Login).Methods(http.MethodPost)
+	router.HandleFunc("/adduser", controller.AddUser).Methods(http.MethodPost)
+	router.HandleFunc("/getuser", controller.GetUser).Methods(http.MethodGet)
+	router.HandleFunc("/addpurchase", controller.AddPurchase).Methods(http.MethodPut)
+	router.HandleFunc("/getuseradmin", controller.GetUserAdmin).Methods(http.MethodPost)
 
 	// Apply the rate limiter middleware to all routes
 	http.Handle("/", middleware.Handler(router))

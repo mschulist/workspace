@@ -404,3 +404,10 @@ $
   1 - n "if first term is 1"
 )
 $
+
+
+$
+  |overline(cal(F))_(n-1)| <= n! \
+  1 \/ 2 \
+  lr(x^2 / 2 |)_(x=1)^2 \
+$

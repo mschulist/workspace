@@ -1,0 +1,1 @@
+/Users/mschulist/github/workspace/math310/template.typ

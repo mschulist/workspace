@@ -2,8 +2,8 @@
   let authors = ("Mark Schulist",)
   // Set the document's basic properties.
   set document(author: authors, title: title)
-  set page(paper: "us-letter", numbering: "1", number-align: center)
-  set text(font: "Linux Libertine", lang: "en")
+  set page(paper: "us-letter", numbering: "1", number-align: center, fill: rgb("1c1c1c"))
+  set text(font: "Linux Libertine", lang: "en", fill: rgb("fdfdfd"))
   set heading(numbering: "1.a)")
 
   // Title row.

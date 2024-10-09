@@ -28,16 +28,25 @@ $
   &= 1 / (2pi) integral_(-infinity)^infinity N e^(- alpha / 2 |x|) e^(i k_0 x) e^(-i k x) d x \
   &= N / (2pi) integral_(-infinity)^infinity e^(- alpha / 2 |x|) e^(i x(k_0 - k)) d x \
   &= N / (2pi) integral_(-infinity)^infinity e^(-alpha / 2 |x| + i x(k_0 - k)) d x \
-  &= N/(2pi) (4 alpha) / (4k_0^2 - 8k k_0 + 4k^2 + alpha^2)
-  // &= N / (2pi)[
-  //   integral_0^infinity e^(x(-alpha / 2 + i (k_0 + k))) d x + integral_(-infinity)^0 e^(-x(
-  //     -alpha / 2 + i (k_0 + k)
-  //   )) d x
-  // ] \
-  // &= N / (2pi) [
-  //   lr(e^(x(-alpha / 2 + i (k_0 + k))) / (-alpha / 2 + i (k_0 + k)) bar)_(x = 0)^infinity -
-  //   lr(e^(-x(-alpha / 2 + i (k_0 + k))) / (-alpha / 2 + i (k_0 + k)) bar)_(x = -infinity)^0
-  // ]
+  // &= N/(2pi) (4 alpha) / (4k_0^2 - 8k k_0 + 4k^2 + alpha^2) \
+  &= N / (2pi)[
+    integral_0^infinity e^(x(-alpha / 2 + i (k_0 - k))) d x + integral_(-infinity)^0 e^(x(
+      alpha / 2 + i (k_0 - k)
+    )) d x
+  ] \
+  &= N / (2pi) [
+    lr(e^(x(-alpha / 2 + i (k_0 - k))) / (-alpha / 2 + i (k_0 - k)) bar)_(x = 0)^infinity -
+    lr(e^(-x(-alpha / 2 + i (k_0 - k))) / (-alpha / 2 + i (k_0 - k)) bar)_(x = -infinity)^0
+  ] \
+  &= N / (2pi) dot 1 / (-alpha / 2 + i (k_0 - k)) [
+    e^(-infinity alpha / 2) e^(i infinity(k_0 - k)) -
+    e^0 +
+    e^0 -
+    e^(-infinity alpha / 2) e^(infinity(k_0 - k))
+  ] \
+  &= N / (2pi) dot 1 / (-alpha / 2 + i (k_0 - k)) [
+
+  ]
 $
 
 ==
@@ -77,6 +86,7 @@ $
             value_color: white,
             marking_color: white,
             stroke: white,
+            title: [$"Re"[psi(x)]$],
           ),
         ),
       ),
@@ -89,7 +99,16 @@ $
       plot(
         data: psi_sq_fl,
         axes: (
-          axis(min: -10, max: 10, step: 2, location: "bottom", value_color: white, marking_color: white, stroke: white),
+          axis(
+            min: -10,
+            max: 10,
+            step: 2,
+            location: "bottom",
+            value_color: white,
+            marking_color: white,
+            stroke: white,
+            title: [x],
+          ),
           axis(
             min: 0,
             max: 0.5,
@@ -98,6 +117,7 @@ $
             value_color: white,
             marking_color: white,
             stroke: white,
+            title: [$|psi(x)|^2$],
           ),
         ),
       ),
@@ -125,9 +145,9 @@ $
 ==
 
 $
-  1 &= C integral_(-3a)^a d x \
-  &= 4a C \
-  ==> C &= 1 / (4a)
+  1 &= C^2 integral_(-3a)^a d x \
+  &= 4a C^2 \
+  ==> C &= 1 / (2sqrt(a))
 $
 
 ==
@@ -148,7 +168,7 @@ $
 $
   psi(x) &= integral_(-infinity)^infinity A(k) e^(i k x) d k \
   &= (C alpha) / sqrt(pi) integral_(-infinity)^infinity e^(-alpha^2 k^2) e^(i k x) d k \
-  &= (C cancel(alpha)) / cancel(sqrt(pi)) cancel(sqrt(pi)) / cancel(alpha) e^(-x^2 / (4 alpha^2)) \
+  "gaussian integral": a=alpha^2, b = i x ==> quad&= (C cancel(alpha)) / cancel(sqrt(pi)) cancel(sqrt(pi)) / cancel(alpha) e^(-x^2 / (4 alpha^2)) \
   &= C e^(-x^2 / (4 alpha^2))
 $
 
@@ -190,8 +210,26 @@ $
   plot(
     data: pot_fl,
     axes: (
-      axis(min: 0, max: 8, step: 1, location: "bottom", value_color: white, marking_color: white, stroke: white),
-      axis(min: 0, max: 4, step: 0.5, location: "left", value_color: white, marking_color: white, stroke: white),
+      axis(
+        min: 0,
+        max: 8,
+        step: 1,
+        location: "bottom",
+        value_color: white,
+        marking_color: white,
+        stroke: white,
+        title: [x],
+      ),
+      axis(
+        min: 0,
+        max: 4,
+        step: 0.5,
+        location: "left",
+        value_color: white,
+        marking_color: white,
+        stroke: white,
+        title: [$U(x)$],
+      ),
     ),
   ),
   (100%, 50%),

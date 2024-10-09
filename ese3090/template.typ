@@ -4,7 +4,7 @@
   set document(author: authors, title: title)
   set page(paper: "us-letter", numbering: "1", number-align: center, fill: rgb("1c1c1c"))
   set text(font: "Linux Libertine", lang: "en", fill: rgb("fdfdfd"))
-  set heading(numbering: "1.a)")
+  set heading(numbering: "1.1)")
 
   // Title row.
   align(center)[
@@ -27,14 +27,4 @@
   set par(justify: true)
 
   body
-}
-
-#let scr(it) = {
-  math.class(
-    "normal",
-    text(
-      font: "New Computer Modern Math",
-      text(font: "New Computer Modern Math Book", stylistic-set: 1, $cal(it)$) + h(0em),
-    ),
-  )
 }

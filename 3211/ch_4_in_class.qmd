@@ -1,0 +1,25 @@
+---
+title: "Ch4 In Class"
+author: "Mark Schulist"
+format: html
+---
+
+```{r}
+library(gamair)
+```
+
+
+```{r}
+data(hubble)
+
+hubble
+```
+
+```{r}
+plot(hubble$x, hubble$y)
+```
+
+```{r}
+cor(hubble$x, hubble$y)
+```
+

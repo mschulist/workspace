@@ -1,4 +1,4 @@
-#import "template.typ": *
+#import "../template.typ": *
 #import "@preview/cetz:0.2.2": canvas, draw, tree
 #import "@preview/ctheorems:1.1.2": *
 

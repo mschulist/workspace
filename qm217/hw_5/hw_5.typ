@@ -1,7 +1,7 @@
 #import "../template.typ": *
 #import "@preview/plotst:0.2.0": *
 
-#show: project.with(title: "Homework 3")
+#show: project.with(title: "Homework 5")
 
 
 =

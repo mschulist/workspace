@@ -16,7 +16,7 @@ class Coalitions:
         all_coalitions = np.array(
             [
                 list(map(int, np.binary_repr(i, width=self.n_voters)))
-                for i in range(2**self.n_voters)
+                for i in tqdm(range(2**self.n_voters))
             ]
         )
         winners = all_coalitions @ self.weights >= self.quota

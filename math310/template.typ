@@ -1,3 +1,5 @@
+#import "@preview/plotst:0.2.0": *
+
 #let project(title: "", body) = {
   let authors = ("Mark Schulist",)
   // Set the document's basic properties.
@@ -29,12 +31,60 @@
   body
 }
 
-#let scr(it) = {
-  math.class(
-    "normal",
-    text(
-      font: "New Computer Modern Math",
-      text(font: "New Computer Modern Math Book", stylistic-set: 1, $cal(it)$) + h(0em),
+#let scr(it) = text(
+  features: ("ss01",),
+  box($cal(it)$),
+)
+
+#let csv_fl(path, len) = {
+  let c = csv(path)
+  let fl = ()
+  for i in range(len) {
+    let element = c.at(i)
+    fl.push((float(element.at(0)), float(element.at(1))))
+  }
+  return fl
+}
+
+#let plot_simple(
+  data,
+  xlim: (0, 1),
+  xlab: [x axis],
+  xstep: 1,
+  ylim: (0, 1),
+  ylab: [y axis],
+  ystep: 1,
+  title: [Plot Title],
+) = {
+  graph_plot(
+    plot(
+      data: data,
+      axes: (
+        axis(
+          min: xlim.at(0),
+          max: xlim.at(1),
+          step: xstep,
+          location: "bottom",
+          value_color: white,
+          marking_color: white,
+          stroke: white,
+          title: xlab,
+        ),
+        axis(
+          min: ylim.at(0),
+          max: ylim.at(1),
+          step: ystep,
+          location: "left",
+          value_color: white,
+          marking_color: white,
+          stroke: white,
+          title: ylab,
+        ),
+      ),
     ),
+    (100%, 50%),
+    markings: "",
+    caption: title,
+    stroke: red,
   )
 }

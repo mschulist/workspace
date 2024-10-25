@@ -56,16 +56,42 @@ $
 ==
 
 $
-  f_(Y|X = x)(y) &= integral_0^1 (x + y) dif x \
-  &= lr(x^2 / 2 + x y |)_(x = 0)^1 \
-  &= 1 / 2 + y
+  f_(X)(x) &= integral_0^1 (x + y) dif y \
+  &= lr(y^2 / 2 + x y |)_(y = 0)^1 \
+  &= 1 / 2 + x
 $
 
 $
-  P(0.3 < Y < 0.5|X = x) &= integral_0.3^0.5 (1 / 2 + y) dif y \
-  &= lr(y / 2 + y^2 / 2 |)_(y = 0.3)^0.5 \
+  f_(Y|X = x)(x) &= f(x, y) / (f_(X)(x)) \
+  &= (x + y) / (x + 1 / 2)
+$
+
+$
+  P(0.3 < Y < 0.5|X = x) &= integral_0.3^0.5 (x + y) / (x + 1 / 2) dif y \
+  &= 1 / (x + 1 / 2) integral_0.3^0.5 (x + y) dif y \
+  &= 1 / (x + 1 / 2) [lr(x y + y^2 / 2|)_(y = 0.3)^0.5] \
+  &= 1 / (x + 1 / 2) [0.5x + 1 / 8 - 0.3x - 0.045] \
+  &= 1 / (x + 1 / 2) [0.2x + 2 / 25] \
+  &= (0.2x + 2 / 25) / (x + 1 / 2)
+$
+
+==
+
+We can integrate over all of $x$ because we have already found the conditional probability for $Y$ between $0.3 < Y < 0.5$.
+
+$
+  P(0.3 < Y < 0.5) &= integral_0^1 (0.2x + 2 / 25) / (x + 1 / 2) (x + 1 / 2) dif x \
+  &= integral_0^1 (0.2x + 2 / 25) dif x \
+  &= lr(x^2 / 10 + 2 / 25 x |)_(x = 0)^1 \
   &= 0.18
 $
+
+
+// $
+//   P(0.3 < Y < 0.5) &= integral_0.3^0.5 x dif x \
+//   &= lr(x^2 / 2 |)_(x = 0.3)^0.5 \
+//   &= 0.08
+// $
 
 = 4.3.15
 

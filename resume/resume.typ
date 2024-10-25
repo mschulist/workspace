@@ -14,7 +14,7 @@
   name: "Washington University in St. Louis",
   degree: "BS in Data Science",
   location: "St. Louis, MO",
-  date: "Aug 2023 - May 2027"
+  date: "Aug 2023 - May 2027",
 )
 
 
@@ -24,8 +24,8 @@
   location: "",
   name: "SeerAI",
   date: "May 2024 - Present",
-  [Tested the Geodesic spatiotemporal platform with their Python API and ArcGIS Online],
-  [Wrote band arithmetic and inverse distance weighting middlewares in Go, utilizing expression parsing and K-D trees respectively]
+  [Leveraged the Geodesic spatiotemporal platform via Python API and ArcGIS Online],
+  [Wrote band arithmetic and inverse distance weighting middlewares in Go, utilizing expression parsing and K-D trees respectively],
 )
 #exp_item(
   role: "Research Assistant",
@@ -43,7 +43,7 @@
   location: "San Francisco, CA",
   date: "Jun 2023 - Aug 2023",
   [Created a website to teach researchers about food webs for a wildlife metrics project],
-  [Developed the website to secure a grant extension]
+  [Developed the website to secure a grant extension],
 )
 // #exp_item(
 //   role: "Sales Associate",
@@ -59,7 +59,7 @@
   name: "Perch Agile Modeling",
   skills: "NextJS, Python, Firebase, Google Cloud",
   date: "May 2024 - Present",
-  [Developed a cloud-native platform to enable bioacoustics researchers to quickly train a custom classifier using transfer learning]
+  [Developed a cloud-native platform to enable bioacoustics researchers to quickly train a custom classifier using transfer learning],
 )
 #project_item(
   name: "eBird Christmas Bird Count Compiler",
@@ -69,12 +69,18 @@
   [Utilized puppeteer and leaflet maps to get and display the eBird data],
 )
 #project_item(
+  name: "Winner of the Master Category at Hack WashU 2024",
+  skills: [NextJS, Supabase, DeckGL],
+  date: "Oct 2024",
+  [Developed a website to provide a visual representation of WashU buildings, courses, and their relevant information (#link("https://washucampusview.com", [washucampusview.com]))],
+  [Utilized DeckGL to create a 3D map of the buildings and integrated Supabase to store the building data],
+)
+#project_item(
   name: "Winner of the Emerging Category at Hack WashU 2023",
   skills: "React, Node, Firebase, Cloud Run",
   date: "Oct 2023",
   [Developed a website to alert WashU students when courses without waitlists have open seats],
   [Responsible for the backend (Firebase and Cloud Run) and part of the frontend (integrating APIs)],
-  
 )
 #project_item(
   name: "Winner of Hack Case Western Reserve University 2024",
@@ -89,7 +95,7 @@
   date: "Jan 2024 - Present",
   [Developed a scheduling website for the Down Syndrome Association of Greater St. Louis],
   [Worked in a team of 8 people to design the full stack application],
-  [Currently Project Management Lead overseeing 5 projects designed to help the St. Louis community]
+  [Currently Project Management Lead overseeing 5 projects designed to help the St. Louis community],
 )
 // #project_item(
 //   name: "Physical Desmos Calculator",
@@ -103,13 +109,13 @@
 #resume_heading("Technical Skills")
 #skill_item(
   category: "Languages",
-  skills: "Java, Go, Python, Typescript, NextJS, HTML/CSS, R"
+  skills: "Java, Go, Python, Typescript, Javascript, HTML/CSS, R",
 )
 #skill_item(
   category: "Other Software/Tools",
-  skills: "Git, Docker, Google Firebase, MongoDB, Linux, MacOS, Windows"
+  skills: "Git, Docker, Google Firebase, MongoDB, Supabase, Linux, MacOS, Windows",
 )
 #skill_item(
   category: "Data Analysis",
-  skills: "Bayesian hierarchical modeling, Markov Chain Monte Carlo, Linear models, Geospatial Analyses"
+  skills: "Bayesian hierarchical modeling, Markov Chain Monte Carlo, Linear models, Geospatial Analyses",
 )

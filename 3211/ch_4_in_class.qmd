@@ -23,3 +23,26 @@ plot(hubble$x, hubble$y)
 cor(hubble$x, hubble$y)
 ```
 
+
+```{r}
+library(mnormt)
+```
+
+```{r}
+b <- dmnorm(c(0, 0), c(1, 3), matrix(c(2, 1.265, 1.265, 5), 2))
+b
+```
+
+```{r}
+c <- pmnorm(c(0, 0), c(1, 3), matrix(c(2, 1.265, 1.265, 5), 2))
+c
+```
+
+```{r}
+pnorm(8, 1, 5) - pnorm(3, 1, 5)
+```
+
+```{r}
+pnorm(8, 4, 4) - pnorm(3, 4, 4)
+```
+

@@ -18,8 +18,11 @@ $
   integral_0^infinity |psi(x)|^2 dif x &= integral_0^infinity abs(2sqrt(a^3)x e^(- a x))^2 dif x \
   &= integral_0^infinity 4 a^3 x^2 e^(-2 a x) dif x \
   &= 4 a^3 integral_0^infinity x^2 e^(-2 a x) dif x \
-  &= 1 / (4 a^3)
+  &= 4a^3 dot 1 / (4 a^3) \
+  &= 1
 $
+
+So yes, it is normalized!
 
 ==
 
@@ -44,7 +47,8 @@ Therefore, the maximum of the function is at $x = 1 / a$.
 $
   integral_0^(1 / a) |psi(x)|^2 dif x &= integral_0^(1 / a) abs(2sqrt(a^3)x e^(- a x))^2 dif x \
   &= integral_0^(1 / a) 4 a^3 x^2 e^(-2 a x) dif x \
-  &= 1 - 5 / e^2
+  &= 1 - 5 / e^2 \
+  &= 0.323
 $
 
 =

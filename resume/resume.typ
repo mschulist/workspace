@@ -12,7 +12,7 @@
 #resume_heading[Education]
 #edu_item(
   name: "Washington University in St. Louis",
-  degree: "BS in Data Science",
+  degree: "BS in Computer Science",
   location: "St. Louis, MO",
   date: "Aug 2023 - May 2027",
 )
@@ -109,7 +109,7 @@
 #resume_heading("Technical Skills")
 #skill_item(
   category: "Languages",
-  skills: "Java, Go, Python, Typescript, Javascript, HTML/CSS, R",
+  skills: "Java, Go, Python, Javascript/Typescript, HTML/CSS, R",
 )
 #skill_item(
   category: "Other Software/Tools",

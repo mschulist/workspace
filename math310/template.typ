@@ -1,4 +1,6 @@
 #import "@preview/plotst:0.2.0": *
+#import "@preview/ctheorems:1.1.2": *
+#import "@preview/physica:0.9.3": *
 
 #let project(title: "", body) = {
   let authors = ("Mark Schulist",)
@@ -35,6 +37,16 @@
   features: ("ss01",),
   box($cal(it)$),
 )
+
+#let csv_fl_one(path, len) = {
+  let c = csv(path)
+  let fl = ()
+  for i in range(len) {
+    let element = c.at(i).at(0)
+    fl.push(float(element))
+  }
+  return fl
+}
 
 #let csv_fl(path, len) = {
   let c = csv(path)

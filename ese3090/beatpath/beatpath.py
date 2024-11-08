@@ -1,5 +1,7 @@
+from datetime import datetime
 import numpy as np
 import itertools
+from tqdm import tqdm
 
 
 class Profile:
@@ -20,7 +22,10 @@ class Profile:
         """
         d_matrix = np.zeros((self.n_candidates, self.n_candidates))
 
-        for comb in itertools.combinations(range(self.n_candidates), 2):
+        for comb in tqdm(
+            itertools.combinations(range(self.n_candidates), 2),
+            total=self.n_candidates * (self.n_candidates - 1) // 2,
+        ):
             for i in range(self.n_voters):
                 a = comb[0]
                 b = comb[1]
@@ -78,24 +83,34 @@ class Profile:
         for i in range(self.n_candidates):
             for j in range(self.n_candidates):
                 if i != j:
-                    if p_matrix[i][j] > p_matrix[j][i]:
+                    if p_matrix[i][j] < p_matrix[j][i]:
                         ranking[i] += 1
         return ranking
 
 
 if __name__ == "__main__":
-    profile = np.array(
-        [
-            [0, 1, 2, 3],
-            [0, 2, 3, 1],
-            [2, 0, 1, 3],
-            [3, 1, 2, 0],
-            [3, 1, 2, 0],
-        ]
-    )
+    # profile = np.array(
+    #     [
+    #         [0, 1, 2, 3],
+    #         [0, 2, 3, 1],
+    #         [2, 0, 1, 3],
+    #         [3, 1, 2, 0],
+    #         [3, 1, 2, 0],
+    #     ]
+    # )
+
+    n_voters = int(1e6)
+    n_candidates = 5
+
+    profile = np.array([np.random.permutation(n_candidates) for _ in range(n_voters)])
+
     profile = Profile(profile)
+
+    before_time = datetime.now()
     d = profile.get_d_matrix()
     p = profile.get_p_matrix(d)
-    print(p)
     ranking = profile.rank_p(p)
+    after_time = datetime.now()
+
+    print("Time taken: ", after_time - before_time)
     print(ranking)

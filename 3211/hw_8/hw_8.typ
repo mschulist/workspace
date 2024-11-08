@@ -1,6 +1,6 @@
 #import "../template.typ": *
 
-#show: project.with(title: "Homework 7")
+#show: project.with(title: "Homework 8")
 
 = 5.4.5
 
@@ -113,8 +113,8 @@ $
 
 $
   f_(Y_1, Y_2)(y_1, y_2) &= f_(X_1, X_2)(y_1 / y_2, y_2)|J| \
-  &= y_1 / cancel(y_2) dot cancel(y_2) dot 1 / y_2 \
-  &= y_1 / y_2
+  &= (y_1 / y_2 + y_2) 1 / y_2 \
+  &= y_1 / y_2^2 + 1
 $
 
 Support:

@@ -15,9 +15,9 @@ $
 $
 
 $
-  [1] &= {1} subset R \
-  [2] &= {2, 3} subset R \
-  [4] &= {4, 5, 6} subset R
+  [1] &= {1} \
+  [2] &= {2, 3} \
+  [4] &= {4, 5, 6}
 $
 
 =
@@ -98,11 +98,65 @@ $
 ==
 
 #proof[
-  Suppose $R, S$ are equivalence relations on $A$. We need to show that $R union S$ is also an equivalence relation on $A$.
+  We can show that this is false by creating two relations $R, S$ that are individually equivalence relations, but their union is not.
 
-  We can show that $R union S$ is reflexive. We know that $R, S$ are reflexive, so $forall a in A, a R a and a S a$. Therefore, $forall a in A, a (R union S) a$. $R$ and $S$ both contain the diagonal elements, so their union will also contain the diagonal elements.
+  We will make sets on $A = {a, b, c}$.
 
-  We can show that $R union S$ is symmetric. We know that $R, S$ are symmetric, so $forall a, b in A, a R b ==> b R a and a S b ==> b S a$. Therefore, $forall a, b in A, a (R union S) b ==> b (R union S) a$. $R$ and $S$ both contain the symmetric elements, so their union will also contain the symmetric elements.
+  $
+    R &= {(a, a), (b, b), (c, c), (a, b), (b, a)} \
+    S &= {(a, a), (b, b), (c, c), (b, c), (c, b)}
+  $
 
-  We can show that $R union S$ is transitive. We know that for each set individually, $a R b and b R c ==> a R c and a S b and b S c ==> a S c$. Therefore, $forall a, b, c in A, a (R union S) b and b (R union S) c ==> a (R union S) c$. $R$ and $S$ both contain the transitive elements, so their union will also contain the transitive elements.
+  These relations are both equivalence relations.
+  #relation_diagram(
+    (
+      ("a", "a"),
+      ("b", "b"),
+      ("c", "c"),
+      ("a", "b"),
+      ("b", "a"),
+    ),
+    caption: [Relation $R$],
+  )
+  #relation_diagram(
+    (
+      ("a", "a"),
+      ("b", "b"),
+      ("c", "c"),
+      ("b", "c"),
+      ("c", "b"),
+    ),
+    caption: [Relation $S$],
+  )
+
+  When we take the union of $R union S$ we get the following relation:
+
+  $
+    R union S &= {(a, a), (b, b), (c, c), (a, b), (b, a), (b, c), (c, b)}
+  $
+
+  #relation_diagram(
+    (
+      ("a", "a"),
+      ("b", "b"),
+      ("c", "c"),
+      ("b", "c"),
+      ("c", "b"),
+      ("a", "b"),
+      ("b", "a"),
+    ),
+    caption: [Relation $R union S$],
+  )
+
+  Clearly, this relation is not an equivalence relation as $a R b$ and $b R c$ but $a cancel(R) c$, which means that $R union S$ is not transitive.
 ]
+
+// #proof[
+//   Suppose $R, S$ are equivalence relations on $A$. We need to show that $R union S$ is also an equivalence relation on $A$.
+
+//   We can show that $R union S$ is reflexive. We know that $R, S$ are reflexive, so $forall a in A, a R a and a S a$. Therefore, $forall a in A, a (R union S) a$. $R$ and $S$ both contain the diagonal elements, so their union will also contain the diagonal elements.
+
+//   We can show that $R union S$ is symmetric. We know that $R, S$ are symmetric, so $forall a, b in A, a R b ==> b R a and a S b ==> b S a$. Therefore, $forall a, b in A, a (R union S) b ==> b (R union S) a$. $R$ and $S$ both contain the symmetric elements, so their union will also contain the symmetric elements.
+
+//   We can show that $R union S$ is transitive. We know that for each set individually, $a R b and b R c ==> a R c and a S b and b S c ==> a S c$. Therefore, $forall a, b, c in A, a (R union S) b and b (R union S) c ==> a (R union S) c$. $R$ and $S$ both contain the transitive elements, so their union will also contain the transitive elements.
+// ]

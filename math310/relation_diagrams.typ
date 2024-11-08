@@ -9,7 +9,7 @@
 }
 
 
-#let relation_diagram(relations) = {
+#let relation_diagram(relations, caption: []) = {
   let node_map = (
     a: (0, -1),
     b: (-1, 0),
@@ -40,5 +40,6 @@
         }
       },
     ),
+    caption: caption
   )
 }

@@ -131,10 +131,10 @@ Transitive:
 We need to show that if $(a, b) ~ (c, d)$ and $(c, d) ~ (e, f)$, then $(a, b) ~ (e, f)$.
 
 $
-  a + d = c + b &quad c + f = e + d \
-  &quad c = e + d - f \
-  a + cancel(d) = e + cancel(d) - f + b&quad \
-  a + f = e + b
+  a + d &= c + b \
+  c + f &= e + d \
+  ==> "add both eqs and commutative" quad a + f + (d + c) &= e + b + (d + c) \
+  ==> "prop 6" quad a + f &= e + b
 $
 
 The final line is the definition of $(a, b) ~ (e, f)$. Therefore, we have shown that $~$ is transitive.
@@ -152,6 +152,8 @@ $
   ==> quad a b = b a
 $
 
+This is the definition of our relation, so it is reflexive.
+
 Symmetric:
 
 $
@@ -159,7 +161,7 @@ $
   ==> a d = b c <=> c b = d a
 $
 
-Multiplication is commutative, so this property holds.
+Multiplication is commutative, so this property holds (it is symmetric).
 
 Transitive:
 
@@ -171,10 +173,10 @@ $
 We can use definition of the relation:
 
 $
-  a d = b c &quad c f = d e \
-  &quad c = (d e) / f \
-  a cancel(d) = b (cancel(d) e) / f &quad \
-  a f = b e &quad
+  a d &= b c \
+  c f &= d e \
+  ==> "mul both eqs and commutative" quad a f (d c) &= b e (d c) \
+  ==> "prop 7", 0 eq.not d c quad a f &= b e
 $
 
 This last line is the definition of the relation we want to show, so we have proven that $~$ is transitive.

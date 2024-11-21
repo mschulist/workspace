@@ -57,9 +57,10 @@
 #resume_heading("Projects")
 #project_item(
   name: "Perch Agile Modeling",
-  skills: "NextJS, Python, Firebase, Google Cloud",
+  skills: "NextJS, FastAPI, SQLite, Python, Google Cloud",
   date: "May 2024 - Present",
   [Developed a cloud-native platform to enable bioacoustics researchers to quickly train a custom classifier using transfer learning],
+  [Utilized SQLite and approximate nearest neighbor algorithms to efficiently search audio feature embeddings]
 )
 #project_item(
   name: "eBird Christmas Bird Count Compiler",
@@ -94,7 +95,6 @@
   skills: "NextJS, MongoDB",
   date: "Jan 2024 - Present",
   [Developed a scheduling website for the Down Syndrome Association of Greater St. Louis],
-  [Worked in a team of 8 people to design the full stack application],
   [Currently Project Management Lead overseeing 5 projects designed to help the St. Louis community],
 )
 // #project_item(

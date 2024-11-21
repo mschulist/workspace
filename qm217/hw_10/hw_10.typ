@@ -135,7 +135,6 @@ $
 
 When $K -> 0, U_0 -> E$ so we are approaching the case when $E > U_0$. So we penetrate deeper into the forbidden region (it is at its highest when $U_0 -> E$).
 
-_*TODO: figure out the meaning of this.*_
 
 =
 
@@ -223,6 +222,8 @@ $
 ==
 
 Classically, the particle would increase in kinetic energy (momentum) because the potential energy decreases and $E = T + U$ at all positions and times.
+
+The kinetic energy would increase from $E$ to $4E$ "instantly."
 
 ==
 

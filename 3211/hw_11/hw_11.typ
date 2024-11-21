@@ -65,27 +65,25 @@ $
 $
 
 $
-  g_(theta|bold(X)) = K t^8 (1 - t)^2
+  g_(theta|bold(X)) = K t^8 (1 - t)^2 4t^3
 $
 
 $
-  1 / K &= integral_0^1 t^8 (1 - t)^2 dif t \
-  &= integral_0^1 t^8 (1 - 2t + t^2) dif t \
-  &= integral_0^1 (t^8 - 2t^9 + t^10) dif t \
-  &= lr(t^9 / 9 - 1 / 5 t^10 + t^11 / 11|)_(t = 0)^1 \
-  &= 1 / 9 - 1 / 5 + 1 / 11 \
-  &= 1 / 495 \
-  ==> quad K &= 495
+  1 / (4K) &= integral_0^1 t^11 (1 - t)^2 dif t \
+  &= integral_0^1 (t^11 + t^13 - 2t^12) dif t \
+  &= 1 / 12 + 1 / 14 - 2 / 13 \
+  ==> 4K &= 1092 \
+  K &= 273
 $
 
 $
-  g_(theta|bold(X))(t) = 495 t^8 (1 - t)^2
+  g_(theta|bold(X))(t) = 273 dot 4 t^11 (1 - t)^2
 $
 
 ==
 
 $
-  495 integral_0^1 t t^8 (1 - t)^2 dif t &= 495 integral_0^1 (t^9 - 2 t^10 + t^11) dif t \
-  &= 495 (1 / 10 - 2 / 11 + 1 / 12) \
-  &= 0.75
+  1092 integral_0^1 t t^11 (1 - t)^2 dif t &= 1092 integral_0^1 (t^12 + t^14 - 2t^13) dif t \
+  &= 1092 (1 / 13 + 1 / 15 - 1 / 7) \
+  &= 0.8
 $

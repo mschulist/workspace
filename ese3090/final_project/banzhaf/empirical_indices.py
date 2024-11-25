@@ -7,7 +7,7 @@ from itertools import product
 ELECTORAL_VOTES_CSV = "data/electoral_college.csv"
 ELECTION_RESULTS_CSV = "data/1976-2020-president.csv"
 WINNER_CSV = "data/1976-2020-pres-winner.csv"
-OLDEST_YEAR = 2012
+OLDEST_YEAR = 2008
 
 presidents_csv = pl.read_csv(ELECTION_RESULTS_CSV, null_values=["NA"])
 electoral_votes_csv = pl.read_csv(ELECTORAL_VOTES_CSV)
@@ -30,7 +30,10 @@ class StateCoalition:
         self.states = states
         self.num_states = num_states
         self.electoral_votes = electoral_votes
-        self.past_results = self.get_past_election_results()
+        past_results = self.get_past_election_results()
+        if past_results is False:
+            raise ValueError("Multiple candidates in the past elections")
+        self.past_results = past_results
 
     @classmethod
     def create_state_coalition(cls, states: List[str]):
@@ -100,7 +103,8 @@ class StateCoalitions:
         past_results_matrix = []
         for coalition in self.state_coalitions:
             past_results_matrix.append(coalition.past_results)
-        return np.array(past_results_matrix)
+        past_results = np.array(past_results_matrix)
+        return past_results
 
     def get_past_results(self, coalition_combination: np.ndarray):
         """
@@ -161,26 +165,42 @@ class StateCoalitions:
 
 
 if __name__ == "__main__":
-    state_coalitions = [
-        StateCoalition.create_state_coalition(
-            ["california", "oregon", "washington", "hawaii"]
-        ),
-        StateCoalition.create_state_coalition(["texas", "missouri", "oklahoma"]),
-        StateCoalition.create_state_coalition(
-            ["new york", "new jersey", "connecticut"]
-        ),
-    ]
+    # state_coalitions = [
+    #     StateCoalition.create_state_coalition(
+    #         ["california", "oregon", "washington", "hawaii"]
+    #     ),
+    #     StateCoalition.create_state_coalition(["texas", "missouri", "oklahoma"]),
+    #     StateCoalition.create_state_coalition(
+    #         ["new york", "new jersey", "connecticut"]
+    #     ),
+    # ]
+
+    # state_coalitions = StateCoalitions(state_coalitions)
+
+    # print(state_coalitions.past_results_matrix)
+    # for i in range(2**state_coalitions.num_coalitions):
+    #     print(
+    #         state_coalitions.get_past_results(
+    #             np.array(list(map(int, f"{i:0{state_coalitions.num_coalitions}b}")))
+    #         )
+    #     )
+
+    # probs, coalitions = state_coalitions.get_probabilites()
+    # print(probs)
+    # print(probs.sum())
+
+    state_groups = pl.read_csv("data/state_groups.csv")
+    state_groups = state_groups.with_columns(
+        pl.col("state").str.to_lowercase().alias("state")
+    )
+    states_in_grouped = state_groups.group_by("group").all().select("state").to_numpy()
+    state_coalitions = []
+    for states in states_in_grouped:
+        states_list = list(states[0])
+        state_coalitions.append(StateCoalition.create_state_coalition(states_list))
 
     state_coalitions = StateCoalitions(state_coalitions)
-
-    print(state_coalitions.past_results_matrix)
-    for i in range(2**state_coalitions.num_coalitions):
-        print(
-            state_coalitions.get_past_results(
-                np.array(list(map(int, f"{i:0{state_coalitions.num_coalitions}b}")))
-            )
-        )
-
     probs, coalitions = state_coalitions.get_probabilites()
     print(probs)
     print(probs.sum())
+    print(probs.shape)

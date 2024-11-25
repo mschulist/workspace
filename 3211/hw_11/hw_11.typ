@@ -13,8 +13,8 @@ $
 $
 
 $
-  (0.645 - 1.96 sqrt(0.645(1 - 0.645)) / sqrt(1516), 0.645 + 1.96 sqrt(0.645(1 - 0.645)) / sqrt(1516)) \
-  (0.621, 0.669)
+  (985 / 1516 - 1.96 sqrt(0.645(1 - 0.645)) / sqrt(1516), 985 / 1516 + 1.96 sqrt(0.645(1 - 0.645)) / sqrt(1516)) \
+  (0.626, 0.674)
 $
 
 
@@ -39,6 +39,11 @@ $
 ==
 
 If we did not have any information about the variance from the sample proportion, we would have to estimate it at a values of $0.5$. This will give us the largest spread (variance), and the true variance will probability be smaller.
+
+$
+  0.03 &= 1.96 sqrt(0.5^2) / sqrt(n) \
+  ==> quad n &= 1068
+$
 
 =
 

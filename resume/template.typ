@@ -6,7 +6,7 @@
 
   set page(
     paper: "us-letter",
-    margin: (x: 0.45in, y: 0.45in)
+    margin: (x: 0.45in, y: 0.40in)
   )
 
   set text(

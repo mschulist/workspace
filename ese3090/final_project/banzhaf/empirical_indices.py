@@ -1,13 +1,12 @@
 import numpy as np
 import polars as pl
 from typing import List
-from tqdm import tqdm
 from itertools import product
 
 ELECTORAL_VOTES_CSV = "data/electoral_college.csv"
 ELECTION_RESULTS_CSV = "data/1976-2020-president.csv"
 WINNER_CSV = "data/1976-2020-pres-winner.csv"
-OLDEST_YEAR = 2008
+OLDEST_YEAR = 2004
 
 presidents_csv = pl.read_csv(ELECTION_RESULTS_CSV, null_values=["NA"])
 electoral_votes_csv = pl.read_csv(ELECTORAL_VOTES_CSV)
@@ -93,6 +92,21 @@ class StateCoalitions:
         self.state_coalitions = state_coalitions
         self.num_coalitions = len(state_coalitions)
         self.past_results_matrix = self.get_past_results_matrix()
+        self.weights = self.compute_electoral_weights()
+
+    def compute_electoral_weights(self):
+        """
+        Given the state coaltions, compute the number of electoral votes each group
+        of states has.
+
+        Returns:
+            np array of shape (num_coalitions) where each element is the number of
+            electoral votes that the coalition has.
+        """
+        weights = np.zeros(self.num_coalitions)
+        for i, coalition in enumerate(self.state_coalitions):
+            weights[i] = coalition.electoral_votes
+        return weights
 
     def get_past_results_matrix(self):
         """
@@ -141,6 +155,7 @@ class StateCoalitions:
         all_possible_combinations = np.array(
             list(product([0, 1], repeat=self.num_coalitions))
         )
+        print(all_possible_combinations.shape)
         probs = np.zeros(all_possible_combinations.shape[0])
         for i in range(all_possible_combinations.shape[0]):
             x_i = self.get_past_results(all_possible_combinations[i])
@@ -163,44 +178,88 @@ class StateCoalitions:
         """
         return 1 / 2 * (x_i + x_i_prime + 1) / (n + 2 ** (m - 1))
 
+    def get_winning_coalitions(self, all_possible_combinations: np.ndarray):
+        """
+        Given a matrix of shape (2**num_voters, num_voters) where
+        each row is a coalition, return a matrix of shape (unknown, num_voters)
+        where each row is a winning coalition.
+
+        We do not know how many of the possible coalitions are winning coalitions, but
+        that is our goal here!
+
+        We return an array of indices of the winning coalitions.
+        """
+        winning_coalitions = []
+        for i in range(all_possible_combinations.shape[0]):
+            if np.dot(self.weights, all_possible_combinations[i]) > 270:
+                winning_coalitions.append(i)
+
+        w_c = np.array(winning_coalitions)
+        return w_c
+
+    def get_prob_of_winning_coalitions(
+        self, probs: np.ndarray, winning_coalitions: np.ndarray
+    ):
+        """
+        Given the probabilities of each coalition winning and the indices of the winning coalitions,
+        return the probability of winning the election.
+        """
+        return probs[winning_coalitions].sum()
+
+    def get_coalitions_where_voter_is_pivotal(
+        self,
+        all_coalitions: np.ndarray,
+        voter_index: int,
+    ):
+        """
+        Given the winning coalitions, return the coalitions where the voter is pivotal.
+        """
+        coalitions_where_voter_is_pivotal = []
+        for i in range(all_coalitions.shape[0]):
+            coalition = all_coalitions[i]
+
+            # skip if the voter is not in the coalition
+            if coalition[voter_index] == 0:
+                continue
+
+            # check to see if they were winning before changing voter
+            if np.dot(self.weights, coalition) <= 270:
+                continue
+
+            # check if the coalition without the voter is a winning coalition
+            coalition_without_voter = coalition.copy()
+            coalition_without_voter[voter_index] = 0
+            if np.dot(self.weights, coalition_without_voter) <= 270:
+                coalitions_where_voter_is_pivotal.append(i)
+
+        return np.array(coalitions_where_voter_is_pivotal)
+
 
 if __name__ == "__main__":
-    # state_coalitions = [
-    #     StateCoalition.create_state_coalition(
-    #         ["california", "oregon", "washington", "hawaii"]
-    #     ),
-    #     StateCoalition.create_state_coalition(["texas", "missouri", "oklahoma"]),
-    #     StateCoalition.create_state_coalition(
-    #         ["new york", "new jersey", "connecticut"]
-    #     ),
-    # ]
-
-    # state_coalitions = StateCoalitions(state_coalitions)
-
-    # print(state_coalitions.past_results_matrix)
-    # for i in range(2**state_coalitions.num_coalitions):
-    #     print(
-    #         state_coalitions.get_past_results(
-    #             np.array(list(map(int, f"{i:0{state_coalitions.num_coalitions}b}")))
-    #         )
-    #     )
-
-    # probs, coalitions = state_coalitions.get_probabilites()
-    # print(probs)
-    # print(probs.sum())
-
     state_groups = pl.read_csv("data/state_groups.csv")
     state_groups = state_groups.with_columns(
         pl.col("state").str.to_lowercase().alias("state")
     )
     states_in_grouped = state_groups.group_by("group").all().select("state").to_numpy()
-    state_coalitions = []
+    state_coalitions_list = []
     for states in states_in_grouped:
         states_list = list(states[0])
-        state_coalitions.append(StateCoalition.create_state_coalition(states_list))
+        state_coalitions_list.append(StateCoalition.create_state_coalition(states_list))
 
-    state_coalitions = StateCoalitions(state_coalitions)
+    state_coalitions = StateCoalitions(state_coalitions_list)
     probs, coalitions = state_coalitions.get_probabilites()
+    winning_coalitions = state_coalitions.get_winning_coalitions(coalitions)
+    overall_prob = state_coalitions.get_prob_of_winning_coalitions(
+        probs, winning_coalitions
+    )
+
+    for i in range(len(state_coalitions_list)):
+        voter_pivotal = state_coalitions.get_coalitions_where_voter_is_pivotal(
+            coalitions, i
+        )
+        voter_prob_to_change = probs[voter_pivotal].sum()
+        print(f"Voter {i + 1} prob to change: {voter_prob_to_change / overall_prob}")
+
     print(probs)
     print(probs.sum())
     print(probs.shape)

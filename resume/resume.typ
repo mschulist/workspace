@@ -57,10 +57,11 @@
 #resume_heading("Projects")
 #project_item(
   name: "Perch Agile Modeling",
-  skills: "NextJS, FastAPI, SQLite, Python, Google Cloud",
+  skills: "NextJS, FastAPI, SQLite, Iceberg, Python, Google Cloud",
   date: "May 2024 - Present",
   [Developed a cloud-native platform to enable bioacoustics researchers to quickly train a custom classifier using transfer learning],
-  [Utilized SQLite and approximate nearest neighbor algorithms to efficiently search audio feature embeddings]
+  [Utilized SQLite and approximate nearest neighbor algorithms to efficiently search audio feature embeddings],
+  [Used Iceberg to store billions of rows of classifier outputs]
 )
 #project_item(
   name: "eBird Christmas Bird Count Compiler",
@@ -73,7 +74,7 @@
   name: "Winner of the Master Category at Hack WashU 2024",
   skills: [NextJS, Supabase, DeckGL],
   date: "Oct 2024",
-  [Developed a website to provide a visual representation of WashU buildings, courses, and their relevant information (#link("https://washucampusview.com", [washucampusview.com]))],
+  [Developed a website to provide a visual representation of WashU buildings, courses, and their relevant information, available at (#link("https://washucampusview.com", [washucampusview.com]))],
   [Utilized DeckGL to create a 3D map of the buildings and integrated Supabase to store the building data],
 )
 #project_item(
@@ -109,7 +110,7 @@
 #resume_heading("Technical Skills")
 #skill_item(
   category: "Languages",
-  skills: "Java, Go, Python, Javascript/Typescript, HTML/CSS, R",
+  skills: "Java, Go, Python, JavaScript/TypeScript, HTML/CSS, R",
 )
 #skill_item(
   category: "Other Software/Tools",

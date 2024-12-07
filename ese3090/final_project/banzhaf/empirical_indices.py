@@ -3,10 +3,12 @@ import polars as pl
 from typing import List
 from itertools import product
 
+from tqdm import tqdm
+
 ELECTORAL_VOTES_CSV = "data/electoral_college.csv"
 ELECTION_RESULTS_CSV = "data/1976-2020-president.csv"
 WINNER_CSV = "data/1976-2020-pres-winner.csv"
-OLDEST_YEAR = 2004
+OLDEST_YEAR = 2000
 
 presidents_csv = pl.read_csv(ELECTION_RESULTS_CSV, null_values=["NA"])
 electoral_votes_csv = pl.read_csv(ELECTORAL_VOTES_CSV)
@@ -157,7 +159,7 @@ class StateCoalitions:
         )
         print(all_possible_combinations.shape)
         probs = np.zeros(all_possible_combinations.shape[0])
-        for i in range(all_possible_combinations.shape[0]):
+        for i in tqdm(range(all_possible_combinations.shape[0])):
             x_i = self.get_past_results(all_possible_combinations[i])
             x_i_prime = self.get_past_results(all_possible_combinations[i] ^ 1)
             num_past_elections = self.past_results_matrix.shape[1]
@@ -222,12 +224,12 @@ class StateCoalitions:
             if coalition[voter_index] == 0:
                 continue
 
-            # check to see if they were winning before changing voter
+            # check to see if they would have lost anyways
             if np.dot(self.weights, coalition) <= 270:
                 continue
 
-            # check if the coalition without the voter is a winning coalition
-            coalition_without_voter = coalition.copy()
+            # Create a copy of coalition with voter removed
+            coalition_without_voter = np.copy(coalition)
             coalition_without_voter[voter_index] = 0
             if np.dot(self.weights, coalition_without_voter) <= 270:
                 coalitions_where_voter_is_pivotal.append(i)
@@ -236,15 +238,22 @@ class StateCoalitions:
 
 
 if __name__ == "__main__":
-    state_groups = pl.read_csv("data/state_groups.csv")
+    state_groups = pl.read_csv("data/state_groups2.csv")
     state_groups = state_groups.with_columns(
         pl.col("state").str.to_lowercase().alias("state")
     )
-    states_in_grouped = state_groups.group_by("group").all().select("state").to_numpy()
+    states_in_grouped = state_groups.group_by("group").all().to_numpy()
+
     state_coalitions_list = []
-    for states in states_in_grouped:
-        states_list = list(states[0])
+    state_indices_map = {}
+    for i, states in enumerate(states_in_grouped):
+        states_list = list(states[1])
         state_coalitions_list.append(StateCoalition.create_state_coalition(states_list))
+        for state in states_list:
+            if i + 1 in state_indices_map:
+                state_indices_map[i + 1].append(state)
+            else:
+                state_indices_map[i + 1] = [state]
 
     state_coalitions = StateCoalitions(state_coalitions_list)
     probs, coalitions = state_coalitions.get_probabilites()
@@ -252,13 +261,19 @@ if __name__ == "__main__":
     overall_prob = state_coalitions.get_prob_of_winning_coalitions(
         probs, winning_coalitions
     )
+    print(overall_prob)
 
+    probs_to_change = []
     for i in range(len(state_coalitions_list)):
         voter_pivotal = state_coalitions.get_coalitions_where_voter_is_pivotal(
             coalitions, i
         )
         voter_prob_to_change = probs[voter_pivotal].sum()
         print(f"Voter {i + 1} prob to change: {voter_prob_to_change / overall_prob}")
+        probs_to_change.append(voter_prob_to_change / overall_prob)
+
+    print(np.array(probs_to_change).sum())
+    print(state_indices_map)
 
     print(probs)
     print(probs.sum())

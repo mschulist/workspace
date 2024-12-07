@@ -562,7 +562,7 @@ $
 ==
 
 $
-  R_(1 0)(r) &= c_0 / a_0 e^(-r \/ a_0)
+  R_(1 0)(r) &= c_0 e^(-r \/ a_0)
 $
 
 We can normalize to find $c_0$:
@@ -573,12 +573,23 @@ $
   c_0 &= 2 / sqrt(a_0^3)
 $
 
+// We can use a Taylor polynomial of degree 1 to approximate the probability that the electron is inside of the nucleus.
+
+// $
+//   c_0^2 r^2 e^(-2r \/ a_0) &approx c_0 [
+
+//   ]
+// $
+
 $
   P(r < 10^(-15) " m") &= integral_0^(10^(-15)) 4 / a_0^3 e^(- 2r \/ a_0) r^2 dif r \
+  &approx 4 / a_0^3 (10^(-15))^3 / 3 \
   // &= -1 (e^(- 2 dot 10^(-15)) - 1) \
   // &= 1 - exp(-2 dot 10^(-15)) \
-  &approx 2 times 10^(-15)
+  &approx 9 times 10^(-15)
 $
+
+We can also see that the exponential term will contribute very little to the integral at such small values of $r$, so it makes sense that the solution is on the same order at the radius of the nucleus.
 
 So basically a zero probability, which makes sense... The electron should not be _inside_ of the proton.
 
@@ -619,7 +630,8 @@ Now we can calculate the probability of the electron being inside of the nucleus
 
 $
   P(r < 10^(-15)" m") &= integral_0^(10^(-15)) 1 / (24 a_0^5) r^4 e^(-r \/ a_0) \
-  &approx 2.22 times 10^(-16)
+  &approx (10^(-15))^5 / 5 1 / (24 a_0^5) \
+  &approx 2 times 10^(-26)
 $
 
-This is smaller than the ground state, which makes sense because it has more energy and therefore will spend more of its time further from the nucleus.
+This is smaller than the ground state, which makes sense because it has more energy and therefore will spend more of its time further from the nucleus. The higher orbitals are, well higher, so less probability to be close to the nucleus.

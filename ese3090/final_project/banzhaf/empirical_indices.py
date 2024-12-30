@@ -244,19 +244,22 @@ if __name__ == "__main__":
     )
     states_in_grouped = state_groups.group_by("group").all().to_numpy()
 
-    state_coalitions_list = []
+    # first compute the empirical indices
+
+    state_coalitions_list: List[StateCoalition] = []
     state_indices_map = {}
     for i, states in enumerate(states_in_grouped):
         states_list = list(states[1])
         state_coalitions_list.append(StateCoalition.create_state_coalition(states_list))
         for state in states_list:
-            if i + 1 in state_indices_map:
-                state_indices_map[i + 1].append(state)
+            if i in state_indices_map:
+                state_indices_map[i].append(state)
             else:
-                state_indices_map[i + 1] = [state]
+                state_indices_map[i] = [state]
 
     state_coalitions = StateCoalitions(state_coalitions_list)
     probs, coalitions = state_coalitions.get_probabilites()
+    print(probs)
     winning_coalitions = state_coalitions.get_winning_coalitions(coalitions)
     overall_prob = state_coalitions.get_prob_of_winning_coalitions(
         probs, winning_coalitions
@@ -269,7 +272,9 @@ if __name__ == "__main__":
             coalitions, i
         )
         voter_prob_to_change = probs[voter_pivotal].sum()
-        print(f"Voter {i + 1} prob to change: {voter_prob_to_change / overall_prob}")
+        print(
+            f"Voter(s) {state_indices_map[i]} prob to change: {voter_prob_to_change / overall_prob}"
+        )
         probs_to_change.append(voter_prob_to_change / overall_prob)
 
     print(np.array(probs_to_change).sum())
@@ -278,3 +283,53 @@ if __name__ == "__main__":
     print(probs)
     print(probs.sum())
     print(probs.shape)
+
+    with open("data/probs_to_change_empirical.csv", "w") as f:
+        f.write("group,prob_to_change\n")
+        for i, prob in enumerate(probs_to_change):
+            f.write(f'"{state_indices_map[i]}",{prob}\n')
+
+    # now compute the indices without past data
+    state_coalitions_list: List[StateCoalition] = []
+    state_indices_map = {}
+    for i, states in enumerate(states_in_grouped):
+        states_list = list(states[1])
+        state_coalitions_list.append(StateCoalition.create_state_coalition(states_list))
+        for state in states_list:
+            if i in state_indices_map:
+                state_indices_map[i].append(state)
+            else:
+                state_indices_map[i] = [state]
+
+    state_coalitions = StateCoalitions(state_coalitions_list)
+    probs, coalitions = state_coalitions.get_probabilites()
+    probs = np.repeat(1 / probs.shape[0], probs.shape[0])
+    print(probs)
+    winning_coalitions = state_coalitions.get_winning_coalitions(coalitions)
+    overall_prob = state_coalitions.get_prob_of_winning_coalitions(
+        probs, winning_coalitions
+    )
+    print(overall_prob)
+
+    probs_to_change = []
+    for i in range(len(state_coalitions_list)):
+        voter_pivotal = state_coalitions.get_coalitions_where_voter_is_pivotal(
+            coalitions, i
+        )
+        voter_prob_to_change = probs[voter_pivotal].sum()
+        print(
+            f"Voter(s) {state_indices_map[i]} prob to change: {voter_prob_to_change / overall_prob}"
+        )
+        probs_to_change.append(voter_prob_to_change / overall_prob)
+
+    print(np.array(probs_to_change).sum())
+    print(state_indices_map)
+
+    print(probs)
+    print(probs.sum())
+    print(probs.shape)
+
+    with open("data/probs_to_change_no_past.csv", "w") as f:
+        f.write("group,prob_to_change\n")
+        for i, prob in enumerate(probs_to_change):
+            f.write(f'"{state_indices_map[i]}",{prob}\n')

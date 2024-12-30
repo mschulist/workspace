@@ -100,3 +100,16 @@
     stroke: red,
   )
 }
+
+#let proof(body) = block(
+  width: 100%,
+  {
+    [_Proof._ ]
+    body
+    box(width: 0pt)
+    h(1fr)
+    sym.wj
+    sym.space.nobreak
+    $square$
+  },
+)

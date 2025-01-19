@@ -14,6 +14,7 @@
 #resume_heading[Interests]
 - Mathematics/Computing: Bayesian statistics, Markov chain Monte Carlo, approximate nearest neighbor search, simulations
 - Machine Learning: Image classification, transformers, dimensionality reduction, transfer learning
+- Software Development: Frontend (React/NextJS), backend (FastAPI, Go), databases (Postgres, Supabase)
 - Non-academic: tennis, birding, photography, rock climbing
 
 #resume_heading[Education]
@@ -53,7 +54,7 @@
   location: "San Francisco, CA",
   date: "Jun 2023 - Aug 2023",
   [Created a website to teach researchers about food webs for a wildlife metrics project],
-  [Developed the website to secure a grant extension],
+  // [Developed the website to secure a grant extension],
 )
 // #exp_item(
 //   role: "Sales Associate",

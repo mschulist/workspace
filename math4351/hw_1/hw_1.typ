@@ -21,7 +21,7 @@ $
 Show that if $a|b$ then $a <= b$
 
 #proof[
-  From the definition of "divides", we know that $b = a k$ for some $k in ZZ$. We know that $a, b > 0$, so $k > 0$ as well. We can see from the definition of "divides" that multiplying $a$ by a positive integer will yield a number larger than or equal to $a$. Therefore $b >= a$.
+  From the definition of "divides", we know that $b = a k$ for some $k in ZZ$. We know that $a, b > 0$, so $k > 0$ as well. We can see from the definition of "divides" that multiplying $a$ by a non-negative integer will yield a number larger than or equal to $a$. Therefore $b >= a$.
 ]
 
 ==
@@ -54,7 +54,7 @@ Show that $a|b x + c y$ for any $x, y in ZZ$.
     b x + c y &= a underbrace((k x + l y), "some integer")
   $
 
-  The LHS is $a$ times some integer, which is what we needed to show.
+  The RHS is $a$ times some integer, which is what we needed to show.
 ]
 
 ==
@@ -70,7 +70,7 @@ $
 #proof[
   Using the fact from the previous problem, we can see that this is true. We can do induction on $NN$.
 
-  Our base case is that $a | b_1 x_1 + b_2 x_2$.
+  Our base case is that $a | b_1 x_1 + b_2 x_2$ (which is true from the previous problem).
 
   Inductive hypothesis: $a | b_1 x_1 + ... + b_j x_j$.
 
@@ -132,9 +132,9 @@ We can further split this up into _pairs_ of divisors of $6$, such that the prod
 
 For example, $1 dot 6 = 6$ and $2 dot 3 = 6$.
 
-First we find all of the _factors_ of $6$, and then we find all of the complements to those factors such that each factor multiplied by the factor equals $6$. Our set of possible GCDs is the set of all factors and their complements.
+First we find all of the _factors_ of $6$, and then we find all of the complements to those factors such that each factor multiplied by the other factor equals $6$. Our set of possible GCDs is the set of all factors and their complements.
 
-*TODO: Prove list is complete.*
+// *TODO: Prove list is complete.*
 
 // *Use the next problem to prove our list is complete.*
 
@@ -234,7 +234,7 @@ Show $D(a) sect D(b) = D((a,b))$
 
   WTS: $D((a,b)) subset.eq D(a) sect D(b)$
 
-  For any $y in D((a,b))$, we know that $y$ divides $(a,b)$ which must divide $a$ and $b$ by definition (it is the _greatest common divisor_). So $y in D(a) sect D(b)$.
+  For any $y in D((a,b))$, we know that $y$ divides $(a,b)$ which must divide $a$ and $b$ by definition (it is the _greatest common divisor_, in other words "divides" is transitive). So $y in D(a) sect D(b)$.
 ]
 
 
@@ -262,14 +262,14 @@ Show that $(a,b,c) = (a,(b,c))$
 ==
 
 #proof[
-  Assume there exists $d in C(a,b,c)$ with $0 < d < C(a,b,c)$. $d in C(a,b,c)$ so there exists $x,y,z in ZZ$ such that $a x + b y + c z = d$. We know that $(a,b,c)|a$ and $(a,b,c)|b$ and $(a,b,c)|c$, so by the linear combination proposition, $(a,b,c)$ divides any linear combination of $a,b,c$. In particular, $(a,b,c)|d$ which implies that $(a,b,c) <= d arrow.zigzag$.
+  Assume there exists $d in C(a,b,c)$ with $0 < d < (a,b,c)$. $d in C(a,b,c)$ so there exists $x,y,z in ZZ$ such that $a x + b y + c z = d$. We know that $(a,b,c)|a$ and $(a,b,c)|b$ and $(a,b,c)|c$, so by the linear combination proposition, $(a,b,c)$ divides any linear combination of $a,b,c$. In particular, $(a,b,c)|d$ which implies that $(a,b,c) <= d arrow.zigzag$.
 
   This cannot be true because we assumed that $d > (a,b,c)$, so therefore $(a,b,c)$ must be the smallest positive element in $C(a,b,c)$.
 ]
 
 ==
 
-(b) GCD is "associative" so order of determining divisors does not matter.
+(b) GCD is "associative" (and also commutative) so order of determining divisors does not matter.
 
 (c) $(a_1, a_2, ..., a_n)$ is the smallest element of $C(a_1,a_2,...,a_n) = {a_1 x_1 + a_2 x_2 + ... + a_n x_n | x_1, x_2, ..., x_n in ZZ}$
 
@@ -334,7 +334,7 @@ Show that $"ord"_(p)(a b) = "ord"_(p)(a) + "ord"_(p)(b)$
 
   Then $"ord"_p_(i)(a) = a_i$ and $"ord"_p_(i)(b) = b_i$.
 
-  Clearly, $"ord"_p_(i)(a b) = a_i + b_i = "ord"_p_(i)(a) + "ord"_p_(i)(b)$
+  Then $"ord"_p_(i)(a b) = a_i + b_i = "ord"_p_(i)(a) + "ord"_p_(i)(b)$ as the exponents are added when we multiply numbers.
 ]
 
 ==
@@ -346,18 +346,20 @@ Show that $"ord"_(p)(a b) = "ord"_(p)(a) + "ord"_(p)(b)$
 
   We know from the FTA:
   $
-    a = p^(r_a) + l quad quad b = p^(r_b) + k
+    a = p^(r_a) l quad quad b = p^(r_b) k
   $
   // where $p divides.not l$ and $p divides.not k$.
 
   Therefore:
   $
     a + b &= p^(r_a) dot l + p^(r_b) + k \
-    &= p^(r_a)(l + p^(v_b - v_a) k) quad "using" r_a <= r_b
+    &= p^(r_a)(l + p^(r_b - r_a) k) quad "using" r_a <= r_b
   $
   // Because $p divides.not l$, we know that $p divides.not l + p^(r_a - r_b) k$.
 
-  Therefore the exponent of $p$ must be at least $r_a$ (i.e. $"ord"_(p)(a+b) >= r_a$ where $r_a = min{"ord"_(p)(a), "ord"_(p)(b)}$).
+  Therefore the exponent of $p$ must be at least $r_a$. It could be larger if $p|(l + p^(r_b - r_a) k)$, but it does not necessarily need to be.
+
+  Hence, $"ord"_(p)(a+b) >= r_a$ where $r_a = min{"ord"_(p)(a), "ord"_(p)(b)}$.
 ]
 
 *Example 1*
@@ -400,11 +402,12 @@ Show that $b | a <==> "ord"_(p)(a) <= "ord"_(p)(b) forall p in {"primes"}$
 
   We are given that $b | a ==> a = b x$ for some $x in ZZ$. Therefore:
   $
+    "ord"_(p)(a) &= "ord"_(p)(b x) \
     "ord"_(p)(a) &= underbrace("ord"_(p)(b), >=0) + underbrace("ord"_(p)(x), >=0) \
     "ord"_(p)(a) &<= "ord"_(p)(b)
   $
 
-  If we add a non-negative value to the RHS, we cannot get a smaller value than $"ord"_(p)(b)$.
+  If we add a non-negative value to the RHS, we cannot get a smaller value than $"ord"_(p)(b)$. We did not assume that $p$ takes on a particular value, so therefore this applied to all prime numbers $p$.
 
   $(<==)$
 
@@ -475,3 +478,5 @@ Given $m | a b$ and $(a,m) = 1$, show that $m | b$.
 
   If $"ord"_(p)(a) = 0$, then we reach the same conclusion using the same reasoning as above (i.e. @ord-add-8 is still satisfied when $"ord"_(p)(a) = 0$ which then implies what we want to show).
 ]
+
+I prefer this version of the proof because I have more experience thinking about "factors" of numbers (factoring them) compared to thinking about whether a number divides another number. Just the "dividing" symbol makes it seem somewhat scary in the other version of the proof, but in this version we do not have to deal with such notation. I would give this proof, but first start out with a more intuitive approach to ensure that my students understood what it means to factor a number.

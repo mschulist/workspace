@@ -112,7 +112,7 @@ $
 $
 
 $
-  b &= minus.plus e^(-i pi \/ 4) 1 / sqrt(2)
+  b &= minus.plus e^(i pi \/ 4) 1 / sqrt(2)
 $
 
 Therefore one option is:
@@ -242,4 +242,9 @@ $
   V'''_(M)(R_0) &= D_(e)(-8 alpha^3 + 2 alpha^3) \
   &= - D_(e) 6 alpha^3 \
   &= - 3 / sqrt(2) 1 / sqrt(D_e) omega^3 mu^(3 \/ 2)
+$
+
+Therefore the cubic correction term is:
+$
+  -D_e 6 / 6 alpha^3 (R - R_0)^3
 $

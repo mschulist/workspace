@@ -6,7 +6,7 @@
 
 #show: project.with(title: "Homework 1")
 
-=
+= 1.1
 
 $
   r in QQ quad x in.not QQ
@@ -34,7 +34,7 @@ Show $r + x$ and $r dot x$ are not rational.
   Contradicts assumption that $x$ is not rational, hence $r dot x in.not QQ$.
 ]
 
-=
+= 1.2
 
 Show $exists.not r in QQ$ such that $r^2 = 12$.
 
@@ -60,62 +60,62 @@ Show $exists.not r in QQ$ such that $r^2 = 12$.
   Hence, there does not exists a $r in QQ$ with $r^2 = 12$.
 ]
 
-=
+// =
 
-Proposition 1.15:
+// Proposition 1.15:
 
-(a): $x y = x z ==> y = z$ \
-(b): $x y = x ==> y = 1$ \
-(c): $x y = 1 ==> y = 1 / x$ \
-(d): $1 / (1 \/ x) = x$
+// (a): $x y = x z ==> y = z$ \
+// (b): $x y = x ==> y = 1$ \
+// (c): $x y = 1 ==> y = 1 / x$ \
+// (d): $1 / (1 \/ x) = x$
 
-#proof[
-  (a)
+// #proof[
+//   (a)
 
-  Suppose $x y = x z$.
+//   Suppose $x y = x z$.
 
-  $
-    y &= 1 dot y quad& "(M4)" \
-    y &= (x / x) dot y quad& "(M5)" \
-    y &= (x dot y) / x quad& "(M3)" \
-    y &= (x dot z) / x quad& "(given)" \
-    y &= z quad& "(M5)"
-  $
+//   $
+//     y &= 1 dot y quad& "(M4)" \
+//     y &= (x / x) dot y quad& "(M5)" \
+//     y &= (x dot y) / x quad& "(M3)" \
+//     y &= (x dot z) / x quad& "(given)" \
+//     y &= z quad& "(M5)"
+//   $
 
-  (b)
+//   (b)
 
-  Suppose $x y = x$.
+//   Suppose $x y = x$.
 
-  $
-    y &= 1 dot y quad& "(M4)" \
-    y &= x / x dot y quad& "(M5)" \
-    y &= (x dot y) / x quad& "(M3)" \
-    y &= x / x quad& ("given") \
-    y &= 1 quad& ("M5")
-  $
+//   $
+//     y &= 1 dot y quad& "(M4)" \
+//     y &= x / x dot y quad& "(M5)" \
+//     y &= (x dot y) / x quad& "(M3)" \
+//     y &= x / x quad& ("given") \
+//     y &= 1 quad& ("M5")
+//   $
 
-  (c)
+//   (c)
 
-  Suppose $x y = 1$
+//   Suppose $x y = 1$
 
-  $
-    y &= 1 dot y quad& "(M4)" \
-    y &= (x dot y) / x quad& "(M5, M4)" \
-    y &= 1 / x quad& "(given)"
-  $
+//   $
+//     y &= 1 dot y quad& "(M4)" \
+//     y &= (x dot y) / x quad& "(M5, M4)" \
+//     y &= 1 / x quad& "(given)"
+//   $
 
-  (d)
+//   (d)
 
-  $
-    x &= 1 dot x quad& "(M4)" \
-    x &= x / x dot x quad& "(M5)" \
-    x &= x / (x dot x / x) x quad& "(M5)" \
-    x &= x / x x / x 1 / (1 / x) quad& "(M5)" \
-    x &= 1 / (1 / x)
-  $
-]
+//   $
+//     x &= 1 dot x quad& "(M4)" \
+//     x &= x / x dot x quad& "(M5)" \
+//     x &= x / (x dot x / x) x quad& "(M5)" \
+//     x &= x / x x / x 1 / (1 / x) quad& "(M5)" \
+//     x &= 1 / (1 / x)
+//   $
+// ]
 
-=
+= 1.4
 
 $E$ is nonempty subset of ordered set.
 
@@ -128,7 +128,7 @@ Show $alpha <= beta$
 #proof[
   $
     alpha <=& p forall p in E \
-    beta <=& p forall p in E
+    beta >=& p forall p in E
   $
   Therefore if we combine the inequalities:
 
@@ -138,7 +138,7 @@ Show $alpha <= beta$
   $
 ]
 
-=
+= 1.5
 
 $A$ nonempty subset of $RR$, bounded below.
 

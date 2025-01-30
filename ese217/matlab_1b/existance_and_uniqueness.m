@@ -1,0 +1,37 @@
+tspan = [0 5];
+
+% Solve for x(0) = 0
+x0_0 = 0;
+[t0, x0] = ode45(@(t, x) 2 * t, tspan, x0_0);
+
+% Solve for x(0) = 5
+x0_1 = 5;
+[t1, x1] = ode45(@(t, x) 2 * t, tspan, x0_1);
+
+% Create a grid for the direction field
+a = 0; % Time range start
+b = 5; % Time range end
+s = 0.5; % Spacing for the grid
+[t, x] = meshgrid(a:s:b, 0:2:30); % Grid for time and solution values
+
+% Compute the vector field
+dx = 2 * t; % Right-hand side of the ODE
+dt = ones(size(dx)); % Time increment is 1
+norm = sqrt(dt.^2 + dx.^2); % Normalize the vectors
+dt = dt ./ norm;
+dx = dx ./ norm;
+
+% Plot the solutions and the direction field
+figure;
+hold on;
+plot(t0, x0, '-o', 'DisplayName', 'x(0) = 0');
+plot(t1, x1, '-o', 'DisplayName', 'x(0) = 5');
+quiver(t, x, dt, dx, 0.5, 'DisplayName', 'Slope Field'); % Direction field
+
+% Add labels, legend, and title
+xlabel('Time t');
+ylabel('Solution x(t)');
+title('Solutions of dx/dt = 2t with Slope Field');
+legend('show');
+grid on;
+hold off;

@@ -257,6 +257,7 @@ Show that $(a,b,c) = (a,(b,c))$
     (a, (b,c)) &= (a,b,c) \
     D(a) sect (D(b) sect D(c)) &= D(a) sect D(b) sect D(c)
   $
+  Therefore, it does not matter the order in which we apply the GCD "operation," and we can be "lazy" and not write the parentheses.
 ]
 
 ==
@@ -476,7 +477,9 @@ Given $m | a b$ and $(a,m) = 1$, show that $m | b$.
 
   If $"ord"_(p)(m) = 0$ then $"ord"_(p)(m) <= "ord"_(p)(b)$ because all terms on the RHS of @ord-add-8 are non-negative.
 
-  If $"ord"_(p)(a) = 0$, then we reach the same conclusion using the same reasoning as above (i.e. @ord-add-8 is still satisfied when $"ord"_(p)(a) = 0$ which then implies what we want to show).
+  If $"ord"_(p)(m) != 0$, then $"ord"_(p)(a) = 0$, which means that $"ord"_(p)(b) >= "ord"_(p)(m)$.
+
+  // then we reach the same conclusion using the same reasoning as above (i.e. @ord-add-8 is still satisfied when $"ord"_(p)(a) = 0$ which then implies what we want to show).
 ]
 
 I prefer this version of the proof because I have more experience thinking about "factors" of numbers (factoring them) compared to thinking about whether a number divides another number. Just the "dividing" symbol makes it seem somewhat scary in the other version of the proof, but in this version we do not have to deal with such notation. I would give this proof, but first start out with a more intuitive approach to ensure that my students understood what it means to factor a number.

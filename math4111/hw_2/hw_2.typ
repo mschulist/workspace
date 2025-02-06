@@ -116,18 +116,19 @@ We want to show that $b^(r + s) = b^r b^s$ if $s, r in QQ$.
 $
   B(x) = {b^t | t in QQ, t <= x}
 $
-We want to show that $b^r = sup B(x)$.
+We want to show that $b^r = sup B(r)$ for $r in RR$.
 
 
 #proof[
   $
     B(x) = {b^t | t in QQ, t <= x}
   $
-  Therefore, $b^r in B(r)$.
 
-  If $t < r$, then $b^t < b^r$, so $b^r$ is #underline([an]) upper bound.
+  We know that $b^r in B(r)$ because $r in QQ$.
 
-  If $gamma < b^r$, then $gamma$ is smaller than some element in $B(r)$ because $b^r in B(r)$.
+  If $t < r$, then $b^t < b^r$, so $b^r$ is #underline([an]) upper bound of $B(r)$.
+
+  If $gamma < b^r$, then $gamma$ is smaller than some element in $B(r)$ because $b^r in B(r)$. Hence $gamma$ cannot be an upper bound of $B(r)$. Therefore, we conclude that $b^r$ is the LUB of $B(r)$.
 ]
 
 ==
@@ -148,7 +149,18 @@ We want to show that $b^(x + y) = b^x b^y$ for $x, y in RR$.
   $
   Claim: $b^x dot b^y = sup {b^c b^d | c, d in QQ, c <= x, d <= y}$.
 
-  TODO!
+  We can first show that $b^x b^y$ is an upper bound of the RHS.
+
+  Because $c <= x$ and $d <= y$ for all $c, d in QQ$, we know that $b^c <= b^x$ and $b^d <= b^y$. We can multiply both inequalities to get that $b^x b^y >= b^c b^d$. Hence $b^x b^y$ is an upper bound.
+
+  Now we show that $b^x b^y$ is the least upper bound of the RHS. Suppose there exists a $gamma < b^x b^y$ with $gamma >= b^c b^d$ for all $c <= x, d <= y$ and $c, d in QQ$.
+
+  This implies:
+  $
+    b^c b^d <= gamma < b^x b^y
+  $ <LUB-1.6e>
+
+  We know that $QQ$ is dense in $RR$, which means that between any 2 (distinct) real numbers we can find a rational number. We also know that $c <= x, d <= y forall c, d in QQ$ is true in @LUB-1.6e. But since $c <= x$ and $d <= y$, we can see that there is no value of $gamma$ satisfying this inequality. Hence, there cannot be a smaller value than $b^x b^y$ that is an upper bound for $B(x + y)$, so $b^x b^y = sup B(x + y)$.
 ]
 
 = 1.7
@@ -191,15 +203,15 @@ Show if $t > 1$ and $n > (b-1)/(t-1)$ then $b^(1/n) < t$.
   Starting from part (b):
   $
     b - 1 &>= n(b^(1 / n) - 1) \
-    1 + (b - 1) / n >= b^(1 / n)
+    1 + (b - 1) / n &>= b^(1 / n)
   $ <1.7beq1>
 
   Now starting from the given in the problem:
   $
     n &> (b-1) / (t-1) \
-    n(t-1) > b-1 \
-    t - 1 > (b-1) / n \
-    t > (b-1) / n + 1
+    n(t-1) &> b-1 \
+    t - 1 &> (b-1) / n \
+    t &> (b-1) / n + 1
   $<1.7beq2>
 
   Combining @1.7beq1 and @1.7beq2:
@@ -220,7 +232,7 @@ Show if $w$ is such that $b^w < y$, then $b^(w + 1 / n)<y$ for large enough $n$.
     n &> (b - 1) / (t - 1) \
     n &> (b - 1) / (y dot b^(-w) - 1)
   $
-  So given values for $y, b,$ and $w$, we need $n$ to be larger than the value on the RHS of this equation above.
+  So given values for $y, b,$ and $w$, we need $n$ to be larger than the value on the RHS of the above inequality.
 
   By part (c):
   $
@@ -271,9 +283,9 @@ Show that this $x$ is unique. We need to show that if $b^(x_1) = b^(x_2)$ then $
 We want to show that there is no ordering that will make $CC$ an ordered field.
 
 #proof[
-  We know that in any ordered field, any element of the ordered field squared must larger than 0. So $i^2 = -1 > 0$. But we know that $(i^2)^2 = 1 > 0$ by the same logic. Combining $1 > 0$ and $-1 > 0$ by adding both sides yields $0 > 0$, which is a contradiction. $arrow.zigzag$
+  We know that in any ordered field, any element of the ordered field squared must larger than 0 (if the element is not zero, and $i eq.not 0$). So $i^2 = -1 > 0$. But we know that $(i^2)^2 = 1 > 0$ by the same logic. Combining $1 > 0$ and $-1 > 0$ by adding both sides yields $0 > 0$, which is a contradiction. $arrow.zigzag$
 
-  Hence, it is impossible for $CC$ to form an ordered field.
+  Hence, this ordering on $CC$ can not form an ordered field. But we did not make any assumptions about the specifics of the ordering (just following the properties of an ordered field) when finding this contradiction, so it is impossible for $CC$ to form an ordered field.
 ]
 
 = 1.9
@@ -328,3 +340,5 @@ $
 This set has an upper bound of $z = 1 + 0 i$, but has no least upper bound.
 
 Say $alpha = 0 + 0i$, then we can continue to decrease the imaginary part forever, but the real part must be zero (as if the real part $<0$ then it is less $alpha$). So there is no LUB of $S$.
+
+If $alpha$ is our upper bound of $S$, we can find a $gamma = alpha - i$ that will still be an upper bound of $S$. 

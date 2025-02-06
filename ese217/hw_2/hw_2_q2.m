@@ -21,14 +21,14 @@ dy = dy ./ norm;
 figure;
 hold on;
 for k = k_values
-    plot(t, k * t, '-o', 'DisplayName', sprintf('y(x) = %.1fx', k)); % Solution curves
+    plot(t, k * t, '-o', 'DisplayName', sprintf('x(t) = %.1ft', k)); % Solution curves
 end
 quiver(x, y, dx, dy, 0.5, 'DisplayName', 'Slope Field'); % Direction field
 
 % Add labels, legend, and title
-xlabel('x');
-ylabel('y(x)');
-title('Solutions of xy'' = y with Slope Field');
+xlabel('t');
+ylabel('x(t)');
+title("Solutions of tx' = x with Slope Field");
 legend('show');
 grid on;
 hold off;

@@ -1,5 +1,4 @@
 #import "@preview/plotst:0.2.0": *
-#import "@preview/ctheorems:1.1.2": *
 #import "@preview/physica:0.9.3": *
 
 #let project(title: "", body) = {

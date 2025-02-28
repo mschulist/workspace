@@ -34,7 +34,7 @@
   role: "Data Science Intern",
   location: "",
   name: "SeerAI",
-  date: "May 2024 - Present",
+  date: "May 2024 - Aug 2024",
   [Leveraged the Geodesic spatiotemporal platform via Python API and ArcGIS Online],
   [Wrote band arithmetic and inverse distance weighting middlewares in Go, utilizing expression parsing and K-D trees respectively],
 )

@@ -115,8 +115,8 @@ $
 $
 
 $
-  ket(0^1) &= braket(1, H', 0) / (E_1 - E_0) ket(1) + braket(3, H', 0) / (E_0 - E_3) ket(3) \
-  &= (planck.reduce / (2 m omega))^(3 / 2) gamma^2 / (planck.reduce omega)[ 3 ket(1) - sqrt(6) / 3 ket(3)]
+  ket(0^1) &= braket(1, H', 0) / (E_0 - E_1) ket(1) + braket(3, H', 0) / (E_0 - E_3) ket(3) \
+  &= (planck.reduce / (2 m omega))^(3 / 2) gamma^2 / (planck.reduce omega)[ -3 ket(1) - sqrt(6) / 3 ket(3)]
 $
 
 $

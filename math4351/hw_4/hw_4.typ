@@ -73,6 +73,8 @@ If $n$ is odd, then $(n,2) = 1$. Hence $phi.alt(2n) = phi.alt(2) phi.alt(n)$ so 
 
 If $n$ is even, then $n = 2^k m$ where $m$ is odd. Hence $phi.alt(2n) = phi.alt(2^(k + 1)) phi.alt(m) ==> phi.alt(2n) eq.not phi.alt(n)$.
 
+So this fact is only true when $n$ is odd.
+
 ==
 
 $phi.alt(n) = 14$ for what $n$?
@@ -101,13 +103,13 @@ We know that $14 = 2 dot 7$. Using @totient-def we can see that because $14$ onl
   On paper I started in the reverse direction to show the above inequality holds, which is why it looks a bit contrived in this form...
 
   $
-    phi.alt(n) &= product(i = 1)^r p_i^(a - 1)(p_i - 1) <= product_(i = 1)^r (p_i - 1) < sqrt(n / 4) \
+    phi.alt(n) &= product_(i = 1)^r p_i^(a - 1)(p_i - 1) <= product_(i = 1)^r (p_i - 1) < sqrt(n / 4) \
     phi.alt(n) &> sqrt(n / 4) \
     k > sqrt(n / 4) \
     4k^2 > n
   $
 
-  Since $n$ is bounded above, $phi.alt(n) = k$ has finitely many solutions.
+  Since $n$ is bounded above, $phi.alt(n) = k$ has finitely many solutions. Looking back, this is a pretty loose bound but at least it's finite!
 ]
 
 =
@@ -146,8 +148,8 @@ $
   154 = 11 dot 7 dot 2
 $
 
-TODO!
 
+If we look at $x^2 + 5x - 13 = x^2 + x + 1 = 0 mod 2$, we can see that it has no solutions for $x$. Therefore, the overall polynomial cannot have any solutions.
 
 
 =
@@ -156,7 +158,7 @@ We want to determine the number of solutions if $n$ is square-free and $a in (ZZ
 
 If $n$ is square-free, then $n = product_(i = 1)^k p_i$ (the exponent on each prime is either 0 or 1 and $n$ has $k$ prime factors).
 
-We know that $x^2 = a mod p$ for odd primes $p$ has exactly 2 solutions.
+We know that $x^2 = a mod p$ for odd primes ($p eq.not 2$) $p$ has exactly 2 solutions.
 
 $
   x^2 = a mod n ==> cases(
@@ -169,7 +171,7 @@ $
 
 So if $n$ is odd, then there are $2^k$ solutions.
 
-And if $n$ is even, then there are $2^(k - 1)$ solutions.
+And if $n$ is even, then there are $2^(k - 1)$ solutions (as one of the factors is $p = 2$ which only has one solution).
 
 
 =
@@ -274,6 +276,8 @@ When $Delta = 0 mod 3$, we know that this will give us 1 solution due to problem
 
 For $Delta = 1 mod 2$, we cannot directly use the discriminant to derive any information about the number of solutions, but there are only 4 quadratics in mod 2, so we can look up this one and find that it has 2 solutions $f(x) = x^2 + x = 0 mod 2$ (and this has 2 solutions in mod 2).
 
+So there are 4 solutions in all $(2 dot 2 dot 1)$.
+
 // So there are 4 solutions, $2 dot 1 dot 2$ (the "2"s come from when $Delta = 1 mod p$ and "1"s come from when $Delta = 0 mod p$).
 
 =
@@ -298,7 +302,7 @@ $
   Delta &= 141 mod 210
 $
 
-$Delta = 141 = b^2 - 4c mod 210$. $141 + 4c = b^2$ so $b$ is odd. 169 is the next square after 141, so set $b^2 = 169, b = 13$. Then $141 + 4c 169 ==> c = 7$.
+$Delta = 141 = b^2 - 4c mod 210$. $141 + 4c = b^2$ so $b$ is odd. 169 is the next square after 141, so set $b^2 = 169, b = 13$. Then $141 + 4c = 169 ==> c = 7$.
 
 Hence we get
 $
@@ -316,5 +320,14 @@ $
 
 We want this to have 6 solutions mod 143.
 
-TODO!
+We can split this into its prime factors, which is $143 = 11 dot 13$. We need to try and get 2 solutions mod 11 and 3 solutions mod 13 so that we have 6 solutions in all.
 
+We know that $12 = 1 mod 11$, so we can exploit this fact to get a repeated root in mod 11 when there are distinct roots in mod 13.
+
+$
+  f(x) &= (x - 1)(x - 5)(x - 12) \
+  &= (x - 1)^2 (x - 5) mod 11 \
+  &= (x - 1) (x - 5) (x - 12) mod 13
+$
+
+As we can see, $f(x)$ has 2 solutions in mod 11 and 3 solutions mod 13. Hence $f(x)$ will have 6 solutions mod 143 by the CRT.

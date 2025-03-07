@@ -7,7 +7,7 @@
   set document(author: authors, title: title)
   set page(paper: "us-letter", numbering: "1", number-align: center, fill: rgb("1c1c1c"))
   set text(font: "Libertinus Serif", lang: "en", fill: rgb("fdfdfd"))
-  set heading(numbering: "1.a)")
+  set heading(numbering: "1.a.i)")
   set math.equation(numbering: "(1)")
 
   // Title row.

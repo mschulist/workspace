@@ -27,7 +27,7 @@ Show that $K$ is compact.
 
   Then $K subset G_alpha_0 union union.big_(i = 1)^m G_alpha_i$ covers $K$. So $K$ is compact as we have shown that given any arbitrary cover of $K$, there exists a finite subcover.
 
-  We used the fact that $0 in K$ so show that there must be a neighborhood around 0 that contains other points of $K$, and then just took the union of finitely many open intervals that live "to the right" of our open ball around 0. We know there are finitely many point to the right of our open ball because of the definition of $K$'s construction.
+  We used the fact that $0 in K$ so show that there must be a neighborhood around 0 that contains other points of $K$, and then just took the union of finitely many open intervals that live "to the right" of our open ball around 0. We know there are finitely many point to the right of our open ball because of the definition of $K$'s construction. We can always split up $K$ into 2 parts, $[0,1/2^n) inter K$ and $[1/2^n, 1] inter K$, and the second of these sets will contain a finite number of points for a fixed $n$.
 ]
 
 = 2.13
@@ -48,11 +48,11 @@ $
   K' = {1 / 2^n | n in NN} union {0}
 $
 
-Fix $n$, then $K_n = {1 / 2^n + 1 / 2^m | m in NN} union {1 / 2^n}$. This has a limit point of $1 / 2^n$ which we include in the set to make it closd.
+Fix $n$, then $K_n = {1 / 2^n + 1 / 2^m | m in NN} union {1 / 2^n}$. This has a limit point of $1 / 2^n$ which we include in the set to make it closed.
 
 If we repeat for all $n in NN$, then we a closed set with a countable number of limit points.
 
-TODO! Prove this more...
+Additionally, for a given $n$ these sets are disjoint and have different limit points (which we have added), so taking their union will not add more limit points. (The closure of the closure is the same).
 
 = 2.15
 
@@ -108,23 +108,38 @@ Then $p < sqrt(2)$, so $p^2 < 2 ==> p in.not E$. Hence $p$ cannot be a limit poi
 
 Then $p > sqrt(3)$, so $p^2 > 3 ==> p in.not E$. Hence $p$ cannot be a limit point of $E$ if $p$ is not in $E$.
 
+Remark: We can repeat the same steps for the "negative" part of $E$ so show that it too is closed. But it is identical to the "positive" part, so it will be closed (like the positive part is).
+
 *Not compact*
 
-Let $A = (-sqrt(3), -sqrt(2)) inter QQ$ (to handle the negatives).
+Let $S = {x in QQ | x > 0, x^2 < 3}$. This forms a countable set of rational numbers. Let $S_i$ be the $i$th element of this countable subset of rational numbers (as we can enumerate them because $QQ$ is countable).
 
-Let $B_n = (sqrt(2), sqrt(3) - (sqrt(3) - sqrt(2)) / n) inter QQ$. Let $B = union.big_(i = 1)^infinity B_i$.
-
-Claim: $A union B$ does not have a finite subcover.
-
-Suppose there exists a finite subcover. Then take the maximum index of $B_i$. Call it $n$. The points in the following set are not in the finite subcover.
+Then let $A_i = (0, S_i) inter QQ$.
 
 $
-  (sqrt(3) - (sqrt(3) - sqrt(2)) / n, sqrt(3)) inter QQ
+  A = union.big_(i=1)^infinity A_i
 $
 
-We can always find a $q in QQ$ between two real numbers, so we will always miss some points of $E$.
+Let $B = (-sqrt(3), -sqrt(2)) inter QQ$ (to handle the negatives).
 
-Hence we have made a set that does not have a finite subcover.
+Claim: $A union B$ covers $E$ and does not have a finite subcover.
+
+Suppose there does exist a finite subcover, then we just take the maximum index of a rational number in our finite subcover, call it $j$. Then because we can find a rational number between any two real numbers, we can find a point between $S_j$ and $sqrt(2)$ (treating them as real numbers, we can find a rational between them). Hence this set does not have a finite subcover.
+
+This set covers $E$. If we assume that there is an element $a in E, a in.not A$ (assume that it is in the positive part, if in the negative part then we are done). This is impossible because $A$ contains all rational numbers whose square is less than 3, which is a superset of the rational numbers whose square is between 2 and 3. Hence this set covers $E$.
+
+
+// Let $B_n = (sqrt(2), sqrt(3) - (sqrt(3) - sqrt(2)) / n) inter QQ$. Let $B = union.big_(i = 1)^infinity B_i$.
+
+// Suppose there exists a finite subcover. Then take the maximum index of $B_i$. Call it $n$. The points in the following set are not in the finite subcover.
+
+// $
+//   (sqrt(3) - (sqrt(3) - sqrt(2)) / n, sqrt(3)) inter QQ
+// $
+
+// We can always find a $q in QQ$ between two real numbers, so we will always miss some points of $E$.
+
+// Hence we have made a set that does not have a finite subcover.
 
 *Open*
 
@@ -149,6 +164,10 @@ $
 $
 
 But $y^2 > 3$, so our assumption that $y in E^c$ must be wrong. Hence all $y in B_(r)(p)$ are in $E$, so $E$ is open (all points of $E$ are interior points).
+
+We can repeat the same steps to show that in the other case (when $r = p - sqrt(2)$) $y$ cannot be an interior point.
+
+We use the two cases as there are two "sides" that a $x in E$ could be closer to, and we want to make a ball that fits inside of $E$ for any $x$.
 
 = 2.17
 
@@ -180,7 +199,7 @@ Then $s in [0,1]$, but $s in.not E$. So $E$ is uncountable.
 
 *$E$ is not dense in $[0,1]$*
 
-Let $x in E, x >= 0.4$. So all $y in [0, 0.3]$ are not limit points of $E$. Hence $E$ cannot be dense in $[0,1]$ as we have found points in $[0,1]$ which are not limit points of $E$.
+Let $x in E, x > 0.4$. So all $y in [0, 0.3]$ are not limit points of $E$. Hence $E$ cannot be dense in $[0,1]$ as we have found points in $[0,1]$ which are not limit points of $E$.
 
 *$E$ is compact*
 
@@ -192,14 +211,21 @@ Suppose $y in E^c$. Then eventually a digit of the decimal expansion of $y$ will
 
 Let $epsilon = 10^(-(i + 1))$. Then $B_(epsilon)(y) subset E^c$ because we are making the neighborhood smaller than the distance from $y$ to any other point of $E$. So this ball is entirely contained withing $E^c$.
 
-Hence $E$ is compact.
+Hence $E$ is compact as $E^c$ is compact.
 
 
-*$E$ is maybe perfect*
+*$E$ is perfect*
 
-TODO!
+Must show that all points of $E$ are limit points.
 
-// $0.4$ is not a limit point (but $0.4 in E$) as with $r > 0.44 - 0.4 = 0.04$, $B_(r)(0.4)$ does not contain any other points of $E$.
+Let $x in E$. $x = 0.x_1 x_2 x_3 ...$, $x_i in {4, 7}$. We must show that all neighborhoods of $x$ contain another point which has a decimal expansion only containing ${4, 7}$.
+
+Let $epsilon$ be the radius of the ball around $x$. Then let $epsilon < 10^(-n)$ for some $n$.
+
+(1) If $x_(n+1) = 4$, take $q = 0.x_1 x_2 ... x_n 7 x_(n+2) ...$. In this case, $q - x = 3 dot 10^(-(n+1)) < 10^(-n)$. \
+(2) If $x_(n+1) = 7$, take $q = 0.x_1 x_2 ... x_n 4 x_(n+2) ...$. In this case, $x - q = 3 dot 10^(-(n+1)) < 10^(-n)$.
+
+So in both cases, we can find another point inside the ball for any arbitrary radius. So all points of $E$ are limit points. We know $E$ is closed, so $E$ is perfect.
 
 
 = 2.23
